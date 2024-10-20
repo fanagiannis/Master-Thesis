@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6785e2d9a48fd2b4baf121b07be6e65b, type: 3}
+  m_Name: Footsteps
+  m_EditorClassIdentifier: 
+  footstepsDirt: []
+  footstepsStone:
+  - {fileID: 8300000, guid: be3034a79dc569540ba21e4a2f312d7a, type: 3}
+  - {fileID: 8300000, guid: 5866b981b628de94b973e7dd1ccfcf50, type: 3}
+  - {fileID: 8300000, guid: b8ce496724cf7d3449176610b10806d2, type: 3}
+  - {fileID: 8300000, guid: 74b9f54a1d8429b46a7ef81a8a52df46, type: 3}
+  - {fileID: 8300000, guid: 3f1edb02d56eb4646915ab6de59c0db9, type: 3}
+  - {fileID: 8300000, guid: 868c8543c2099774683b38bdb2428e0d, type: 3}
+  - {fileID: 8300000, guid: 80ac8c3a8fa203349b65c5bbc550fc70, type: 3}
+  - {fileID: 8300000, guid: e508d29ffb279874f97f05aa758b2b3f, type: 3}
+  - {fileID: 8300000, guid: 7449d9412f6057b4cb42d7e0e45d4aef, type: 3}
+  - {fileID: 8300000, guid: dae2bbff40c6f8e4f850a2a85c7d23e8, type: 3}
