@@ -11,7 +11,8 @@ public class Guard : Agent
     [SerializeField]private Transform safezone;
     [SerializeField]protected float speed;
     protected Animator animator;
-    protected bool playerSpotted;
+    [SerializeField]protected bool playerSpotted;
+    [SerializeField]protected bool playerAlive;
     [SerializeField]protected Transform playerPosition;
     public override void Start()
     {
@@ -53,8 +54,9 @@ public class Guard : Agent
 
         Sequence PlayerSpot = new Sequence("Spot Player");
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted));
+        Condition checkPlayer = new Condition("PlayerAlive?",new ConditionLeaf(()=>playerAlive));
         Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,playerPosition));
-        Action shootAction = new Action("ShootPlayer",new ShootAction(playerPosition, 5000f, animator));
+        Action shootAction = new Action("ShootPlayer",new ShootAction(playerPosition, animator));
 
         PlayerSpot.AddChild(spotPlayer);
         PlayerSpot.AddChild(lookAt);
@@ -70,8 +72,8 @@ public class Guard : Agent
         
         Fallback rootfallback = new Fallback("Root");
 
-        rootfallback.AddChild(PlayerSpot);
         rootfallback.AddChild(hideSequence);
+        rootfallback.AddChild(PlayerSpot);
         rootfallback.AddChild(guardPatrol);
         
 

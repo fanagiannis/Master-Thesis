@@ -203,7 +203,7 @@ namespace Actions
             animator.SetBool("IsRunning",false);
             animator.SetBool("IsCrouching",true);  
             //animator.SetBool("IsAlert",true); 
-            return Node.Status.RUNNING; 
+            return Node.Status.SUCCESS; 
         }
 
         public void Reset()
@@ -267,47 +267,41 @@ namespace Actions
     public class ShootAction : IAction
     {
         private Transform player;
-        private float shootCooldown;
-        private float nextTimeToShoot;
         private Animator animator;
+        private bool shot;
 
-        public ShootAction(Transform player, float shootCooldown, Animator animator)
+        public ShootAction(Transform player, Animator animator)
         {
             this.player = player;
-            this.shootCooldown = shootCooldown;
             this.animator = animator;
-            this.nextTimeToShoot = Time.time;
+            this.shot=false;
         }
 
         public Node.Status Process()
         {
-            if (Time.time >= nextTimeToShoot)
-            {
-                Shoot();
-                nextTimeToShoot = Time.time + shootCooldown;
-                return Node.Status.SUCCESS; 
-            }
-            return Node.Status.RUNNING; 
+            Shoot();  
+            return Node.Status.SUCCESS; 
         }
 
         private void Shoot()
         {
-            Debug.Log("BANG");
             PlayerDummy target = player.GetComponent<PlayerDummy>();
-            if (target != null)
+            if (target != null && !shot)
             {
                 animator.SetTrigger("Shoot");
                 int random = Random.Range(0, 3);
                 if (random > 0)
                 {
+                    Debug.Log("BANG");
                     target.TakeDamage(10f);
+                    shot=true;
                 }
             }
         }
 
         public void Reset()
         {
-            nextTimeToShoot = Time.time; // Resetting the cooldown for the next shot.
+        
         }
     }
 }
