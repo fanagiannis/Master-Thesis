@@ -58,7 +58,7 @@ public class Guard : Agent
 
         PlayerSpot.AddChild(spotPlayer);
         PlayerSpot.AddChild(lookAt);
-        //PlayerSpot.AddChild(shootAction);
+        PlayerSpot.AddChild(shootAction);
 
 
         hideSequence.AddChild(checkIfDanger);

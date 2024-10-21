@@ -184,8 +184,7 @@ namespace Actions
         }
 
         public void Reset()
-        {
-            animator.SetBool("Alert",false);  
+        { 
             looksAtTarget = false;
         }
 
@@ -301,7 +300,7 @@ namespace Actions
                 int random = Random.Range(0, 3);
                 if (random > 0)
                 {
-                    target.TakeDamage(0.001f);
+                    target.TakeDamage(10f);
                 }
             }
         }
