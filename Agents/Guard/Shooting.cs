@@ -39,6 +39,7 @@ public class NPCShooting : MonoBehaviour
         Debug.Log("BANG");
         
         PlayerDummy target=player.GetComponent<PlayerDummy>();
+        this.gameObject.GetComponent<Animator>().SetTrigger("Shoot");
         if(target!=null)
         {
             int random = Random.Range(0, 3);
