@@ -288,4 +288,51 @@ namespace Actions
             navigation.ResetPath(); 
         }
     }
+
+    public class ShootAction : IAction
+    {
+        private Transform player;
+        private float shootCooldown;
+        private float nextTimeToShoot;
+        private Animator animator;
+        public ShootAction(Transform player, float shootCooldown, Animator animator)
+        {
+            this.player = player;
+            this.shootCooldown = shootCooldown;
+            this.animator = animator;
+            this.nextTimeToShoot = Time.time;
+        }
+
+        public Node.Status Process()
+        {
+            if (Time.time >= nextTimeToShoot)
+            {
+                Shoot();
+                nextTimeToShoot = Time.time + shootCooldown;
+                return Node.Status.SUCCESS; 
+            }
+            return Node.Status.RUNNING;
+        }
+
+        
+
+        private void Shoot()
+        {
+            PlayerDummy target = player.GetComponent<PlayerDummy>();
+            if (target != null)
+            {
+                animator.SetTrigger("Shoot");
+                int random = Random.Range(0, 3);
+                if (random > 0)
+                {
+                    target.TakeDamage(10f);
+                }
+            }
+        }
+
+        public void Reset()
+        {
+            nextTimeToShoot = Time.time;
+        }
+    }
 }

@@ -55,9 +55,11 @@ public class Guard : Agent
 
         Sequence PlayerSpot = new Sequence("Spot Player");
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted));
+        //Action shootAction = new Action("ShootPlayer",new ShootAction(this.transform, playerPosition, 35f, 2f, 1f, animator));
         Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,playerPosition));
 
         PlayerSpot.AddChild(spotPlayer);
+        //PlayerSpot.AddChild(shootAction);
         PlayerSpot.AddChild(lookAt);
         
 
