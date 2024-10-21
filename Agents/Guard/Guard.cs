@@ -47,21 +47,18 @@ public class Guard : Agent
         Action takeCover = new Action("Take Cover",new GoTo(this.animator,this.navigation,()=>safezone.position));
         Action crouchAction = new Action("Crouch",crouch);
 
-        // Fallback fallback= new Fallback("StandUpFB");
-        // Sequence standUpSequence = new Sequence("Stand Up");
         Condition safe = new Condition("Safe?",new ConditionLeaf(()=>!InDanger));
         Action standUp = new Action("Stand",new ActionReset(crouch));
 
 
         Sequence PlayerSpot = new Sequence("Spot Player");
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted));
-        //Action shootAction = new Action("ShootPlayer",new ShootAction(this.transform, playerPosition, 35f, 2f, 1f, animator));
         Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,playerPosition));
+        Action shootAction = new Action("ShootPlayer",new ShootAction(playerPosition, 5000f, animator));
 
         PlayerSpot.AddChild(spotPlayer);
-        //PlayerSpot.AddChild(shootAction);
         PlayerSpot.AddChild(lookAt);
-        
+        //PlayerSpot.AddChild(shootAction);
 
 
         hideSequence.AddChild(checkIfDanger);

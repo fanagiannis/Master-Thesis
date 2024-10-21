@@ -156,61 +156,37 @@ namespace Actions
         }
     }
 
-    //GUARD
-
-    // public class GuardAlert : GoTo
-    // {
-    //     private Agent agent;
-    //     private NavMeshAgent navigation;
-    //     private System.Func<Vector3> getdestination;
-    //     // public GuardAlert(Agent agent,NavMeshAgent navigation,System.Func<Vector3> getdestination)
-    //     // {
-    //     //     this.agent = agent;
-    //     //     this.navigation=navigation;
-    //     //     this.getdestination = getdestination;
-    //     //     navigation.ResetPath();
-    //     // }
-    //     public override Node.Status Process()
-    //     {
-    //         Vector3 destination = getdestination();
-    //         navigation.speed=5f;
-    //         navigation.SetDestination(destination); 
-    //         if(navigation.remainingDistance< 0.5f && !navigation.pathPending)
-    //         {
-    //             navigation.ResetPath();
-    //             return Node.Status.SUCCESS;
-    //         }
-    //         return Node.Status.RUNNING;  
-    //     }
-    //     public override void Reset()
-    //     {
-    //         navigation.ResetPath();
-    //     }
-    // }
     public class LookAtTarget : IAction
     {
         private Animator animator;
         private Transform targetposition;
         private NavMeshAgent navigation;
+        private bool looksAtTarget;
         public LookAtTarget (NavMeshAgent navigation,Animator animator,Transform position)
         {
             this.navigation=navigation;
             this.animator = animator;
             this.targetposition = position;
+            this.looksAtTarget = false;
         }
         public Node.Status Process()
         {
-            animator.gameObject.transform.LookAt(targetposition) ;
-            animator.SetBool("Alert",true); 
-            this.navigation.ResetPath();
-            animator.SetBool("IsWalking",false); 
-            //Debug.Log(targetposition);
-            return Node.Status.RUNNING; 
+            if(!looksAtTarget)
+            {
+                animator.gameObject.transform.LookAt(targetposition) ;
+                animator.SetBool("Alert",true); 
+                this.navigation.ResetPath();
+                animator.SetBool("IsWalking",false); 
+                looksAtTarget=true;
+                return Node.Status.SUCCESS;
+            }
+            return Node.Status.SUCCESS;
         }
 
         public void Reset()
         {
             animator.SetBool("Alert",false);  
+            looksAtTarget = false;
         }
 
     }
@@ -295,6 +271,7 @@ namespace Actions
         private float shootCooldown;
         private float nextTimeToShoot;
         private Animator animator;
+
         public ShootAction(Transform player, float shootCooldown, Animator animator)
         {
             this.player = player;
@@ -311,13 +288,12 @@ namespace Actions
                 nextTimeToShoot = Time.time + shootCooldown;
                 return Node.Status.SUCCESS; 
             }
-            return Node.Status.RUNNING;
+            return Node.Status.RUNNING; 
         }
-
-        
 
         private void Shoot()
         {
+            Debug.Log("BANG");
             PlayerDummy target = player.GetComponent<PlayerDummy>();
             if (target != null)
             {
@@ -325,14 +301,14 @@ namespace Actions
                 int random = Random.Range(0, 3);
                 if (random > 0)
                 {
-                    target.TakeDamage(10f);
+                    target.TakeDamage(0.001f);
                 }
             }
         }
 
         public void Reset()
         {
-            nextTimeToShoot = Time.time;
+            nextTimeToShoot = Time.time; // Resetting the cooldown for the next shot.
         }
     }
 }

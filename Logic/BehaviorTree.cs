@@ -84,6 +84,7 @@ namespace Behavior
         }
         public override Status Process()
         {
+            Debug.Log($"Processing action: {Name}");
             return action.Process();
         }
         public override void Reset()
