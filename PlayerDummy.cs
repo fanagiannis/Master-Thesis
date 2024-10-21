@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PlayerDummy : MonoBehaviour
 {
+    public UnityEvent Dead;
     public float HP;
     public GameObject hpBar;
     public Image image;
@@ -25,6 +27,8 @@ public class PlayerDummy : MonoBehaviour
     }
     private void Death()
     {
-        if(HP<=0){this.gameObject.SetActive(false);}
+        if(HP<=0){
+            Dead.Invoke();
+        }
     }
 }

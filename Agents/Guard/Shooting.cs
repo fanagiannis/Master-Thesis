@@ -16,8 +16,7 @@ public class NPCShooting : MonoBehaviour
     void Update()
     {
         if(activated)
-        {
-            
+        {    
             AimAtPlayer();
             if (Time.time >= nextTimeToShoot)
             {
@@ -35,9 +34,7 @@ public class NPCShooting : MonoBehaviour
     }
 
     void Shoot()
-    {
-        Debug.Log("BANG");
-        
+    {   
         PlayerDummy target=player.GetComponent<PlayerDummy>();
         this.gameObject.GetComponent<Animator>().SetTrigger("Shoot");
         if(target!=null)

@@ -204,7 +204,6 @@ namespace Actions
             animator.SetBool("Alert",true); 
             this.navigation.ResetPath();
             animator.SetBool("IsWalking",false); 
-            animator.SetBool("IsShooting",true); 
             //Debug.Log(targetposition);
             return Node.Status.RUNNING; 
         }

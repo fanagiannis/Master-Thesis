@@ -28,10 +28,6 @@ public class Guard : Agent
             animator.SetBool("IsCrouching",false);//DEBUG!!!!!!!!!!!!
             navigation.speed = speed;
         }
-        // if(lineOfSight.GetVisibleTarget("Player")!=null)
-        // {
-        //     playerSpotted=true;
-        // }
     }
     public override void BakeBehavior()
     {
