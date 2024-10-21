@@ -37,7 +37,7 @@ public class Guard : Agent
         BT=new BehaviorTree("Guard Logic");
 
         Sequence guardPatrol = new Sequence("Patrol");
-        Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!playerSpotted));
+        Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!playerSpotted && !InDanger));
         Action patrol = new Action("Guard Patrol",new GuardRandomPatrol(this,this.navigation,this.animator));
 
         guardPatrol.AddChild(notspotPlayer);
