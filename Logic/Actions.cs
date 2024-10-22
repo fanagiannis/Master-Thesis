@@ -163,32 +163,35 @@ namespace Actions
         private Transform targetposition;
         private NavMeshAgent navigation;
         private bool looksAtTarget;
-        public LookAtTarget (NavMeshAgent navigation,Animator animator,Transform position)
+
+        public LookAtTarget(NavMeshAgent navigation, Animator animator, Transform position)
         {
-            this.navigation=navigation;
+            this.navigation = navigation;
             this.animator = animator;
             this.targetposition = position;
             this.looksAtTarget = false;
         }
+
         public Node.Status Process()
         {
-            if(!looksAtTarget)
+            Vector3 directionToTarget = (targetposition.position - animator.gameObject.transform.position).normalized;
+            float dotProduct = Vector3.Dot(animator.gameObject.transform.forward, directionToTarget);
+            if (dotProduct < 0.9f)  
             {
-                animator.gameObject.transform.LookAt(targetposition) ;
-                animator.SetBool("Alert",true); 
+                animator.gameObject.transform.LookAt(targetposition);
+                animator.SetBool("Alert", true);
                 this.navigation.ResetPath();
-                animator.SetBool("IsWalking",false); 
-                looksAtTarget=true;
-                return Node.Status.SUCCESS;
+                animator.SetBool("IsWalking", false);
+                looksAtTarget = true;
             }
+            
             return Node.Status.SUCCESS;
         }
 
         public void Reset()
-        { 
+        {
             looksAtTarget = false;
         }
-
     }
 
     public class Crouch : IAction
@@ -290,7 +293,7 @@ namespace Actions
                 
                 if (random > 4)
                 {
-                    target.TakeDamage(50f);
+                    target.TakeDamage(1f);
                     return Node.Status.SUCCESS;; 
                 }
                 else

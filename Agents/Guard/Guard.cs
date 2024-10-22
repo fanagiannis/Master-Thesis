@@ -66,6 +66,8 @@ public class Guard : Agent
         Sequence PlayerSpot = new Sequence("Spot Player");
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted && playerAlive));
         Condition checkPlayer = new Condition("PlayerAlive?",new ConditionLeaf(()=>playerAlive));
+
+        
         Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,playerPosition));
 
         Sequence shootSequence = new Sequence("Shoot Player Sequence");
