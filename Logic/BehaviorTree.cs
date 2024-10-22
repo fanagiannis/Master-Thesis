@@ -181,4 +181,29 @@ namespace Behavior
         }
     }
 
+    public class WaitNode : Node
+    {
+        private float waitTime;
+        private float timer;
+        public WaitNode(string name, float time, int priority = 0): base(name, priority) 
+        {
+            this.waitTime = time;
+            timer=0;
+        }
+        public override Status Process()
+        {
+            timer+=Time.deltaTime;
+            if(timer>=waitTime)
+            {
+                return Status.SUCCESS;
+            }
+            return Status.RUNNING;
+        }
+
+        public override void Reset()
+        {
+            timer=0;
+        }
+    }
+
 }
