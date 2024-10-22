@@ -7,6 +7,7 @@ using Conditions;
 using Unity.IO.LowLevel.Unsafe;
 using System.Linq;
 using System.Text;
+using System;
 
 namespace Behavior
 {
@@ -206,4 +207,28 @@ namespace Behavior
         }
     }
 
+    public class RepeatNode : Node
+    {
+        private Func<bool> repeatCondition;  
+
+        public RepeatNode(string name, Func<bool> repeatCondition, int priority = 0) : base(name, priority)
+        {
+            this.repeatCondition = repeatCondition;
+        }
+
+        public override Status Process()
+        {
+            if (repeatCondition())  
+            {
+                return Status.RUNNING;
+            }
+
+            return Status.SUCCESS; 
+        }
+
+        public override void Reset()
+        {
+            
+        }
+    }
 }
