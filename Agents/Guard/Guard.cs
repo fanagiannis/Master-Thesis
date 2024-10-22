@@ -25,9 +25,11 @@ public class Guard : Agent
     public override void Update()
     {
         BT.Process();
+
+        //DEBUG!!!!!!!!!!!!
         if(!InDanger)
         {
-            animator.SetBool("IsCrouching",false);//DEBUG!!!!!!!!!!!!
+            animator.SetBool("IsCrouching",false);
             navigation.speed = speed;
         }
         if(!playerAlive)
@@ -35,6 +37,7 @@ public class Guard : Agent
             animator.SetBool("Alert",false);
             playerSpotted=false;
         }
+        //DEBUG!!!!!!!!!!!!
     }
     public override void BakeBehavior()
     {
