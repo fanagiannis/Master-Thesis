@@ -64,10 +64,10 @@ public class Guard : Agent
 
         Action test = new Action("Debug",new Test("debug"));
         WaitNode delay = new WaitNode("Delay",3f);
-        Sequence delayAndTestSequence = new Sequence("Delay and Debug Sequence");
-        delayAndTestSequence.AddChild(delay);   
-        delayAndTestSequence.AddChild(test);    
-        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndTestSequence, () => playerAlive, 3);
+        Sequence delayAndShootSequence = new Sequence("Delay and Debug Sequence");
+        delayAndShootSequence.AddChild(delay);   
+        delayAndShootSequence.AddChild(shootAction);    
+        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => playerAlive, 3);
 
         shootSequence.AddChild(repeat);
 

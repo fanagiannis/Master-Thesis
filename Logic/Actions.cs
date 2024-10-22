@@ -274,30 +274,29 @@ namespace Actions
         {
             this.player = player;
             this.animator = animator;
-            this.shot=false;
         }
 
         public Node.Status Process()
         {
             PlayerDummy target = player.GetComponent<PlayerDummy>();
-            if (target != null && !shot)
+            if (target != null)
             {
                 animator.SetTrigger("Shoot");
                 int random = Random.Range(0, 3);
                 if (random > 0)
                 {
                     Debug.Log("BANG");
-                    target.TakeDamage(0.01f);
+                    target.TakeDamage(10f);
                     shot=true;
-                    return Node.Status.RUNNING; 
+                    return Node.Status.SUCCESS;; 
                 }
             } 
-            return Node.Status.SUCCESS; 
+            return Node.Status.RUNNING; 
         }
 
         public void Reset()
         {
-            shot=false;
+        
         }
     }
 }
