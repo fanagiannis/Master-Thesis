@@ -268,7 +268,6 @@ namespace Actions
     {
         private Transform player;
         private Animator animator;
-        private bool shot;
 
         public ShootAction(Transform player, Animator animator)
         {
@@ -282,13 +281,18 @@ namespace Actions
             if (target != null)
             {
                 animator.SetTrigger("Shoot");
-                int random = Random.Range(0, 3);
-                if (random > 0)
+                Debug.Log("BANG");
+                int random = Random.Range(0, 10);
+                
+                if (random > 4)
                 {
-                    Debug.Log("BANG");
                     target.TakeDamage(10f);
-                    shot=true;
                     return Node.Status.SUCCESS;; 
+                }
+                else
+                {
+                    Debug.Log("Missed!");
+                    return Node.Status.SUCCESS;
                 }
             } 
             return Node.Status.RUNNING; 
