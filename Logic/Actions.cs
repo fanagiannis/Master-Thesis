@@ -279,12 +279,6 @@ namespace Actions
 
         public Node.Status Process()
         {
-            Shoot();  
-            return Node.Status.SUCCESS; 
-        }
-
-        private void Shoot()
-        {
             PlayerDummy target = player.GetComponent<PlayerDummy>();
             if (target != null && !shot)
             {
@@ -293,15 +287,17 @@ namespace Actions
                 if (random > 0)
                 {
                     Debug.Log("BANG");
-                    target.TakeDamage(10f);
+                    target.TakeDamage(0.01f);
                     shot=true;
+                    return Node.Status.RUNNING; 
                 }
-            }
+            } 
+            return Node.Status.SUCCESS; 
         }
 
         public void Reset()
         {
-        
+            shot=false;
         }
     }
 }

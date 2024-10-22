@@ -85,7 +85,7 @@ namespace Behavior
         }
         public override Status Process()
         {
-            Debug.Log($"Processing action: {Name}");
+            //Debug.Log($"Processing action: {Name}");
             return action.Process();
         }
         public override void Reset()
@@ -209,26 +209,51 @@ namespace Behavior
 
     public class RepeatNode : Node
     {
-        private Func<bool> repeatCondition;  
-
-        public RepeatNode(string name, Func<bool> repeatCondition, int priority = 0) : base(name, priority)
+        private Node childNode;                 
+        private Func<bool> repeatCondition;     
+        private int repeatCount;
+        private int repeatTimes;
+        public RepeatNode(string name, Node childNode, Func<bool> repeatCondition, int times = 0,int priority = 0) : base(name, priority)
         {
+            this.childNode = childNode;
             this.repeatCondition = repeatCondition;
+            this.repeatCount = times;
+            repeatTimes=0;
         }
-
         public override Status Process()
         {
-            if (repeatCondition())  
+            if(repeatCount<=0)
             {
-                return Status.RUNNING;
+                if (repeatCondition())
+                {
+                    Status childStatus = childNode.Process();
+                    if (childStatus == Status.SUCCESS || childStatus == Status.FAILURE)
+                    {
+                        childNode.Reset();
+                    }
+                    return Status.RUNNING;
+                }
+                return Status.SUCCESS;
             }
-
-            return Status.SUCCESS; 
+            else
+            {
+                if(repeatTimes<repeatCount)
+                {
+                    Status childStatus = childNode.Process();
+                    if (childStatus == Status.SUCCESS || childStatus == Status.FAILURE)
+                    {
+                        childNode.Reset();
+                        repeatTimes+=1;
+                    }
+                    return Status.RUNNING;
+                }
+                return Status.SUCCESS;
+            }
+            
         }
-
         public override void Reset()
         {
-            
+            childNode.Reset();
         }
     }
 }

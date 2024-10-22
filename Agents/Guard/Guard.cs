@@ -5,6 +5,7 @@ using Behavior;
 using Actions;
 using Conditions;
 using System.ComponentModel;
+using UnityEngine.UIElements;
 
 public class Guard : Agent
 {   
@@ -56,12 +57,23 @@ public class Guard : Agent
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted));
         Condition checkPlayer = new Condition("PlayerAlive?",new ConditionLeaf(()=>playerAlive));
         Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,playerPosition));
+
+        Sequence shootSequence = new Sequence("Shoot Player Sequence");
+       
         Action shootAction = new Action("ShootPlayer",new ShootAction(playerPosition, animator));
+
+        Action test = new Action("Debug",new Test("debug"));
+        WaitNode delay = new WaitNode("Delay",3f);
+        Sequence delayAndTestSequence = new Sequence("Delay and Debug Sequence");
+        delayAndTestSequence.AddChild(delay);   
+        delayAndTestSequence.AddChild(test);    
+        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndTestSequence, () => playerAlive, 3);
+
+        shootSequence.AddChild(repeat);
 
         PlayerSpot.AddChild(spotPlayer);
         PlayerSpot.AddChild(lookAt);
-        PlayerSpot.AddChild(shootAction);
-
+        PlayerSpot.AddChild(repeat);
 
         hideSequence.AddChild(checkIfDanger);
         hideSequence.AddChild(takeCover);
