@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEditor.PackageManager.Requests;
 using Unity.VisualScripting;
 using System.Linq.Expressions;
+using UnityEngine.Events;
 
 namespace Actions
 {
@@ -268,11 +269,13 @@ namespace Actions
     {
         private Transform player;
         private Animator animator;
+        private UnityEvent shootEvent;
 
-        public ShootAction(Transform player, Animator animator)
+        public ShootAction(Transform player, Animator animator, UnityEvent shoot)
         {
             this.player = player;
             this.animator = animator;
+            this.shootEvent = shoot;
         }
 
         public Node.Status Process()
@@ -282,11 +285,12 @@ namespace Actions
             {
                 animator.SetTrigger("Shoot");
                 Debug.Log("BANG");
+                shootEvent.Invoke();
                 int random = Random.Range(0, 10);
                 
                 if (random > 4)
                 {
-                    target.TakeDamage(10f);
+                    target.TakeDamage(50f);
                     return Node.Status.SUCCESS;; 
                 }
                 else

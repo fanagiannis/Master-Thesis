@@ -6,6 +6,7 @@ using Actions;
 using Conditions;
 using System.ComponentModel;
 using UnityEngine.UIElements;
+using UnityEngine.Events;
 
 public class Guard : Agent
 {   
@@ -15,6 +16,7 @@ public class Guard : Agent
     [SerializeField]protected bool playerSpotted;
     [SerializeField]protected bool playerAlive;
     [SerializeField]protected Transform playerPosition;
+    [SerializeField]protected UnityEvent Shoot;
     public override void Start()
     {
         base.Start();
@@ -68,7 +70,7 @@ public class Guard : Agent
 
         Sequence shootSequence = new Sequence("Shoot Player Sequence");
        
-        Action shootAction = new Action("ShootPlayer",new ShootAction(playerPosition, animator));
+        Action shootAction = new Action("ShootPlayer",new ShootAction(playerPosition, animator , Shoot));
 
         Action test = new Action("Debug",new Test("debug"));
         WaitNode delay = new WaitNode("Delay",3f);
