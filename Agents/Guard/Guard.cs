@@ -30,6 +30,11 @@ public class Guard : Agent
             animator.SetBool("IsCrouching",false);//DEBUG!!!!!!!!!!!!
             navigation.speed = speed;
         }
+        if(!playerAlive)
+        {
+            animator.SetBool("Alert",false);
+            playerSpotted=false;
+        }
     }
     public override void BakeBehavior()
     {
@@ -54,7 +59,7 @@ public class Guard : Agent
 
 
         Sequence PlayerSpot = new Sequence("Spot Player");
-        Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted));
+        Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted && playerAlive));
         Condition checkPlayer = new Condition("PlayerAlive?",new ConditionLeaf(()=>playerAlive));
         Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,playerPosition));
 
@@ -67,7 +72,7 @@ public class Guard : Agent
         Sequence delayAndShootSequence = new Sequence("Delay and Debug Sequence");
         delayAndShootSequence.AddChild(delay);   
         delayAndShootSequence.AddChild(shootAction);    
-        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => playerAlive, 3);
+        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => playerAlive);
 
         shootSequence.AddChild(repeat);
 
@@ -97,4 +102,10 @@ public class Guard : Agent
     {
         playerSpotted = true;
     }
+
+    public void ResetPlayerAlive()
+    {
+        playerAlive = false;
+    }
 }
+
