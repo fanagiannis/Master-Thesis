@@ -8,45 +8,45 @@ public class AudioSourceManager : MonoBehaviour
     [SerializeField] private float fadeOutDuration = 0.2f; // Duration to fade out the sound
     private AudioSource audioSource;
     private bool isPlayingFootsteps = false;
-    private Player player;
+    //private Player player;
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        player = GetComponentInParent<Player>(); // Cache the player reference
+        //player = GetComponentInParent<Player>(); // Cache the player reference
     }
 
     void Update()
     {
-        if (player.Data.Velocity() != Vector3.zero )
-        {
-            if (!isPlayingFootsteps) 
-            {
-                StartCoroutine(Footsteps());
-            }
-        }
-        else
-        {
-            if (audioSource.isPlaying && !isPlayingFootsteps)
-            {
-                StartCoroutine(FadeOutSound());
-            }
-        }
+        // if (player.Data.Velocity() != Vector3.zero )
+        // {
+        //     if (!isPlayingFootsteps) 
+        //     {
+        //         StartCoroutine(Footsteps());
+        //     }
+        // }
+        // else
+        // {
+        //     if (audioSource.isPlaying && !isPlayingFootsteps)
+        //     {
+        //         StartCoroutine(FadeOutSound());
+        //     }
+        // }
     }
 
-    private IEnumerator Footsteps()
-    {
-        isPlayingFootsteps = true;
-        while (player.Data.Velocity() != Vector3.zero)
-        {
-            if(player.HasJumped()){break;}
-            audioSource.volume = 0.1f;
-            audioSource.clip = sounds.RandomSound();
-            audioSource.Play();
-            yield return new WaitForSeconds(0.4f);
-        }
-        isPlayingFootsteps = false; 
-    }
+    // private IEnumerator Footsteps()
+    // {
+    //     // isPlayingFootsteps = true;
+    //     // while (player.Data.Velocity() != Vector3.zero)
+    //     // {
+    //     //     if(player.HasJumped()){break;}
+    //     //     audioSource.volume = 0.1f;
+    //     //     audioSource.clip = sounds.RandomSound();
+    //     //     audioSource.Play();
+    //     //     yield return new WaitForSeconds(0.4f);
+    //     // }
+    //     // isPlayingFootsteps = false; 
+    // }
 
     private IEnumerator FadeOutSound()
     {
