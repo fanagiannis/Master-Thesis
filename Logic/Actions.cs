@@ -194,6 +194,42 @@ namespace Actions
         }
     }
 
+    public class ZombieLookAtTarget : IAction
+    {
+        private Animator animator;
+        private Transform targetposition;
+        private NavMeshAgent navigation;
+        private bool looksAtTarget;
+
+        public ZombieLookAtTarget(NavMeshAgent navigation, Animator animator, Transform position)
+        {
+            this.navigation = navigation;
+            this.animator = animator;
+            this.targetposition = position;
+            this.looksAtTarget = false;
+        }
+
+        public Node.Status Process()
+        {
+            Vector3 directionToTarget = (targetposition.position - animator.gameObject.transform.position).normalized;
+            float dotProduct = Vector3.Dot(animator.gameObject.transform.forward, directionToTarget);
+            if (dotProduct < 0.9f)  
+            {
+                animator.gameObject.transform.LookAt(targetposition);
+                this.navigation.ResetPath();
+                animator.SetBool("IsWalking", false);
+                looksAtTarget = true;
+            }
+            
+            return Node.Status.SUCCESS;
+        }
+
+        public void Reset()
+        {
+            looksAtTarget = false;
+        }
+    }
+
     public class Crouch : IAction
     {
         private Animator animator;
