@@ -32,12 +32,16 @@ public class Zombie : Agent
         Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!playerSpotted));
         Action patrol = new Action("Roam",new GuardRandomPatrol(this,this.navigation,this.animator));
 
-        Sequence spotPlayerSequence = new Sequence("Spot Sequence");
+        Sequence chasePlayerSequence = new Sequence("Spot Sequence");
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted));
         Action lookAt = new Action("LookAtPlayer",new ZombieLookAtTarget(this.navigation,this.animator,playerPosition));
+        WaitNode delay = new WaitNode("Chase Delay",5f);
+        Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>playerPosition.position));
 
-        spotPlayerSequence.AddChild(spotPlayer);
-        spotPlayerSequence.AddChild(lookAt);
+        chasePlayerSequence.AddChild(spotPlayer);
+        chasePlayerSequence.AddChild(lookAt);
+        chasePlayerSequence.AddChild(delay);
+        chasePlayerSequence.AddChild(chasePlayer);
 
         zombiePatrol.AddChild(notspotPlayer);
         zombiePatrol.AddChild(patrol);
@@ -45,7 +49,7 @@ public class Zombie : Agent
         Fallback rootfallback = new Fallback("Root");
 
         rootfallback.AddChild(zombiePatrol);
-        rootfallback.AddChild(spotPlayerSequence);
+        rootfallback.AddChild(chasePlayerSequence);
         BT.AddChild(rootfallback);
         BT.PrintTree();
     }
