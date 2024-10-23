@@ -10,8 +10,6 @@ public class Zombie : Agent
 {
     [SerializeField]protected float walkspeed,runspeed,currentspeed;
     protected AnimationController animator;
-    [SerializeField]protected bool playerInRange;
-    [SerializeField]protected bool playerAlive;
     public override void Start()
     {
         base.Start();
@@ -42,7 +40,7 @@ public class Zombie : Agent
 
         Sequence hitPlayer = new Sequence("Hit Player");
         Condition InRange = new Condition("InRange?",new ConditionLeaf(()=>playerInRange && PlayerSpotted()));
-        Action hitAction = new Action("Hit",new ZombieHit(()=>targetPosition,this.animator,this.navigation));
+        Action hitAction = new Action("Hit",new ZombieHit(this.animator,this.navigation,()=>targetPosition));
 
         hitPlayer.AddChild(InRange);
         hitPlayer.AddChild(hitAction);
@@ -52,7 +50,6 @@ public class Zombie : Agent
         chasePlayerSequence.AddChild(lookAt);
         chasePlayerSequence.AddChild(delay2);
         chasePlayerSequence.AddChild(chasePlayer);
-        //chasePlayerSequence.AddChild(hitPlayer);
 
         zombiePatrol.AddChild(notspotPlayer);
         zombiePatrol.AddChild(patrol);
@@ -66,32 +63,4 @@ public class Zombie : Agent
         BT.PrintTree();
     }
 
-    public bool PlayerSpotted()
-    {
-        if(targetPosition!=null && playerAlive)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }  
-    }
-    public void ResetPlayerAlive()
-    {
-        playerAlive = false;
-    }
-    public bool TargetInRange()
-    {
-        if(targetPosition!=null)
-        {
-            float range = 2f; 
-            return Vector3.Distance(transform.position, targetPosition.position) <= range;
-        }
-        else
-        {
-            return false;
-        }
-        
-    }
 }

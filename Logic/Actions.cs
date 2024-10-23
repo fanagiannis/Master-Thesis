@@ -231,7 +231,7 @@ namespace Actions
     private AnimationController animator;
     private NavMeshAgent navigation;
 
-    public ZombieHit(Func<Transform> target, AnimationController animator,NavMeshAgent navigation)
+    public ZombieHit(AnimationController animator,NavMeshAgent navigation,Func<Transform> target)
     {
         this.target = target;
         this.animator = animator;

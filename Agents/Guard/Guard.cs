@@ -14,7 +14,6 @@ public class Guard : Agent
     [SerializeField]protected float speed;
     protected AnimationController animator;
     [SerializeField]protected bool playerSpotted;
-    [SerializeField]protected bool playerAlive;
     [SerializeField]protected Transform playerPosition;
     [SerializeField]protected UnityEvent Shoot;
     public override void Start()

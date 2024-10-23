@@ -14,7 +14,8 @@ public class Agent : MonoBehaviour
     protected FieldOfVision lineOfSight;
     protected bool foodOnSight;
     [SerializeField]protected Transform targetPosition;
-
+    [SerializeField]protected bool playerInRange;
+    [SerializeField]protected bool playerAlive;
     [SerializeField] protected bool InDanger;
     public virtual void Start()
     {
@@ -43,10 +44,26 @@ public class Agent : MonoBehaviour
         navigation.velocity = Vector3.zero;
     }
 
-    public Vector3 FoodPosition()
+    public bool PlayerSpotted()
     {
-        Transform food = lineOfSight.GetVisibleTarget();
-        return food != null ? food.position : Vector3.zero;
+        return targetPosition != null && playerAlive;
+    }
+    public bool TargetInRange()
+    {
+        if(targetPosition!=null)
+        {
+            float range = 2f; 
+            return Vector3.Distance(transform.position, targetPosition.position) <= range;
+        }
+        else
+        {
+            return false;
+        }
+        
+    }
+    public void ResetPlayerAlive()
+    {
+        playerAlive = false;
     }
 
     public void SetTarget(Transform target)
