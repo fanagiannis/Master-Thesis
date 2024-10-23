@@ -10,7 +10,7 @@ public class Zombie : Agent
 {
     [SerializeField]protected float walkspeed,runspeed,currentspeed;
     protected AnimationController animator;
-    [SerializeField]protected bool playerSpotted,playerInRange;
+    [SerializeField]protected bool playerInRange;
     [SerializeField]protected bool playerAlive;
     public override void Start()
     {
@@ -35,20 +35,22 @@ public class Zombie : Agent
 
         Sequence chasePlayerSequence = new Sequence("Spot Sequence");
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>PlayerSpotted() && !playerInRange));
-        Action lookAt = new Action("LookAtPlayer",new ZombieLookAtTarget(this.navigation,this.animator,targetPosition));
-        WaitNode delay = new WaitNode("Chase Delay",5f);
+        WaitNode delay = new WaitNode("Chase Delay",1f);
+        Action lookAt = new Action("LookAtPlayer",new ZombieLookAtTarget(this.navigation,this.animator,()=>targetPosition));
+        WaitNode delay2 = new WaitNode("Chase Delay",5f);
         Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>targetPosition.position));
 
         Sequence hitPlayer = new Sequence("Hit Player");
-        Condition InRange = new Condition("InRange?",new ConditionLeaf(()=>playerInRange && playerSpotted));
-        Action hitAction = new Action("Hit",new ZombieHit(targetPosition,this.animator,this.navigation));
+        Condition InRange = new Condition("InRange?",new ConditionLeaf(()=>playerInRange && PlayerSpotted()));
+        Action hitAction = new Action("Hit",new ZombieHit(()=>targetPosition,this.animator,this.navigation));
 
         hitPlayer.AddChild(InRange);
         hitPlayer.AddChild(hitAction);
 
         chasePlayerSequence.AddChild(spotPlayer);
-        chasePlayerSequence.AddChild(lookAt);
         chasePlayerSequence.AddChild(delay);
+        chasePlayerSequence.AddChild(lookAt);
+        chasePlayerSequence.AddChild(delay2);
         chasePlayerSequence.AddChild(chasePlayer);
         //chasePlayerSequence.AddChild(hitPlayer);
 
@@ -66,23 +68,18 @@ public class Zombie : Agent
 
     public bool PlayerSpotted()
     {
-        if(targetPosition!=null)
+        if(targetPosition!=null && playerAlive)
         {
-            playerSpotted = true;
             return true;
         }
         else
         {
-            playerSpotted = false;
             return false;
-        }
-        
+        }  
     }
-
     public void ResetPlayerAlive()
     {
         playerAlive = false;
-        playerSpotted = false;
     }
     public bool TargetInRange()
     {

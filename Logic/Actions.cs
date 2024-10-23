@@ -1,13 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Behavior;
 using UnityEngine.AI;
-using UnityEngine.UI;
-using UnityEditor.PackageManager.Requests;
-using Unity.VisualScripting;
-using System.Linq.Expressions;
 using UnityEngine.Events;
+using System;
 
 namespace Actions
 {
@@ -196,11 +191,11 @@ namespace Actions
     public class ZombieLookAtTarget : IAction
     {
         private AnimationController animator;
-        private Transform targetposition;
+        private Func<Transform> targetposition;
         private NavMeshAgent navigation;
         private bool looksAtTarget;
 
-        public ZombieLookAtTarget(NavMeshAgent navigation, AnimationController animator ,Transform position)
+        public ZombieLookAtTarget(NavMeshAgent navigation, AnimationController animator ,Func<Transform> position)
         {
             this.navigation = navigation;
             this.animator = animator;
@@ -210,11 +205,12 @@ namespace Actions
 
         public Node.Status Process()
         {
-            Vector3 directionToTarget = (targetposition.position - animator.gameObject.transform.position).normalized;
+            Transform target = targetposition();
+            Vector3 directionToTarget = (target.position - animator.gameObject.transform.position).normalized;
             float dotProduct = Vector3.Dot(animator.gameObject.transform.forward, directionToTarget);
             if (dotProduct < 0.9f)  
             {
-                animator.gameObject.transform.LookAt(targetposition);
+                animator.gameObject.transform.LookAt(target.position);
                 this.navigation.ResetPath();
                 animator.Scream();
                 looksAtTarget = true;
@@ -231,20 +227,21 @@ namespace Actions
 
     public class ZombieHit : IAction
 {
-    private Transform player;
+    private Func<Transform> target;
     private AnimationController animator;
     private NavMeshAgent navigation;
 
-    public ZombieHit(Transform player, AnimationController animator,NavMeshAgent navigation)
+    public ZombieHit(Func<Transform> target, AnimationController animator,NavMeshAgent navigation)
     {
-        this.player = player;
+        this.target = target;
         this.animator = animator;
         this.navigation = navigation;
     }
 
     public Node.Status Process()
     {
-        PlayerDummy target = player.GetComponent<PlayerDummy>();
+        Transform player = target();
+        PlayerDummy tgt = player.GetComponent<PlayerDummy>();
         if (target != null)
         {
             navigation.ResetPath();
@@ -358,7 +355,7 @@ namespace Actions
                 animator.SetTrigger("Shoot");
                 Debug.Log("BANG");
                 shootEvent.Invoke();
-                int random = Random.Range(0, 10);
+                int random = 5;//= Random.Range(0, 0);
                 
                 if (random > 4)
                 {
