@@ -119,7 +119,7 @@ namespace Actions
             this.navigation.speed = 4f;
             animator.SetBool("IsRunning",true);
             navigation.SetDestination(destination); 
-            if(navigation.remainingDistance< 0.5f && !navigation.pathPending)
+            if(navigation.remainingDistance< 1f && !navigation.pathPending)
             {
                 navigation.ResetPath();
                 return Node.Status.SUCCESS;
@@ -218,6 +218,7 @@ namespace Actions
                 animator.gameObject.transform.LookAt(targetposition);
                 this.navigation.ResetPath();
                 animator.SetBool("IsWalking", false);
+                animator.SetBool("IsRunning", false);
                 animator.SetTrigger("Scream");
                 looksAtTarget = true;
             }
@@ -230,6 +231,38 @@ namespace Actions
             looksAtTarget = false;
         }
     }
+
+    public class ZombieHit : IAction
+{
+    private Transform player;
+    private Animator animator;
+    private NavMeshAgent navigation;
+
+    public ZombieHit(Transform player, Animator animator,NavMeshAgent navigation)
+    {
+        this.player = player;
+        this.animator = animator;
+        this.navigation = navigation;
+    }
+
+    public Node.Status Process()
+    {
+        PlayerDummy target = player.GetComponent<PlayerDummy>();
+        if (target != null)
+        {
+            navigation.ResetPath();
+            animator.SetTrigger("Hit");
+            return Node.Status.SUCCESS;
+        }
+
+        return Node.Status.FAILURE;
+    }
+
+    public void Reset()
+    {
+       
+    }
+}
 
     public class Crouch : IAction
     {

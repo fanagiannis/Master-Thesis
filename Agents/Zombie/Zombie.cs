@@ -4,12 +4,13 @@ using UnityEngine;
 using Behavior;
 using Actions;
 using Conditions;
+using UnityEngine.Assertions.Must;
 
 public class Zombie : Agent
 {
     [SerializeField]protected float walkspeed,runspeed,currentspeed;
     protected Animator animator;
-    [SerializeField]protected bool playerSpotted;
+    [SerializeField]protected bool playerSpotted,playerInRange;
     [SerializeField]protected bool playerAlive;
     [SerializeField]protected Transform playerPosition;
     public override void Start()
@@ -23,6 +24,7 @@ public class Zombie : Agent
     public override void Update()
     {
         BT.Process();
+        playerInRange=TargetInRange();
     }
     public override void BakeBehavior()
     {
@@ -33,15 +35,23 @@ public class Zombie : Agent
         Action patrol = new Action("Roam",new GuardRandomPatrol(this,this.navigation,this.animator));
 
         Sequence chasePlayerSequence = new Sequence("Spot Sequence");
-        Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted));
+        Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted && !playerInRange));
         Action lookAt = new Action("LookAtPlayer",new ZombieLookAtTarget(this.navigation,this.animator,playerPosition));
         WaitNode delay = new WaitNode("Chase Delay",5f);
         Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>playerPosition.position));
+
+        Sequence hitPlayer = new Sequence("Hit Player");
+        Condition InRange = new Condition("InRange?",new ConditionLeaf(()=>playerInRange && playerSpotted && playerAlive));
+        Action hitAction = new Action("Hit",new ZombieHit(playerPosition,this.animator,this.navigation));
+
+        hitPlayer.AddChild(InRange);
+        hitPlayer.AddChild(hitAction);
 
         chasePlayerSequence.AddChild(spotPlayer);
         chasePlayerSequence.AddChild(lookAt);
         chasePlayerSequence.AddChild(delay);
         chasePlayerSequence.AddChild(chasePlayer);
+        //chasePlayerSequence.AddChild(hitPlayer);
 
         zombiePatrol.AddChild(notspotPlayer);
         zombiePatrol.AddChild(patrol);
@@ -50,6 +60,7 @@ public class Zombie : Agent
 
         rootfallback.AddChild(zombiePatrol);
         rootfallback.AddChild(chasePlayerSequence);
+        rootfallback.AddChild(hitPlayer);
         BT.AddChild(rootfallback);
         BT.PrintTree();
     }
@@ -62,5 +73,10 @@ public class Zombie : Agent
     public void ResetPlayerAlive()
     {
         playerAlive = false;
+    }
+    public bool TargetInRange()
+    {
+        float range = 1.5f; 
+        return Vector3.Distance(transform.position, playerPosition.position) <= range;
     }
 }
