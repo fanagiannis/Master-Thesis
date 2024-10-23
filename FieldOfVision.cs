@@ -7,12 +7,17 @@ using UnityEngine.Events;
 
 public class FieldOfVision : MonoBehaviour
 {
-    [SerializeField]private UnityEvent spotPlayer;
+    //[SerializeField]private UnityEvent spotPlayer;
     public float viewRadius=50f;
     public float viewAngle=150f;
     public LayerMask targetMask;
     public LayerMask obstacleMask;
     public List<Transform> visibleTargets = new List<Transform>();
+    public Agent agent;
+    void Awake()
+    {
+        agent = GetComponent<Agent>();
+    }
     void Update()
     {
         FindTargets();
@@ -30,8 +35,10 @@ public class FieldOfVision : MonoBehaviour
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask)&&target.gameObject.activeSelf)
                 {
-                    spotPlayer.Invoke();
-                    visibleTargets.Add(target);  
+                    visibleTargets.Add(target);
+                    agent.SetTarget(target);
+                    //spotPlayer.Invoke();  
+
                 }
             }
         }
@@ -65,9 +72,17 @@ public class FieldOfVision : MonoBehaviour
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
 
-    public Transform GetVisibleTarget(string searchTag)
+    public Transform GetVisibleTarget()
     {
-        return null;
+        return visibleTargets[0];
+        // foreach(Transform target in visibleTargets)
+        // {
+        //     if(target.tag == searchTag) 
+        //     {
+        //         return target;
+        //     }
+        // }
+        
         // // Transform visibleFood = null;
         // Transform visibleTarget = null;
         // foreach(Transform target in visibleTargets)

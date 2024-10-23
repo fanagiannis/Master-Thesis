@@ -40,7 +40,7 @@ public class Cat : Agent
     }
     public override bool CheckTarget()
     {
-        Transform target = lineOfSight.GetVisibleTarget("Rat");
+        Transform target = lineOfSight.GetVisibleTarget();
         if(target!=null)
         {
             if(target.CompareTag("Rat")){

@@ -53,7 +53,7 @@ public class Rat : Agent
     
     public override bool CheckTarget()
     {
-        Transform target = lineOfSight.GetVisibleTarget("ItemOfInterest");
+        Transform target = lineOfSight.GetVisibleTarget();
         if(target!=null)
         {
             if(target.CompareTag("Food")){

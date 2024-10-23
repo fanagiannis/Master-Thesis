@@ -13,6 +13,7 @@ public class Agent : MonoBehaviour
     protected BehaviorTree BT;
     protected FieldOfVision lineOfSight;
     protected bool foodOnSight;
+    [SerializeField]protected Transform targetPosition;
 
     [SerializeField] protected bool InDanger;
     public virtual void Start()
@@ -44,8 +45,13 @@ public class Agent : MonoBehaviour
 
     public Vector3 FoodPosition()
     {
-        Transform food = lineOfSight.GetVisibleTarget("Food");
+        Transform food = lineOfSight.GetVisibleTarget();
         return food != null ? food.position : Vector3.zero;
+    }
+
+    public void SetTarget(Transform target)
+    {
+        targetPosition = target;
     }
 
     public virtual bool CheckTarget(){return false;}

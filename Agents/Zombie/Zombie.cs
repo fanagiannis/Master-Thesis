@@ -12,7 +12,6 @@ public class Zombie : Agent
     protected AnimationController animator;
     [SerializeField]protected bool playerSpotted,playerInRange;
     [SerializeField]protected bool playerAlive;
-    [SerializeField]protected Transform playerPosition;
     public override void Start()
     {
         base.Start();
@@ -31,18 +30,18 @@ public class Zombie : Agent
         BT=new BehaviorTree("Guard Logic");
 
         Sequence zombiePatrol = new Sequence("Zombie Patrol");
-        Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!playerSpotted));
+        Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!PlayerSpotted()));
         Action patrol = new Action("Roam",new GuardRandomPatrol(this,this.navigation,this.animator));
 
         Sequence chasePlayerSequence = new Sequence("Spot Sequence");
-        Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted && !playerInRange));
-        Action lookAt = new Action("LookAtPlayer",new ZombieLookAtTarget(this.navigation,this.animator,playerPosition));
+        Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>PlayerSpotted() && !playerInRange));
+        Action lookAt = new Action("LookAtPlayer",new ZombieLookAtTarget(this.navigation,this.animator,targetPosition));
         WaitNode delay = new WaitNode("Chase Delay",5f);
-        Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>playerPosition.position));
+        Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>targetPosition.position));
 
         Sequence hitPlayer = new Sequence("Hit Player");
         Condition InRange = new Condition("InRange?",new ConditionLeaf(()=>playerInRange && playerSpotted));
-        Action hitAction = new Action("Hit",new ZombieHit(playerPosition,this.animator,this.navigation));
+        Action hitAction = new Action("Hit",new ZombieHit(targetPosition,this.animator,this.navigation));
 
         hitPlayer.AddChild(InRange);
         hitPlayer.AddChild(hitAction);
@@ -65,9 +64,19 @@ public class Zombie : Agent
         BT.PrintTree();
     }
 
-    public void SetPlayerSpotted()
+    public bool PlayerSpotted()
     {
-        playerSpotted = true;
+        if(targetPosition!=null)
+        {
+            playerSpotted = true;
+            return true;
+        }
+        else
+        {
+            playerSpotted = false;
+            return false;
+        }
+        
     }
 
     public void ResetPlayerAlive()
@@ -77,7 +86,15 @@ public class Zombie : Agent
     }
     public bool TargetInRange()
     {
-        float range = 2f; 
-        return Vector3.Distance(transform.position, playerPosition.position) <= range;
+        if(targetPosition!=null)
+        {
+            float range = 2f; 
+            return Vector3.Distance(transform.position, targetPosition.position) <= range;
+        }
+        else
+        {
+            return false;
+        }
+        
     }
 }
