@@ -218,6 +218,7 @@ namespace Actions
                 animator.gameObject.transform.LookAt(targetposition);
                 this.navigation.ResetPath();
                 animator.SetBool("IsWalking", false);
+                animator.SetTrigger("Scream");
                 looksAtTarget = true;
             }
             
