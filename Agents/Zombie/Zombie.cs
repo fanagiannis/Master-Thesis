@@ -9,14 +9,14 @@ using UnityEngine.Assertions.Must;
 public class Zombie : Agent
 {
     [SerializeField]protected float walkspeed,runspeed,currentspeed;
-    protected Animator animator;
+    protected AnimationController animator;
     [SerializeField]protected bool playerSpotted,playerInRange;
     [SerializeField]protected bool playerAlive;
     [SerializeField]protected Transform playerPosition;
     public override void Start()
     {
         base.Start();
-        animator = GetComponent<Animator>();
+        animator = GetComponent<AnimationController>();
         BakeBehavior();
         currentspeed=walkspeed;
         this.navigation.speed = currentspeed;

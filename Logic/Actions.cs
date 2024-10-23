@@ -101,10 +101,10 @@ namespace Actions
 
     public class GoTo : IAction
     {
-        private Animator animator;
+        private AnimationController animator;
         private NavMeshAgent navigation;
         private System.Func<Vector3> getdestination;
-        public GoTo (Animator animator,NavMeshAgent navigation,System.Func<Vector3> getdestination)
+        public GoTo (AnimationController animator ,NavMeshAgent navigation,System.Func<Vector3> getdestination)
         {
             this.animator = animator;
             this.navigation=navigation;
@@ -115,9 +115,8 @@ namespace Actions
         public virtual Node.Status Process()
         {
             Vector3 destination = getdestination();
-            animator.SetBool("IsWalking",true);
+            animator.Run();
             this.navigation.speed = 4f;
-            animator.SetBool("IsRunning",true);
             navigation.SetDestination(destination); 
             if(navigation.remainingDistance< 1f && !navigation.pathPending)
             {
@@ -196,12 +195,12 @@ namespace Actions
 
     public class ZombieLookAtTarget : IAction
     {
-        private Animator animator;
+        private AnimationController animator;
         private Transform targetposition;
         private NavMeshAgent navigation;
         private bool looksAtTarget;
 
-        public ZombieLookAtTarget(NavMeshAgent navigation, Animator animator, Transform position)
+        public ZombieLookAtTarget(NavMeshAgent navigation, AnimationController animator ,Transform position)
         {
             this.navigation = navigation;
             this.animator = animator;
@@ -217,9 +216,7 @@ namespace Actions
             {
                 animator.gameObject.transform.LookAt(targetposition);
                 this.navigation.ResetPath();
-                animator.SetBool("IsWalking", false);
-                animator.SetBool("IsRunning", false);
-                animator.SetTrigger("Scream");
+                animator.Scream();
                 looksAtTarget = true;
             }
             
@@ -235,10 +232,10 @@ namespace Actions
     public class ZombieHit : IAction
 {
     private Transform player;
-    private Animator animator;
+    private AnimationController animator;
     private NavMeshAgent navigation;
 
-    public ZombieHit(Transform player, Animator animator,NavMeshAgent navigation)
+    public ZombieHit(Transform player, AnimationController animator,NavMeshAgent navigation)
     {
         this.player = player;
         this.animator = animator;
@@ -250,11 +247,8 @@ namespace Actions
         PlayerDummy target = player.GetComponent<PlayerDummy>();
         if (target != null)
         {
-            animator.SetBool("IsWalking",false);
-            animator.SetBool("IsRunning",false);
-            animator.ResetTrigger("Scream");
             navigation.ResetPath();
-            animator.SetTrigger("Hit");
+            animator.Hit();
             return Node.Status.SUCCESS;
         }
 
@@ -294,12 +288,12 @@ namespace Actions
     {
         private Agent agent;
         private NavMeshAgent navigation;
-        private Animator animator;
+        private AnimationController animator;
         private float waitTime = 2f; 
         private float timer; 
         private bool isWaiting = false;
 
-        public GuardRandomPatrol(Agent agent, NavMeshAgent navigation,Animator animator)
+        public GuardRandomPatrol(Agent agent, NavMeshAgent navigation,AnimationController animator)
         {
             this.agent = agent;
             this.navigation = navigation;
@@ -321,8 +315,7 @@ namespace Actions
                 }
                 if (navigation.remainingDistance < 0.5f && !navigation.pathPending)
                 {
-                    animator.SetBool("IsWalking",false);
-                    animator.SetBool("IsRunning",false);
+                    animator.Idle();
                     isWaiting = true;
                     timer = Time.time; 
                     return Node.Status.RUNNING; 
@@ -332,8 +325,8 @@ namespace Actions
 
         private void SetRandomDestination()
         {
-            this.navigation.speed = 1;
-            animator.SetBool("IsWalking",true);
+            this.navigation.speed = 1f;
+            animator.Walk();
             agent.SetRandomDestination();
         }
 
