@@ -7,8 +7,7 @@ public class ZombieAnimationController : AnimationController
     protected override void Awake()
     {
         base.Awake();
-        Idle();
-        ResetTriggers();
+        Idle();        ResetTriggers();
     }
     public override void Walk()
     {
