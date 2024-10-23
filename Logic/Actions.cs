@@ -250,6 +250,9 @@ namespace Actions
         PlayerDummy target = player.GetComponent<PlayerDummy>();
         if (target != null)
         {
+            animator.SetBool("IsWalking",false);
+            animator.SetBool("IsRunning",false);
+            animator.ResetTrigger("Scream");
             navigation.ResetPath();
             animator.SetTrigger("Hit");
             return Node.Status.SUCCESS;
@@ -302,6 +305,7 @@ namespace Actions
             this.navigation = navigation;
             this.animator = animator;
             SetRandomDestination();
+            
         }
 
         public Node.Status Process()
@@ -318,6 +322,7 @@ namespace Actions
                 if (navigation.remainingDistance < 0.5f && !navigation.pathPending)
                 {
                     animator.SetBool("IsWalking",false);
+                    animator.SetBool("IsRunning",false);
                     isWaiting = true;
                     timer = Time.time; 
                     return Node.Status.RUNNING; 
@@ -327,6 +332,7 @@ namespace Actions
 
         private void SetRandomDestination()
         {
+            this.navigation.speed = 1;
             animator.SetBool("IsWalking",true);
             agent.SetRandomDestination();
         }

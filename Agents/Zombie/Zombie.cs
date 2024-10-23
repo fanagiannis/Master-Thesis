@@ -41,7 +41,7 @@ public class Zombie : Agent
         Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>playerPosition.position));
 
         Sequence hitPlayer = new Sequence("Hit Player");
-        Condition InRange = new Condition("InRange?",new ConditionLeaf(()=>playerInRange && playerSpotted && playerAlive));
+        Condition InRange = new Condition("InRange?",new ConditionLeaf(()=>playerInRange && playerSpotted));
         Action hitAction = new Action("Hit",new ZombieHit(playerPosition,this.animator,this.navigation));
 
         hitPlayer.AddChild(InRange);
@@ -73,10 +73,11 @@ public class Zombie : Agent
     public void ResetPlayerAlive()
     {
         playerAlive = false;
+        playerSpotted = false;
     }
     public bool TargetInRange()
     {
-        float range = 1.5f; 
+        float range = 2f; 
         return Vector3.Distance(transform.position, playerPosition.position) <= range;
     }
 }
