@@ -8,7 +8,7 @@ using System.ComponentModel;
 using UnityEngine.UIElements;
 using UnityEngine.Events;
 
-public class Guard : Agent
+public class Guard : HostileAgent
 {   
     [SerializeField]private Transform safezone;
     [SerializeField]protected float speed;

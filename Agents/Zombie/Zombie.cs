@@ -6,7 +6,7 @@ using Actions;
 using Conditions;
 using UnityEngine.Assertions.Must;
 
-public class Zombie : Agent
+public class Zombie : HostileAgent 
 {
     [SerializeField]protected float walkspeed,runspeed,currentspeed;
     protected AnimationController animator;

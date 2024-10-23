@@ -12,10 +12,7 @@ public class Agent : MonoBehaviour
     protected bool IsWaiting=false;
     protected BehaviorTree BT;
     protected FieldOfVision lineOfSight;
-    protected bool foodOnSight;
     [SerializeField]protected Transform targetPosition;
-    [SerializeField]protected bool playerInRange;
-    [SerializeField]protected bool playerAlive;
     [SerializeField] protected bool InDanger;
     public virtual void Start()
     {
@@ -43,11 +40,6 @@ public class Agent : MonoBehaviour
         navigation.ResetPath(); 
         navigation.velocity = Vector3.zero;
     }
-
-    public bool PlayerSpotted()
-    {
-        return targetPosition != null && playerAlive;
-    }
     public bool TargetInRange()
     {
         if(targetPosition!=null)
@@ -61,11 +53,6 @@ public class Agent : MonoBehaviour
         }
         
     }
-    public void ResetPlayerAlive()
-    {
-        playerAlive = false;
-    }
-
     public void SetTarget(Transform target)
     {
         targetPosition = target;
