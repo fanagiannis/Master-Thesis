@@ -6,14 +6,30 @@ using UnityEngine.InputSystem;
 
 public class PlayerShoot : MonoBehaviour
 {
-    [SerializeField]private UnityEvent Shoot;
+    [SerializeField] private UnityEvent Shoot;
+    [SerializeField]private UnityEvent StopShooting; 
+    [SerializeField] private float fireRate = 0.1f; 
     private PlayerInput playerInput;
-    void Awake()=>playerInput = GetComponent<PlayerInput>();
+    private float nextFireTime;
+
+    private void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+    }
+
     private void Update()
     {
-        if (playerInput.actions["Fire"].triggered)
+        if (playerInput.actions["Fire"].ReadValue<float>() > 0)
         {
-            Shoot.Invoke();
+            if (Time.time >= nextFireTime)
+            {
+                Shoot.Invoke();  
+                nextFireTime = Time.time + fireRate;  
+            }
+        }
+        else
+        {
+            StopShooting.Invoke();
         }
     }
     public void debug()
