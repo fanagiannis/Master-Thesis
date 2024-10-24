@@ -41,6 +41,16 @@ public class ZombieAnimationController : AnimationController
         Idle();
         Trigger(scream);
     }  
+    public void TriggerDeath()
+    {
+        ResetAll();
+        Trigger(death);
+    }
+    public void ResetAll()
+    {
+        ResetAnimation(walk);
+        ResetAnimation(run);
+    }
     public override void ResetTriggers()
     {
         ResetTrigger(scream);
