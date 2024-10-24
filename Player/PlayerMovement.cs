@@ -25,7 +25,9 @@ public class PlayerMovement : MonoBehaviour
     {
         float Move_X=playerInput.actions["Movement"].ReadValue<Vector2>().x;//Input.GetAxis("Horizontal");
         float Move_Z=playerInput.actions["Movement"].ReadValue<Vector2>().y;//Input.GetAxis("Vertical");
-        Controller.Move(new Vector3(Move_X,0,Move_Z)*moveSpeed*Time.deltaTime);
+        Vector3 move = transform.right * Move_X + transform.forward * Move_Z;
+
+        Controller.Move(move*moveSpeed*Time.deltaTime);
     }
     private void Look()
     {
