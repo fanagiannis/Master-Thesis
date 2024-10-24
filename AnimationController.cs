@@ -16,6 +16,14 @@ public class AnimationController : MonoBehaviour
     public virtual void Hit(){}
     public virtual void Scream(){}   
     public virtual void ResetTriggers(){}
+    public void ResetAnimation(string anim)
+    {
+        animator.SetBool(anim,false);
+    }
+    public void SetAnimation(string anim)
+    {
+        animator.SetBool(anim,true);
+    }
 }
 
 
