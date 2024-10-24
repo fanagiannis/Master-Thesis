@@ -46,8 +46,7 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log(Controller.velocity);
      
         Vector3 velocity = Controller.velocity;
-        float speed = velocity.magnitude; 
-        if (speed > 0.1f) 
+        if (velocity.magnitude > 0.1f) 
         {
            
             Vector3 localVelocity = transform.InverseTransformDirection(velocity);
@@ -60,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
                 animcontroller.WalkBackwards();
             }
 
-            if (localVelocity.x > 0) 
+            else if (localVelocity.x > 0) 
             {
                 animcontroller.WalkRight();
             }
