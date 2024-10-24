@@ -6,20 +6,17 @@ using UnityEngine.InputSystem;
 public class WeaponManager : MonoBehaviour
 {
     [SerializeField]private Weapon weaponData;
+    [SerializeField]private GameObject hitFX;
     public void Fire(Transform origin)
     {
         RaycastHit hit;
-        Debug.Log("Boom");
         GetComponent<AudioSource>().PlayOneShot(weaponData.Sound);
+        Debug.DrawRay(origin.position, origin.forward, Color.red);
         if(Physics.Raycast(origin.position,origin.forward,out hit)){
             Debug.Log($"Hit {hit.collider.gameObject.name}");
-            if(hit.collider.tag == "Player"){
-                // hit.collider.GetComponent<Player>().Data.TakeDamage(weaponData.Damage);
-                // if(hit.collider.gameObject.GetComponent<Player>().Data.Dead())
-                {
-                    //this.GetComponent<Player>().Stats().GetKill();
-                }
-            }
+            GameObject impact = Instantiate(hitFX, hit.point+new Vector3(0,1.5f,0), Quaternion.LookRotation(hit.normal));
+            Destroy(impact, 2f);
+            
         }
     }
     public Weapon Data()
