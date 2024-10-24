@@ -4,40 +4,46 @@ using UnityEngine;
 
 public class ZombieAnimationController : AnimationController
 {
+    private string walk,run,scream,hit,death;
     protected override void Awake()
     {
         base.Awake();
+        walk="IsWalking";
+        run="IsRunning";
+        scream="Scream";
+        hit="Hit";
+        death="Death";
         Idle();        
         ResetTriggers();
     }
     public override void Walk()
     {
-        animator.SetBool("IsRunning",false);
-        animator.SetBool("IsWalking",true);
+        ResetAnimation(run);
+        SetAnimation(walk);
     }
     public override void Run()
     {
-        animator.SetBool("IsRunning",true);
-        animator.SetBool("IsWalking",false);
+        SetAnimation(run);
+        ResetAnimation(walk);
     }
     public override void Idle()
     {
-        animator.SetBool("IsRunning",false);
-        animator.SetBool("IsWalking",false);
+        ResetAnimation(run);
+        ResetAnimation(walk);
     }
     public override void Hit()
     {
         Idle();
-        animator.SetTrigger("Hit");
+        Trigger(hit);
     }
     public override void Scream()
     {
         Idle();
-        animator.SetTrigger("Scream");
+        Trigger(scream);
     }  
     public override void ResetTriggers()
     {
-        animator.ResetTrigger("Scream");
-        animator.ResetTrigger("Hit");
+        ResetTrigger(scream);
+        ResetTrigger(hit);
     } 
 }

@@ -24,6 +24,14 @@ public class AnimationController : MonoBehaviour
     {
         animator.SetBool(anim,true);
     }
+    public void Trigger(string name)
+    {
+        animator.SetTrigger(name);
+    }
+    public void ResetTrigger(string name)
+    {
+        animator.ResetTrigger(name);
+    }
 }
 
 
