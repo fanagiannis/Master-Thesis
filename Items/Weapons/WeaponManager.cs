@@ -21,7 +21,7 @@ public class WeaponManager : MonoBehaviour
 
             else if(hit.collider.gameObject.CompareTag("Wall"))
             {
-                GameObject impact = Instantiate(hitFX, hit.point, Quaternion.LookRotation(hit.normal));
+                GameObject impact = Instantiate(hitFX, hit.point+new Vector3(0,Random.Range(0f,0.7f),0), Quaternion.LookRotation(hit.normal));
                 Destroy(impact, 2f);
             }
             
