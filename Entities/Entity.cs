@@ -6,10 +6,6 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    
-    public enum State{Alive,Dead}
-    [Header("State")]
-    [SerializeField]protected State currentstate;
     [Header("HP")]
     [SerializeField]protected int hp;
     [SerializeField]protected int MaxHP;
@@ -20,16 +16,15 @@ public class Entity : MonoBehaviour
     {
         return Math.Max(hp, 0);
     }
-    public void Death()
+    public bool Death()
     {
         if(hp>0)
         {
-            currentstate=State.Alive;
+            return false;
         }
         else
         {
-            currentstate=State.Dead;
-            dead=true;
+            return true;
         }
     }
 }

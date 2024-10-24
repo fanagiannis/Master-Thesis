@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed; 
+    public float moveSpeed;
     [SerializeField]private CharacterController Controller;
     [SerializeField]private Gravity gravity;
     [SerializeField]private PlayerInput playerInput;
@@ -19,11 +19,11 @@ public class PlayerMovement : MonoBehaviour
         playerInput.actions.Enable();
         animcontroller=this.gameObject.GetComponent<PlayerAnimationController>();
     }
-    void Update()
+    public void Control()
     {   
         Movement();
         Look();
-        //gravity.Apply(Controller);
+        gravity.Apply(Controller);
     }
     
     private void Movement()
@@ -67,4 +67,5 @@ public class PlayerMovement : MonoBehaviour
     }
     public PlayerInput PlayerInput(){return playerInput;}
     public bool HasJumped(){return !Controller.isGrounded; }
+    public PlayerAnimationController GetAnimationController(){return animcontroller;} 
 }

@@ -4,16 +4,23 @@ using UnityEngine;
 
 public class Player : Entity
 {   
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerShoot playerShoot;
+    void Awake()
+    {
+        playerController = GetComponent<PlayerController>();
+        playerShoot = GetComponent<PlayerShoot>();
+    }
     void Update()
     {
-        Death();
-        switch(currentstate)
+        if(!Death())
         {
-            case State.Alive:
-                break;
-            case State.Dead:
-                this.gameObject.SetActive(false);
-                break;
+            playerController.Control();
+            playerShoot.Control();
+        }
+        else
+        {
+            playerController.GetAnimationController().TriggerDeath();
         }
     }
 }

@@ -17,7 +17,7 @@ public class PlayerShoot : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
     }
 
-    private void Update()
+    public void Control()
     {
         if (playerInput.actions["Fire"].ReadValue<float>() > 0)
         {
