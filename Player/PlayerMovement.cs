@@ -50,24 +50,24 @@ public class PlayerMovement : MonoBehaviour
         {
            
             Vector3 localVelocity = transform.InverseTransformDirection(velocity);
-            if (localVelocity.z > 0) 
+            if (localVelocity.z > 0.1f) 
             {
                 animcontroller.WalkForward();
             }
-            else if (localVelocity.z < 0) 
+            else if (localVelocity.z < -0.1f) 
             {
                 animcontroller.WalkBackwards();
             }
 
-            else if (localVelocity.x > 0) 
+            if (localVelocity.x > 0.1f) 
             {
                 animcontroller.WalkRight();
             }
-            else if (localVelocity.x < 0) 
+            else if (localVelocity.x < -0.1f) 
             {
                 animcontroller.WalkLeft();
             }
-        }
+            }
         else
         {
             animcontroller.ResetAll();
