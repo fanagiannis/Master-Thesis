@@ -13,7 +13,7 @@ public class Agent : MonoBehaviour
     protected BehaviorTree BT;
     protected FieldOfVision lineOfSight;
     [SerializeField]protected Transform targetPosition;
-    [SerializeField] protected bool InDanger;
+    [SerializeField] protected bool InDanger,Active;
     public virtual void Start()
     {
         navigation = GetComponent<NavMeshAgent>();
@@ -21,7 +21,9 @@ public class Agent : MonoBehaviour
     }
     public virtual void Update()
     {
-        BT.Process();
+        if(Active){
+            BT.Process();
+        }
     }
     public virtual void BakeBehavior(){}
     public void ResetBT()=>BT.Reset();

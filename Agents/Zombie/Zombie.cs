@@ -17,15 +17,20 @@ public class Zombie : HostileAgent
         BakeBehavior();
         currentspeed=walkspeed;
         this.navigation.speed = currentspeed;
+        animator.Idle();
     }
     public override void Update()
     {
-        BT.Process();
-        playerInRange=TargetInRange();
+        if(Active)
+        {
+            //BT.Process();
+            playerInRange=TargetInRange();
+        }
+        
     }
     public override void BakeBehavior()
     {
-        BT=new BehaviorTree("Guard Logic");
+        BT=new BehaviorTree("Zombie Logic");
 
         Sequence zombiePatrol = new Sequence("Zombie Patrol");
         Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!PlayerSpotted()));
