@@ -12,8 +12,11 @@ public class Agent : MonoBehaviour
     protected bool IsWaiting=false;
     protected BehaviorTree BT;
     protected FieldOfVision lineOfSight;
+    [Header("Target")]
     [SerializeField]protected Transform targetPosition;
-    [SerializeField] protected bool InDanger,Active;
+    [Header("Booleans")]
+    [SerializeField] protected bool InDanger;
+    [SerializeField] protected bool Active;
     public virtual void Start()
     {
         navigation = GetComponent<NavMeshAgent>();

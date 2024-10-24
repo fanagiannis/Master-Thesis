@@ -6,9 +6,12 @@ using Actions;
 using Conditions;
 using UnityEngine.Assertions.Must;
 
-public class Zombie : HostileAgent 
+public class ZombieBehavior : HostileAgent 
 {
-    [SerializeField]protected float walkspeed,runspeed,currentspeed;
+    [Header("Movement Speed")]
+    [SerializeField]protected float walkspeed;
+    [SerializeField]protected float runspeed;
+    [SerializeField]protected float currentspeed;
     protected AnimationController animator;
     public override void Start()
     {
@@ -23,7 +26,7 @@ public class Zombie : HostileAgent
     {
         if(Active)
         {
-            //BT.Process();
+            BT.Process();
             playerInRange=TargetInRange();
         }
         
