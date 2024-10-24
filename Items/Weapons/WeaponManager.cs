@@ -11,17 +11,17 @@ public class WeaponManager : MonoBehaviour
     {
         RaycastHit hit;
         GetComponent<AudioSource>().PlayOneShot(weaponData.Sound);
-        if(Physics.Raycast(origin.position,origin.forward,out hit)){
+        if(Physics.Raycast(origin.position+new Vector3(0,1,0),origin.forward,out hit)){
             Debug.Log($"Hit {hit.collider.gameObject.name}");
             if(hit.collider.gameObject.CompareTag("Enemy"))
             {
-                GameObject impact = Instantiate(enemyHitFX, hit.point+new Vector3(0,1.5f,0), enemyHitFX.transform.rotation);
+                GameObject impact = Instantiate(enemyHitFX, hit.point+new Vector3(0,1,0), Quaternion.LookRotation(-hit.normal));
                 Destroy(impact, 1f);
             }
 
             else
             {
-                GameObject impact = Instantiate(hitFX, hit.point+new Vector3(0,1.5f,0), Quaternion.LookRotation(hit.normal));
+                GameObject impact = Instantiate(hitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(impact, 2f);
             }
             
