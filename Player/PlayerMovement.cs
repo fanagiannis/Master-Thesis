@@ -8,17 +8,20 @@ public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed; 
     [SerializeField]private CharacterController Controller;
+    [SerializeField]private Gravity gravity;
     [SerializeField]private PlayerInput playerInput;
     void Start()
     {
         Controller=GetComponent<CharacterController>();
         playerInput=this.gameObject.GetComponent<PlayerInput>();
+        gravity=this.gameObject.GetComponent<Gravity>();
         playerInput.actions.Enable();
     }
     void Update()
     {   
         Movement();
         Look();
+        gravity.Apply(Controller);
     }
     
     private void Movement()

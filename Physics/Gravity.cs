@@ -6,7 +6,7 @@ public class Gravity : MonoBehaviour
 {
     [SerializeField]public float GravityScale=-9f;
     public Vector3 velocity;
-    public void gravity(CharacterController controller)
+    public void Apply (CharacterController controller)
     {
         if(controller.isGrounded&&velocity.y<0){velocity.y=-2f;}
         velocity.y+=GravityScale*Time.deltaTime;
