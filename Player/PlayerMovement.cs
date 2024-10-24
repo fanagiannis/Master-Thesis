@@ -24,7 +24,6 @@ public class PlayerMovement : MonoBehaviour
         Movement();
         Look();
         //gravity.Apply(Controller);
-        Animations();
     }
     
     private void Movement()
@@ -34,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = transform.right * Move_X + transform.forward * Move_Z;
 
         Controller.Move(move*moveSpeed*Time.deltaTime);
+        Animations(Move_X, Move_Z);
     }
     private void Look()
     {
@@ -41,36 +41,27 @@ public class PlayerMovement : MonoBehaviour
         float mouseX = mouseInput.x * 10f * Time.deltaTime;
         transform.Rotate(Vector3.up * mouseX);
     }
-    private void Animations()
+    private void Animations(float moveX, float moveZ)
     {
-        Debug.Log(Controller.velocity);
-     
-        Vector3 velocity = Controller.velocity;
-        if (velocity.magnitude > 0.1f) 
+        animcontroller.ResetAll();
+        if (Mathf.Abs(moveX) > 0.1f || Mathf.Abs(moveZ) > 0.1f) 
         {
-           
-            Vector3 localVelocity = transform.InverseTransformDirection(velocity);
-            if (localVelocity.z > 0.1f) 
+            if (moveZ > 0.1f) 
             {
                 animcontroller.WalkForward();
             }
-            else if (localVelocity.z < -0.1f) 
+            else if (moveZ < -0.1f) 
             {
                 animcontroller.WalkBackwards();
             }
-
-            if (localVelocity.x > 0.1f) 
+            if (moveX > 0.1f) 
             {
                 animcontroller.WalkRight();
             }
-            else if (localVelocity.x < -0.1f) 
+            else if (moveX < -0.1f) 
             {
                 animcontroller.WalkLeft();
             }
-            }
-        else
-        {
-            animcontroller.ResetAll();
         }
     
     }
