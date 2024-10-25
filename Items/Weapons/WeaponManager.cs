@@ -15,7 +15,7 @@ public class WeaponManager : MonoBehaviour
             Debug.Log($"Hit {hit.collider.gameObject.name}");
             if(hit.collider.gameObject.CompareTag("Enemy"))
             {
-                GameObject impact = Instantiate(enemyHitFX, hit.point+new Vector3(0,Random.Range(0.2f,0.7f),0), Quaternion.LookRotation(-hit.normal));
+                GameObject impact = Instantiate(enemyHitFX, hit.point+new Vector3(0,Random.Range(0.2f,0.7f),0), Quaternion.LookRotation(-hit.normal),parent:hit.collider.gameObject.transform);
                 hit.collider.gameObject.GetComponent<Entity>().TakeDamage(10);
                 Destroy(impact, 0.5f);
             }

@@ -2,25 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GamemodeManager : MonoBehaviour
 {
     public static GamemodeManager Instance;
-    public PlayerSpawner playerSpawner;
-    public List weaponsList;
-    public int listIndex;
-    public GameObject activeweapon;
+    public List<Transform> spawnLocations;
+    public List<Zombie> zombiesList;
+    public GameObject zombiePrefab;
+    public float timer;
     void Start()
     {
         Instance=this;
-        //activeweapon=RandomWeapon();
-        // if(playerSpawner!=null)
-        // {
-        //     playerSpawner.SpawnPlayers();
-        // } 
+        zombiesList=new List<Zombie>();
+        ResetTimer();
     }
-    public GameObject RandomWeapon()
+    void Update()
     {
-        return weaponsList.Item(Random.Range(0, weaponsList.prefabList.Count));
+        timer-=Time.deltaTime;
+        if (timer < 0)
+        {
+            var obj = Instantiate(zombiePrefab,spawnLocations[Random.Range(0,spawnLocations.Count)]);
+            zombiesList.Add(obj.gameObject.GetComponent<Zombie>());
+            ResetTimer();
+        }
+    }
+
+    void ResetTimer()
+    {
+        timer=Random.Range(0.5f,3f);
     }
 }
