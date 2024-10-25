@@ -32,4 +32,12 @@ public class GamemodeManager : MonoBehaviour
     {
         timer=Random.Range(0.5f,3f);
     }
+
+    public void PlayerDead()
+    {
+        foreach (Zombie zombie in zombiesList)
+        {
+            zombie.gameObject.GetComponent<ZombieBehavior>().SetPlayerDead();
+        }
+    }
 }

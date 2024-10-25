@@ -73,4 +73,8 @@ public class ZombieBehavior : HostileAgent
     {
         Active=false;
     }
+    public void SetPlayerDead()
+    {
+        playerAlive=false;
+    }
 }
