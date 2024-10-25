@@ -8,7 +8,7 @@ using System.ComponentModel;
 using UnityEngine.UIElements;
 using UnityEngine.Events;
 
-public class Guard : HostileAgent
+public class GuardBehavior : HostileAgent
 {   
     [SerializeField]private Transform safezone;
     [SerializeField]protected float speed;
@@ -42,9 +42,9 @@ public class Guard : HostileAgent
     }
     public override void BakeBehavior()
     {
-    //     IAction crouch =new Crouch(this.animator); 
+    //       IAction crouch =new Crouch(this.animator); 
 
-    //     BT=new BehaviorTree("Guard Logic");
+        BT=new BehaviorTree("Guard Logic");
 
     //     Sequence guardPatrol = new Sequence("Patrol");
     //     Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!playerSpotted && !InDanger));

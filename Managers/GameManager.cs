@@ -19,6 +19,15 @@ public class GamemodeManager : MonoBehaviour
     }
     void Update()
     {
+        //ZombieSpawner();
+    }
+
+    void ResetTimer()
+    {
+        timer=Random.Range(0.5f,3f);
+    }
+    void ZombieSpawner()
+    {
         timer-=Time.deltaTime;
         if (timer < 0)
         {
@@ -26,11 +35,6 @@ public class GamemodeManager : MonoBehaviour
             zombiesList.Add(obj.gameObject.GetComponent<Zombie>());
             ResetTimer();
         }
-    }
-
-    void ResetTimer()
-    {
-        timer=Random.Range(0.5f,3f);
     }
 
     public void PlayerDead()
