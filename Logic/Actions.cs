@@ -153,49 +153,12 @@ namespace Actions
 
     public class LookAtTarget : IAction
     {
-        private Animator animator;
-        private Transform targetposition;
-        private NavMeshAgent navigation;
-        private bool looksAtTarget;
-
-        public LookAtTarget(NavMeshAgent navigation, Animator animator, Transform position)
-        {
-            this.navigation = navigation;
-            this.animator = animator;
-            this.targetposition = position;
-            this.looksAtTarget = false;
-        }
-
-        public Node.Status Process()
-        {
-            Vector3 directionToTarget = (targetposition.position - animator.gameObject.transform.position).normalized;
-            float dotProduct = Vector3.Dot(animator.gameObject.transform.forward, directionToTarget);
-            if (dotProduct < 0.9f)  
-            {
-                animator.gameObject.transform.LookAt(targetposition);
-                animator.SetBool("Alert", true);
-                this.navigation.ResetPath();
-                animator.SetBool("IsWalking", false);
-                looksAtTarget = true;
-            }
-            
-            return Node.Status.SUCCESS;
-        }
-
-        public void Reset()
-        {
-            looksAtTarget = false;
-        }
-    }
-
-    public class ZombieLookAtTarget : IAction
-    {
         private AnimationController animator;
         private Func<Transform> targetposition;
         private NavMeshAgent navigation;
         private bool looksAtTarget;
 
-        public ZombieLookAtTarget(NavMeshAgent navigation, AnimationController animator ,Func<Transform> position)
+        public LookAtTarget(NavMeshAgent navigation, AnimationController animator ,Func<Transform> position)
         {
             this.navigation = navigation;
             this.animator = animator;
@@ -260,23 +223,20 @@ namespace Actions
 
     public class Crouch : IAction
     {
-        private Animator animator;
-        public Crouch(Animator animator)
+        private GuardAnimationController animator;
+        public Crouch(GuardAnimationController animator)
         {
             this.animator = animator;
         }
         public Node.Status Process()
         {
-            animator.SetBool("IsWalking",false);
-            animator.SetBool("IsRunning",false);
-            animator.SetBool("IsCrouching",true);  
-            //animator.SetBool("IsAlert",true); 
+            animator.Crouch(); 
             return Node.Status.SUCCESS; 
         }
 
         public void Reset()
         {
-            animator.SetBool("IsCrouching",false);  
+            animator.ResetAll();
         }
 
     }
@@ -337,10 +297,10 @@ namespace Actions
     public class ShootAction : IAction
     {
         private Transform player;
-        private Animator animator;
+        private GuardAnimationController animator;
         private UnityEvent shootEvent;
 
-        public ShootAction(Transform player, Animator animator, UnityEvent shoot)
+        public ShootAction(Transform player, GuardAnimationController animator, UnityEvent shoot)
         {
             this.player = player;
             this.animator = animator;
@@ -352,10 +312,10 @@ namespace Actions
             PlayerDummy target = player.GetComponent<PlayerDummy>();
             if (target != null)
             {
-                animator.SetTrigger("Shoot");
+
                 Debug.Log("BANG");
                 shootEvent.Invoke();
-                int random = 5;//= Random.Range(0, 0);
+                int random = 5;
                 
                 if (random > 4)
                 {

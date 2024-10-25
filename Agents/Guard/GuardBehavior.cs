@@ -12,13 +12,14 @@ public class GuardBehavior : HostileAgent
 {   
     [SerializeField]private Transform safezone;
     [SerializeField]protected float speed;
+    protected GuardAnimationController animator;
     [SerializeField]protected bool playerSpotted;
     [SerializeField]protected Transform playerPosition;
     [SerializeField]protected UnityEvent Shoot;
     public override void Start()
     {
         base.Start();
-        animator = GetComponent<Animator>();
+        animator = GetComponent<GuardAnimationController>();
         BakeBehavior();
         this.navigation.speed = speed;
     }
@@ -66,7 +67,7 @@ public class GuardBehavior : HostileAgent
         Condition checkPlayer = new Condition("PlayerAlive?",new ConditionLeaf(()=>playerAlive));
 
         
-        Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,playerPosition));
+        Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,()=>playerPosition));
 
         Sequence shootSequence = new Sequence("Shoot Player Sequence");
        
