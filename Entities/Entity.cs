@@ -16,6 +16,10 @@ public class Entity : MonoBehaviour
     {
         return Math.Max(hp, 0);
     }
+    public void TakeDamage(int value)
+    {
+        hp-=value;
+    }
     public bool Death()
     {
         if(hp>0)

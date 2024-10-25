@@ -8,7 +8,7 @@ public class Hit : MonoBehaviour
     {
         if(other.tag=="Player")
         {
-            other.GetComponent<PlayerDummy>().TakeDamage(10f);
+            other.GetComponent<Player>().TakeDamage(10);
         }
     }
 }
