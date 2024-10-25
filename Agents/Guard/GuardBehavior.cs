@@ -12,14 +12,14 @@ public class GuardBehavior : HostileAgent
 {   
     [SerializeField]private Transform safezone;
     [SerializeField]protected float speed;
-    protected AnimationController animator;
+    protected GuardAnimationController animator;
     [SerializeField]protected bool playerSpotted;
     [SerializeField]protected Transform playerPosition;
     [SerializeField]protected UnityEvent Shoot;
     public override void Start()
     {
         base.Start();
-        animator = GetComponent<AnimationController>();
+        animator = GetComponent<Animator>();
         BakeBehavior();
         this.navigation.speed = speed;
     }
@@ -42,77 +42,77 @@ public class GuardBehavior : HostileAgent
     }
     public override void BakeBehavior()
     {
-    //       IAction crouch =new Crouch(this.animator); 
+        IAction crouch =new Crouch(this.animator); 
 
         BT=new BehaviorTree("Guard Logic");
 
-    //     Sequence guardPatrol = new Sequence("Patrol");
-    //     Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!playerSpotted && !InDanger));
-    //     Action patrol = new Action("Guard Patrol",new GuardRandomPatrol(this,this.navigation,this.animator));
+        Sequence guardPatrol = new Sequence("Patrol");
+        Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!playerSpotted && !InDanger));
+        Action patrol = new Action("Guard Patrol",new GuardRandomPatrol(this,this.navigation,this.animator));
 
-    //     guardPatrol.AddChild(notspotPlayer);
-    //     guardPatrol.AddChild(patrol);
+        guardPatrol.AddChild(notspotPlayer);
+        guardPatrol.AddChild(patrol);
 
-    //     Sequence hideSequence = new Sequence("Take Cover");
-    //     Condition checkIfDanger = new Condition("Threatened?",new ConditionLeaf(()=>InDanger));
-    //     Action takeCover = new Action("Take Cover",new GoTo(this.animator,this.navigation,()=>safezone.position));
-    //     Action crouchAction = new Action("Crouch",crouch);
+        Sequence hideSequence = new Sequence("Take Cover");
+        Condition checkIfDanger = new Condition("Threatened?",new ConditionLeaf(()=>InDanger));
+        Action takeCover = new Action("Take Cover",new GoTo(this.animator,this.navigation,()=>safezone.position));
+        Action crouchAction = new Action("Crouch",crouch);
 
-    //     Condition safe = new Condition("Safe?",new ConditionLeaf(()=>!InDanger));
-    //     Action standUp = new Action("Stand",new ActionReset(crouch));
+        Condition safe = new Condition("Safe?",new ConditionLeaf(()=>!InDanger));
+        Action standUp = new Action("Stand",new ActionReset(crouch));
 
 
-    //     Sequence PlayerSpot = new Sequence("Spot Player");
-    //     Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted && playerAlive));
-    //     Condition checkPlayer = new Condition("PlayerAlive?",new ConditionLeaf(()=>playerAlive));
+        Sequence PlayerSpot = new Sequence("Spot Player");
+        Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted && playerAlive));
+        Condition checkPlayer = new Condition("PlayerAlive?",new ConditionLeaf(()=>playerAlive));
 
         
-    //     Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,playerPosition));
+        Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,playerPosition));
 
-    //     Sequence shootSequence = new Sequence("Shoot Player Sequence");
+        Sequence shootSequence = new Sequence("Shoot Player Sequence");
        
-    //     Action shootAction = new Action("ShootPlayer",new ShootAction(playerPosition, animator , Shoot));
+        Action shootAction = new Action("ShootPlayer",new ShootAction(playerPosition, animator , Shoot));
 
-    //     Action test = new Action("Debug",new Test("debug"));
-    //     WaitNode delay = new WaitNode("Delay",3f);
-    //     Sequence delayAndShootSequence = new Sequence("Delay and Debug Sequence");
-    //     delayAndShootSequence.AddChild(delay);   
-    //     delayAndShootSequence.AddChild(shootAction);    
-    //     RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => playerAlive);
+        Action test = new Action("Debug",new Test("debug"));
+        WaitNode delay = new WaitNode("Delay",3f);
+        Sequence delayAndShootSequence = new Sequence("Delay and Debug Sequence");
+        delayAndShootSequence.AddChild(delay);   
+        delayAndShootSequence.AddChild(shootAction);    
+        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => playerAlive);
 
-    //     shootSequence.AddChild(repeat);
+        shootSequence.AddChild(repeat);
 
-    //     PlayerSpot.AddChild(spotPlayer);
-    //     PlayerSpot.AddChild(lookAt);
-    //     PlayerSpot.AddChild(repeat);
+        PlayerSpot.AddChild(spotPlayer);
+        PlayerSpot.AddChild(lookAt);
+        PlayerSpot.AddChild(repeat);
 
-    //     hideSequence.AddChild(checkIfDanger);
-    //     hideSequence.AddChild(takeCover);
-    //     hideSequence.AddChild(crouchAction);
-    //     hideSequence.AddChild(safe);
-    //     hideSequence.AddChild(standUp);
+        hideSequence.AddChild(checkIfDanger);
+        hideSequence.AddChild(takeCover);
+        hideSequence.AddChild(crouchAction);
+        hideSequence.AddChild(safe);
+        hideSequence.AddChild(standUp);
         
         
-    //     Fallback rootfallback = new Fallback("Root");
+        Fallback rootfallback = new Fallback("Root");
 
-    //     rootfallback.AddChild(hideSequence);
-    //     rootfallback.AddChild(PlayerSpot);
-    //     rootfallback.AddChild(guardPatrol);
+        rootfallback.AddChild(hideSequence);
+        rootfallback.AddChild(PlayerSpot);
+        rootfallback.AddChild(guardPatrol);
         
 
-    //     BT.AddChild(rootfallback);
-    //     BT.PrintTree();
-    // }
+        BT.AddChild(rootfallback);
+        BT.PrintTree();
+    }
 
-    // public void SetPlayerSpotted()
-    // {
-    //     playerSpotted = true;
-    // }
+    public void SetPlayerSpotted()
+    {
+        playerSpotted = true;
+    }
 
-    // public void ResetPlayerAlive()
-    // {
-    //     playerAlive = false;
-    // }
-}}
+    public void ResetPlayerAlive()
+    {
+        playerAlive = false;
+    }
+}
     
 
