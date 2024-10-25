@@ -12,7 +12,6 @@ public class GuardBehavior : HostileAgent
 {   
     [SerializeField]private Transform safezone;
     [SerializeField]protected float speed;
-    protected GuardAnimationController animator;
     [SerializeField]protected bool playerSpotted;
     [SerializeField]protected Transform playerPosition;
     [SerializeField]protected UnityEvent Shoot;
