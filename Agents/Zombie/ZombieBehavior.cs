@@ -43,7 +43,6 @@ public class ZombieBehavior : HostileAgent
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>PlayerSpotted() && !playerInRange));
         WaitNode delay = new WaitNode("Chase Delay",1f);
         Action lookAt = new Action("LookAtPlayer",new ZombieLookAtTarget(this.navigation,this.animator,()=>targetPosition));
-        WaitNode delay2 = new WaitNode("Chase Delay",5f);
         Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>targetPosition.position));
 
         Sequence hitPlayer = new Sequence("Hit Player");
@@ -56,7 +55,7 @@ public class ZombieBehavior : HostileAgent
         chasePlayerSequence.AddChild(spotPlayer);
         chasePlayerSequence.AddChild(delay);
         chasePlayerSequence.AddChild(lookAt);
-        chasePlayerSequence.AddChild(delay2);
+        //chasePlayerSequence.AddChild(delay2);
         chasePlayerSequence.AddChild(chasePlayer);
 
         zombiePatrol.AddChild(notspotPlayer);
@@ -69,5 +68,9 @@ public class ZombieBehavior : HostileAgent
         rootfallback.AddChild(hitPlayer);
         BT.AddChild(rootfallback);
         BT.PrintTree();
+    }
+    public void Deactivate()
+    {
+        Active=false;
     }
 }

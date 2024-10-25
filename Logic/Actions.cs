@@ -212,7 +212,7 @@ namespace Actions
             {
                 animator.gameObject.transform.LookAt(target.position);
                 this.navigation.ResetPath();
-                animator.Scream();
+                //animator.Scream();
                 looksAtTarget = true;
             }
             

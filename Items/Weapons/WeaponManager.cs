@@ -16,7 +16,8 @@ public class WeaponManager : MonoBehaviour
             if(hit.collider.gameObject.CompareTag("Enemy"))
             {
                 GameObject impact = Instantiate(enemyHitFX, hit.point+new Vector3(0,Random.Range(0.2f,0.7f),0), Quaternion.LookRotation(-hit.normal));
-                Destroy(impact, 1f);
+                hit.collider.gameObject.GetComponent<Entity>().TakeDamage(10);
+                Destroy(impact, 0.5f);
             }
 
             else if(hit.collider.gameObject.CompareTag("Wall"))
