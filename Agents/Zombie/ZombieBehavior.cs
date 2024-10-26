@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Behavior;
 using Actions;
+using Actions.ZombieActions;
 using Conditions;
 using UnityEngine.Assertions.Must;
 
@@ -12,11 +13,11 @@ public class ZombieBehavior : HostileAgent
     [SerializeField]protected float walkspeed;
     [SerializeField]protected float runspeed;
     [SerializeField]protected float currentspeed;
-    protected AnimationController animator;
+    protected ZombieAnimationController animator;
     public override void Start()
     {
         base.Start();
-        animator = GetComponent<AnimationController>();
+        animator = GetComponent<ZombieAnimationController>();
         BakeBehavior();
         currentspeed=walkspeed;
         this.navigation.speed = currentspeed;
@@ -37,13 +38,13 @@ public class ZombieBehavior : HostileAgent
 
         Sequence zombiePatrol = new Sequence("Zombie Patrol");
         Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!PlayerSpotted()));
-        Action patrol = new Action("Roam",new GuardRandomPatrol(this,this.navigation,this.animator));
+        Action patrol = new Action("Roam",new ZombieRandomPatrol(this,this.navigation,this.animator));
 
         Sequence chasePlayerSequence = new Sequence("Spot Sequence");
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>PlayerSpotted() && !playerInRange));
         WaitNode delay = new WaitNode("Chase Delay",1f);
         Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,()=>targetPosition));
-        Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>targetPosition.position));
+        Action chasePlayer = new Action("Chase Player",new ZombieGoTo(this.animator,this.navigation,()=>targetPosition.position));
 
         Sequence hitPlayer = new Sequence("Hit Player");
         Condition InRange = new Condition("InRange?",new ConditionLeaf(()=>playerInRange && PlayerSpotted()));

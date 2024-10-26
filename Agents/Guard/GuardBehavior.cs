@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Behavior;
 using Actions;
+using Actions.GuardActions;
 using Conditions;
 using System.ComponentModel;
 using UnityEngine.UIElements;
@@ -20,25 +21,24 @@ public class GuardBehavior : HostileAgent
     {
         base.Start();
         animator = GetComponent<GuardAnimationController>();
-        BakeBehavior();
+        
         this.navigation.speed = speed;
+        BakeBehavior();
     }
     public override void Update()
     {
         BT.Process();
 
-        // //DEBUG!!!!!!!!!!!!
-        // if(!InDanger)
-        // {
-        //     animator.SetBool("IsCrouching",false);
-        //     navigation.speed = speed;
-        // }
-        // if(!playerAlive)
-        // {
-        //     animator.SetBool("Alert",false);
-        //     playerSpotted=false;
-        // }
-        // //DEBUG!!!!!!!!!!!!
+        //DEBUG!!!!!!!!!!!!
+        if(!InDanger)
+        {
+            navigation.speed = speed;
+        }
+        if(!playerAlive)
+        {
+            playerSpotted=false;
+        }
+        //DEBUG!!!!!!!!!!!!
     }
     public override void BakeBehavior()
     {
@@ -55,7 +55,7 @@ public class GuardBehavior : HostileAgent
 
         Sequence hideSequence = new Sequence("Take Cover");
         Condition checkIfDanger = new Condition("Threatened?",new ConditionLeaf(()=>InDanger));
-        Action takeCover = new Action("Take Cover",new GoTo(this.animator,this.navigation,()=>safezone.position));
+        Action takeCover = new Action("Take Cover",new GuardGoTo(this.animator,this.navigation,()=>safezone.position));
         Action crouchAction = new Action("Crouch",crouch);
 
         Condition safe = new Condition("Safe?",new ConditionLeaf(()=>!InDanger));
@@ -107,11 +107,6 @@ public class GuardBehavior : HostileAgent
     public void SetPlayerSpotted()
     {
         playerSpotted = true;
-    }
-
-    public void ResetPlayerAlive()
-    {
-        playerAlive = false;
     }
 }
     
