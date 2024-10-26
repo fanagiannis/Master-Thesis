@@ -152,6 +152,38 @@ namespace Actions
             looksAtTarget = false;
         }
     }
+
+    public class GoTo : IAction
+        {
+            private AnimationController animator;
+            private NavMeshAgent navigation;
+            private System.Func<Vector3> getdestination;
+            public GoTo (AnimationController animator ,NavMeshAgent navigation,System.Func<Vector3> getdestination)
+            {
+                this.animator = animator;
+                this.navigation=navigation;
+                this.getdestination = getdestination;
+                navigation.ResetPath();
+                    
+            }
+            public virtual Node.Status Process()
+            {
+                Vector3 destination = getdestination();
+                animator.Run();
+                this.navigation.speed = 4f;
+                navigation.SetDestination(destination); 
+                if(navigation.remainingDistance< 1f && !navigation.pathPending)
+                {
+                    navigation.ResetPath();
+                    return Node.Status.SUCCESS;
+                }
+                return Node.Status.RUNNING;  
+            }
+            public virtual void Reset()
+            {
+                navigation.ResetPath();
+            }
+        }
     
     namespace ZombieActions
     {
@@ -241,37 +273,7 @@ namespace Actions
             }
         }
 
-        public class ZombieGoTo : IAction
-        {
-            private ZombieAnimationController animator;
-            private NavMeshAgent navigation;
-            private System.Func<Vector3> getdestination;
-            public ZombieGoTo (ZombieAnimationController animator ,NavMeshAgent navigation,System.Func<Vector3> getdestination)
-            {
-                this.animator = animator;
-                this.navigation=navigation;
-                this.getdestination = getdestination;
-                navigation.ResetPath();
-                    
-            }
-            public virtual Node.Status Process()
-            {
-                Vector3 destination = getdestination();
-                animator.Run();
-                this.navigation.speed = 4f;
-                navigation.SetDestination(destination); 
-                if(navigation.remainingDistance< 1f && !navigation.pathPending)
-                {
-                    navigation.ResetPath();
-                    return Node.Status.SUCCESS;
-                }
-                return Node.Status.RUNNING;  
-            }
-            public virtual void Reset()
-            {
-                navigation.ResetPath();
-            }
-        }
+        
     }
 
     namespace GuardActions

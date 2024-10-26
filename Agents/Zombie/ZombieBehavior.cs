@@ -44,7 +44,7 @@ public class ZombieBehavior : HostileAgent
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>PlayerSpotted() && !playerInRange));
         WaitNode delay = new WaitNode("Chase Delay",1f);
         Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,()=>targetPosition));
-        Action chasePlayer = new Action("Chase Player",new ZombieGoTo(this.animator,this.navigation,()=>targetPosition.position));
+        Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>targetPosition.position));
 
         Sequence hitPlayer = new Sequence("Hit Player");
         Condition InRange = new Condition("InRange?",new ConditionLeaf(()=>playerInRange && PlayerSpotted()));

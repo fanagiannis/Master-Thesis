@@ -68,6 +68,13 @@ public class GuardBehavior : HostileAgent
         Action shootAction = new Action("ShootPlayer", new ShootAction(targetPosition, animator, Shoot));
         WaitNode delay1 = new WaitNode("Delay", 3f);
 
+        Sequence chaseSequence = new Sequence("Chase Player Sequence");
+        Condition cantShoot = new Condition("CantShootPlayer?", new ConditionLeaf(() => !playerInRange));
+        Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>targetPosition.position));
+
+        chaseSequence.AddChild(cantShoot);
+        chaseSequence.AddChild(chasePlayer);
+
         Sequence delayAndShootSequence = new Sequence("Delay and Debug Sequence");
         delayAndShootSequence.AddChild(delay1);
         delayAndShootSequence.AddChild(shootAction);
@@ -81,8 +88,13 @@ public class GuardBehavior : HostileAgent
         playerSpot.AddChild(lookAt);
         playerSpot.AddChild(delay);
         playerSpot.AddChild(aim);
-        playerSpot.AddChild(shootSequence);
 
+        Fallback KillPlayer = new Fallback("Kill Player");
+        KillPlayer.AddChild(chaseSequence);
+        KillPlayer.AddChild(shootSequence);
+
+        playerSpot.AddChild(KillPlayer);
+        
         hideSequence.AddChild(checkIfDanger);
         hideSequence.AddChild(takeCover);
         hideSequence.AddChild(crouchAction);
