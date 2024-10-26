@@ -72,6 +72,11 @@ public class FieldOfVision : MonoBehaviour
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
 
+    public bool ActiveVisiblePlayer()
+    {
+        return visibleTargets.Count>0;
+    }
+
     public Transform GetVisibleTarget()
     {
         return visibleTargets[0];
