@@ -27,15 +27,19 @@ public class GuardBehavior : HostileAgent
     public override void Update()
     {
         BT.Process();
-        playerInRange=Vector3.Distance(this.transform.position,targetPosition.position)<8f && lineOfSight.ActiveVisiblePlayer();
+        playerInRange=Vector3.Distance(this.transform.position,targetPosition.position)<8f && lineOfSight.ActiveVisiblePlayer() && playerAlive;
         //DEBUG!!!!!!!!!!!!
         if(!InDanger)
         {
-            navigation.speed = speed;
+            //navigation.speed = speed;
         }
         if(!playerAlive)
         {
             playerSpotted=false;
+        }
+        if(playerInRange)
+        {
+            navigation.ResetPath();
         }
         //DEBUG!!!!!!!!!!!!
     }

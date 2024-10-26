@@ -337,7 +337,7 @@ namespace Actions
 
             private void SetRandomDestination()
             {
-                this.navigation.speed = 1f;
+                this.navigation.speed = 2f;
                 animator.Walk();
                 agent.SetRandomDestination();
                 
