@@ -63,9 +63,9 @@ public class GuardBehavior : HostileAgent
 
         Sequence PlayerSpot = new Sequence("Spot Player");
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>PlayerSpotted() && !playerInRange));
-        WaitNode delay = new WaitNode("Chase Delay",1f);
+        //WaitNode delay = new WaitNode("Chase Delay",1f);
         Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,()=>targetPosition));
-        Action aim = new Action("Aim At Player",new Aim(targetPosition,this.animator));
+        Action aim = new Action("Aim At Player",new Aim(this.animator));
 
         Sequence shootSequence = new Sequence("Shoot Player Sequence");
        

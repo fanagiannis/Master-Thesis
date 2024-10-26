@@ -394,13 +394,10 @@ namespace Actions
 
         public class Aim : IAction
         {
-            private Transform player;
             private GuardAnimationController animator;
-            public Aim(Transform player, GuardAnimationController animator)
+            public Aim(GuardAnimationController animator)
             {
-                this.player = player;
                 this.animator = animator;
-    
             }
 
             public Node.Status Process()
