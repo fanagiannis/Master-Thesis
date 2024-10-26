@@ -27,7 +27,7 @@ public class GuardBehavior : HostileAgent
     public override void Update()
     {
         BT.Process();
-        playerInRange=Vector3.Distance(this.transform.position,targetPosition.position)<15f && lineOfSight.ActiveVisiblePlayer();
+        playerInRange=Vector3.Distance(this.transform.position,targetPosition.position)<8f && lineOfSight.ActiveVisiblePlayer();
         //DEBUG!!!!!!!!!!!!
         if(!InDanger)
         {
@@ -70,28 +70,40 @@ public class GuardBehavior : HostileAgent
 
         Sequence chaseSequence = new Sequence("Chase Player Sequence");
         Condition cantShoot = new Condition("CantShootPlayer?", new ConditionLeaf(() => !playerInRange));
-        Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>targetPosition.position));
+        Action chasePlayer = new Action("Chase Player",new GuardGoTo(this.animator,this.navigation,()=>targetPosition.position));
 
         chaseSequence.AddChild(cantShoot);
         chaseSequence.AddChild(chasePlayer);
 
         Sequence delayAndShootSequence = new Sequence("Delay and Debug Sequence");
+        delayAndShootSequence.AddChild(canShoot);
         delayAndShootSequence.AddChild(delay1);
         delayAndShootSequence.AddChild(shootAction);
 
         RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => playerAlive);
-        shootSequence.AddChild(canShoot);
+        
         shootSequence.AddChild(repeat);
         shootSequence.AddChild(delayAndShootSequence);
 
         playerSpot.AddChild(spotPlayer);
-        playerSpot.AddChild(lookAt);
-        playerSpot.AddChild(delay);
-        playerSpot.AddChild(aim);
+
+        Sequence test = new Sequence("TEST");
+        
+        test.AddChild(canShoot);
+        test.AddChild(lookAt);
+        test.AddChild(delay);
+        test.AddChild(aim);
+        test.AddChild(shootSequence);
+        
+
+        
+
 
         Fallback KillPlayer = new Fallback("Kill Player");
+
+        KillPlayer.AddChild(test);
         KillPlayer.AddChild(chaseSequence);
-        KillPlayer.AddChild(shootSequence);
+        
 
         playerSpot.AddChild(KillPlayer);
         

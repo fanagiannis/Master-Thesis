@@ -18,7 +18,6 @@ public class GuardAnimationController : AnimationController
     }
     public override void Idle()
     {
-        Debug.Log("Idle called - resetting walk and run, but leaving alert as-is");
         ResetAnimation(run);
         ResetAnimation(walk);
         ResetAnimation(crouch);

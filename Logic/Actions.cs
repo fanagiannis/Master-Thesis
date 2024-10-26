@@ -403,6 +403,7 @@ namespace Actions
 
             public Node.Status Process()
             {       
+                animator.Idle();
                 animator.Alert();
                 return Node.Status.SUCCESS; 
             }
@@ -441,9 +442,11 @@ namespace Actions
             }
             public virtual void Reset()
             {
-                navigation.ResetPath();
+                //navigation.ResetPath();
             }
         }
+
+
     }
     
 }
