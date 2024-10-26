@@ -39,7 +39,7 @@ public class GuardAnimationController : AnimationController
         ResetAnimation(run);
         ResetAnimation(walk);
         ResetAnimation(crouch);
-        ResetAnimation(alert);
+        SetAnimation(alert);
     }
     public void Crouch()
     {

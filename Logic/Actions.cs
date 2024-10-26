@@ -364,7 +364,7 @@ namespace Actions
 
             public Node.Status Process()
             {
-                PlayerDummy target = player.GetComponent<PlayerDummy>();
+                Player target = player.GetComponent<Player>();
                 if (target != null)
                 {
 
@@ -374,7 +374,7 @@ namespace Actions
                     
                     if (random > 4)
                     {
-                        target.TakeDamage(1f);
+                        target.TakeDamage(1);
                         return Node.Status.SUCCESS;; 
                     }
                     else
@@ -384,6 +384,29 @@ namespace Actions
                     }
                 } 
                 return Node.Status.RUNNING; 
+            }
+
+            public void Reset()
+            {
+            
+            }
+        }
+
+        public class Aim : IAction
+        {
+            private Transform player;
+            private GuardAnimationController animator;
+            public Aim(Transform player, GuardAnimationController animator)
+            {
+                this.player = player;
+                this.animator = animator;
+    
+            }
+
+            public Node.Status Process()
+            {       
+                animator.Alert();
+                return Node.Status.SUCCESS; 
             }
 
             public void Reset()

@@ -15,7 +15,6 @@ public class GuardBehavior : HostileAgent
     [SerializeField]protected float speed;
     protected GuardAnimationController animator;
     [SerializeField]protected bool playerSpotted;
-    [SerializeField]protected Transform playerPosition;
     [SerializeField]protected UnityEvent Shoot;
     public override void Start()
     {
@@ -63,20 +62,19 @@ public class GuardBehavior : HostileAgent
 
 
         Sequence PlayerSpot = new Sequence("Spot Player");
-        Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>playerSpotted && playerAlive));
-        Condition checkPlayer = new Condition("PlayerAlive?",new ConditionLeaf(()=>playerAlive));
-
-        
-        Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,()=>playerPosition));
+        Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>PlayerSpotted() && !playerInRange));
+        WaitNode delay = new WaitNode("Chase Delay",1f);
+        Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,()=>targetPosition));
+        Action aim = new Action("Aim At Player",new Aim(targetPosition,this.animator));
 
         Sequence shootSequence = new Sequence("Shoot Player Sequence");
        
-        Action shootAction = new Action("ShootPlayer",new ShootAction(playerPosition, animator , Shoot));
+        Action shootAction = new Action("ShootPlayer",new ShootAction(targetPosition, animator , Shoot));
 
         Action test = new Action("Debug",new Test("debug"));
-        WaitNode delay = new WaitNode("Delay",3f);
+        WaitNode delay1 = new WaitNode("Delay",3f);
         Sequence delayAndShootSequence = new Sequence("Delay and Debug Sequence");
-        delayAndShootSequence.AddChild(delay);   
+        delayAndShootSequence.AddChild(delay1);   
         delayAndShootSequence.AddChild(shootAction);    
         RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => playerAlive);
 
@@ -84,7 +82,8 @@ public class GuardBehavior : HostileAgent
 
         PlayerSpot.AddChild(spotPlayer);
         PlayerSpot.AddChild(lookAt);
-        PlayerSpot.AddChild(repeat);
+        PlayerSpot.AddChild(aim);
+        //PlayerSpot.AddChild(repeat);
 
         hideSequence.AddChild(checkIfDanger);
         hideSequence.AddChild(takeCover);
