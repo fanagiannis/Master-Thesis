@@ -36,10 +36,15 @@ public class GuardBehavior : HostileAgent
         if(!playerAlive)
         {
             playerSpotted=false;
+            animator.ResetAlert();
         }
         if(playerInRange)
         {
             navigation.ResetPath();
+        }
+        if(PlayerSpotted())
+        {
+            playerSpotted=true;
         }
         //DEBUG!!!!!!!!!!!!
     }
@@ -62,7 +67,7 @@ public class GuardBehavior : HostileAgent
         Action standUp = new Action("Stand", new ActionReset(new Crouch(this.animator)));
 
         Sequence playerSpot = new Sequence("Spot Player");
-        Condition spotPlayer = new Condition("PlayerSpotted?", new ConditionLeaf(() => PlayerSpotted()));
+        Condition spotPlayer = new Condition("PlayerSpotted?", new ConditionLeaf(() => playerSpotted));
         Action lookAt = new Action("LookAtPlayer", new LookAtTarget(this.navigation, this.animator, () => targetPosition));
         WaitNode delay = new WaitNode("Chase Delay", 1f);
         Action aim = new Action("Aim At Player", new Aim(this.animator));
@@ -73,7 +78,7 @@ public class GuardBehavior : HostileAgent
         WaitNode delay1 = new WaitNode("Delay", 3f);
 
         Sequence chaseSequence = new Sequence("Chase Player Sequence");
-        Condition cantShoot = new Condition("CantShootPlayer?", new ConditionLeaf(() => !playerInRange));
+        Condition cantShoot = new Condition("CantShootPlayer?", new ConditionLeaf(() => !playerInRange && playerAlive));
         Action chasePlayer = new Action("Chase Player",new GuardGoTo(this.animator,this.navigation,()=>targetPosition.position));
 
         chaseSequence.AddChild(cantShoot);
@@ -91,13 +96,13 @@ public class GuardBehavior : HostileAgent
 
         playerSpot.AddChild(spotPlayer);
 
-        Sequence test = new Sequence("TEST");
+        Sequence ChooseShootPlayerSequence = new Sequence("Choose Shoot Player Sequence");
         
-        test.AddChild(canShoot);
-        test.AddChild(lookAt);
-        test.AddChild(delay);
-        test.AddChild(aim);
-        test.AddChild(shootSequence);
+        ChooseShootPlayerSequence.AddChild(canShoot);
+        ChooseShootPlayerSequence.AddChild(lookAt);
+        ChooseShootPlayerSequence.AddChild(delay);
+        ChooseShootPlayerSequence.AddChild(aim);
+        ChooseShootPlayerSequence.AddChild(shootSequence);
         
 
         
@@ -105,7 +110,7 @@ public class GuardBehavior : HostileAgent
 
         Fallback KillPlayer = new Fallback("Kill Player");
 
-        KillPlayer.AddChild(test);
+        KillPlayer.AddChild(ChooseShootPlayerSequence);
         KillPlayer.AddChild(chaseSequence);
         
 

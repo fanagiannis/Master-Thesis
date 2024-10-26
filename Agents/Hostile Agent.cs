@@ -13,6 +13,6 @@ public class HostileAgent : Agent
     }
     public bool PlayerSpotted()
     {
-        return targetPosition != null && playerAlive;
+        return targetPosition != null && playerAlive && lineOfSight.ActiveVisiblePlayer();
     }
 }
