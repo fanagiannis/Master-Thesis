@@ -13,61 +13,51 @@ public class GuardAnimationController : AnimationController
         run="IsRunning";
         alert="Alert";
         death="Dead";
-        Idle();        
-        ResetTriggers();
+        //Idle();        
+        //ResetTriggers();
     }
     public override void Idle()
     {
-        ResetAll();
+        Debug.Log("Idle called - resetting walk and run, but leaving alert as-is");
+        ResetAnimation(run);
+        ResetAnimation(walk);
+        ResetAnimation(crouch);
     }
     public override void Walk()
     {
         ResetAnimation(run);
         SetAnimation(walk);
         ResetAnimation(crouch);
-        ResetAnimation(alert);
+        //ResetAnimation(alert);
     }
     public override void Run()
     {
         SetAnimation(run);
         ResetAnimation(walk);
         ResetAnimation(crouch);
-        ResetAnimation(alert);
+        //ResetAnimation(alert);
     }
     public void Alert()
     {
-        ResetAnimation(run);
-        ResetAnimation(walk);
-        ResetAnimation(crouch);
         SetAnimation(alert);
+    }
+    public void ResetAlert()
+    {
+        ResetAnimation(alert);
     }
     public void Crouch()
     {
         ResetAnimation(run);
         ResetAnimation(walk);
         SetAnimation(crouch);
-        ResetAnimation(alert);
+        //ResetAnimation(alert);
     }
     public void CrouchWalk()
     {
         ResetAnimation(run);
         SetAnimation(walk);
         SetAnimation(crouch);
-        ResetAnimation(alert);
-    }
-    public void AlertWalk()
-    {
-        ResetAnimation(run);
-        SetAnimation(walk);
-        ResetAnimation(crouch);
-        SetAnimation(alert);
-    }
-    public void AlertRun()
-    {
-        SetAnimation(run);
-        ResetAnimation(walk);
-        ResetAnimation(crouch);
-        SetAnimation(alert);
+        //ResetAnimation(alert);
     }
 
     public void TriggerDeath()

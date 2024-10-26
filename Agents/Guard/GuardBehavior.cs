@@ -65,13 +65,14 @@ public class GuardBehavior : HostileAgent
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>PlayerSpotted() && !playerInRange));
         //WaitNode delay = new WaitNode("Chase Delay",1f);
         Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,()=>targetPosition));
+        WaitNode delay = new WaitNode("Chase Delay",1f);
         Action aim = new Action("Aim At Player",new Aim(this.animator));
 
         Sequence shootSequence = new Sequence("Shoot Player Sequence");
        
         Action shootAction = new Action("ShootPlayer",new ShootAction(targetPosition, animator , Shoot));
 
-        Action test = new Action("Debug",new Test("debug"));
+        // Action test = new Action("Debug",new Test("debug"));
         WaitNode delay1 = new WaitNode("Delay",3f);
         Sequence delayAndShootSequence = new Sequence("Delay and Debug Sequence");
         delayAndShootSequence.AddChild(delay1);   
@@ -79,10 +80,13 @@ public class GuardBehavior : HostileAgent
         RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => playerAlive);
 
         shootSequence.AddChild(repeat);
+        shootSequence.AddChild(delayAndShootSequence);
 
         PlayerSpot.AddChild(spotPlayer);
         PlayerSpot.AddChild(lookAt);
+        PlayerSpot.AddChild(delay);
         PlayerSpot.AddChild(aim);
+        PlayerSpot.AddChild(shootSequence);
         //PlayerSpot.AddChild(repeat);
 
         hideSequence.AddChild(checkIfDanger);

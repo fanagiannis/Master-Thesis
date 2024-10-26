@@ -141,7 +141,6 @@ namespace Actions
             {
                 animator.gameObject.transform.LookAt(target.position);
                 this.navigation.ResetPath();
-                //animator.Scream();
                 looksAtTarget = true;
             }
             
@@ -292,7 +291,7 @@ namespace Actions
 
             public void Reset()
             {
-                animator.ResetAll();
+                //animator.ResetAll();
             }
 
         }
@@ -364,7 +363,7 @@ namespace Actions
 
             public Node.Status Process()
             {
-                Player target = player.GetComponent<Player>();
+                Player target = player.gameObject.GetComponent<Player>();
                 if (target != null)
                 {
 
@@ -374,7 +373,7 @@ namespace Actions
                     
                     if (random > 4)
                     {
-                        target.TakeDamage(1);
+                        target.TakeDamage(10);
                         return Node.Status.SUCCESS;; 
                     }
                     else
