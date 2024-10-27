@@ -45,7 +45,7 @@ public class Agent : MonoBehaviour
         navigation.ResetPath(); 
         navigation.velocity = Vector3.zero;
     }
-    public bool TargetInRange(float range)
+    public virtual bool TargetInRange(float range)
     {
         if(targetPosition!=null)
         {

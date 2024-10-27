@@ -152,6 +152,19 @@ public class GuardBehavior : HostileAgent
     {
         playerSpotted = true;
     }
+
+    public override bool TargetInRange(float range)
+    {
+        if(targetPosition!=null)
+        {
+            return Vector3.Distance(this.transform.position,targetPosition.position)<range && lineOfSight.ActiveVisiblePlayer() && playerAlive;
+        }
+        else
+        {
+            return false;
+        }
+        
+    }
 }
     
 
