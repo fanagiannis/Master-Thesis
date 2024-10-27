@@ -71,8 +71,12 @@ public class GuardBehavior : HostileAgent
         hideSequence.AddChild(checkIfDanger);
         hideSequence.AddChild(takeCover);
         hideSequence.AddChild(crouchAction);
-        hideSequence.AddChild(safe);
-        hideSequence.AddChild(standUp);
+
+        Sequence checkcoverSafety = new Sequence("Check Cover Safety");
+        checkcoverSafety.AddChild(safe);
+        checkcoverSafety.AddChild(standUp);
+
+        hideSequence.AddChild(checkcoverSafety);
 
         //SPOT PLAYER
 
@@ -115,6 +119,7 @@ public class GuardBehavior : HostileAgent
         chooseShootPlayerSequence.AddChild(shootSequence);
 
         Fallback killPlayer = new Fallback("Kill Player");
+        //killPlayer.AddChild(hideSequence);
         killPlayer.AddChild(chooseShootPlayerSequence);
         killPlayer.AddChild(chaseSequence);
 
@@ -122,8 +127,13 @@ public class GuardBehavior : HostileAgent
 
         Fallback rootFallback = new Fallback("Root");
         rootFallback.AddChild(hideSequence);
-        rootFallback.AddChild(playerSpot);
-        rootFallback.AddChild(guardPatrol);
+
+        Fallback roamFB = new Fallback("RoamFB");
+
+        roamFB.AddChild(playerSpot);
+        roamFB.AddChild(guardPatrol);
+
+        rootFallback.AddChild(roamFB);
 
         BT.AddChild(rootFallback);
         BT.PrintTree();
