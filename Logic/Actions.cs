@@ -298,6 +298,27 @@ namespace Actions
 
         }
 
+        public class Stand : IAction
+        {
+            private GuardAnimationController animator;
+            public Stand(GuardAnimationController animator)
+            {
+                this.animator = animator;
+            }
+            public Node.Status Process()
+            {
+                animator.Idle();
+                animator.Alert(); 
+                return Node.Status.SUCCESS; 
+            }
+
+            public void Reset()
+            {
+                animator.ResetAll();
+            }
+
+        }
+
         public class GuardRandomPatrol : IAction
         {
             private Agent agent;

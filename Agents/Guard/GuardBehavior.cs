@@ -81,6 +81,18 @@ public class GuardBehavior : HostileAgent
         hideSequence.AddChild(takeCover);
         hideSequence.AddChild(crouchAction);
 
+        Fallback CoverFireFB = new Fallback("Cover Fire");
+        Sequence coverFireSequence = new Sequence("Cover Fire Sequence");
+        Condition inRange = new Condition("CanShootPlayer?", new ConditionLeaf(() => playerInRange));
+        Action stand = new Action("Stand",new Stand(this.animator));
+
+        coverFireSequence.AddChild(inRange);
+        coverFireSequence.AddChild(stand);
+
+        CoverFireFB.AddChild(coverFireSequence);
+
+        hideSequence.AddChild(CoverFireFB);
+
         Sequence checkcoverSafety = new Sequence("Check Cover Safety");
         checkcoverSafety.AddChild(safe);
         checkcoverSafety.AddChild(standUp);
