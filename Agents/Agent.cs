@@ -45,11 +45,10 @@ public class Agent : MonoBehaviour
         navigation.ResetPath(); 
         navigation.velocity = Vector3.zero;
     }
-    public bool TargetInRange()
+    public bool TargetInRange(float range)
     {
         if(targetPosition!=null)
         {
-            float range = 2f; 
             return Vector3.Distance(transform.position, targetPosition.position) <= range;
         }
         else

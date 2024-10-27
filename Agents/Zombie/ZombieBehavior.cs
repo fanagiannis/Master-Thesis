@@ -28,7 +28,7 @@ public class ZombieBehavior : HostileAgent
         if(Active)
         {
             BT.Process();
-            playerInRange=TargetInRange();
+            playerInRange=TargetInRange(1f);
         }
         
     }
@@ -74,8 +74,5 @@ public class ZombieBehavior : HostileAgent
     {
         Active=false;
     }
-    public void SetPlayerDead()
-    {
-        playerAlive=false;
-    }
+    
 }

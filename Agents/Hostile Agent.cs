@@ -16,4 +16,8 @@ public class HostileAgent : Agent
     {
         return targetPosition != null && playerAlive && lineOfSight.ActiveVisiblePlayer();
     }
+    public void SetPlayerDead()
+    {
+        playerAlive=false;
+    }
 }

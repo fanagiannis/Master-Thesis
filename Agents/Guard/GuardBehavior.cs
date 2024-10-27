@@ -29,7 +29,7 @@ public class GuardBehavior : HostileAgent
         if(!GetComponent<Guard>().Death())
         {
             BT.Process();
-            playerInRange=Vector3.Distance(this.transform.position,targetPosition.position)<8f && lineOfSight.ActiveVisiblePlayer() && playerAlive;
+            playerInRange=TargetInRange(10f);//Vector3.Distance(this.transform.position,targetPosition.position)<8f && lineOfSight.ActiveVisiblePlayer() && playerAlive;
             //DEBUG!!!!!!!!!!!!
             if(!InDanger)
             {
