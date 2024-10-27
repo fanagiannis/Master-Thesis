@@ -26,27 +26,36 @@ public class GuardBehavior : HostileAgent
     }
     public override void Update()
     {
-        BT.Process();
-        playerInRange=Vector3.Distance(this.transform.position,targetPosition.position)<8f && lineOfSight.ActiveVisiblePlayer() && playerAlive;
-        //DEBUG!!!!!!!!!!!!
-        if(!InDanger)
+        if(!GetComponent<Guard>().Death())
         {
-            //navigation.speed = speed;
+            BT.Process();
+            playerInRange=Vector3.Distance(this.transform.position,targetPosition.position)<8f && lineOfSight.ActiveVisiblePlayer() && playerAlive;
+            //DEBUG!!!!!!!!!!!!
+            if(!InDanger)
+            {
+                //navigation.speed = speed;
+            }
+            if(!playerAlive)
+            {
+                playerSpotted=false;
+                animator.ResetAlert();
+            }
+            if(playerInRange)
+            {
+                navigation.ResetPath();
+            }
+            if(PlayerSpotted())
+            {
+                playerSpotted=true;
+            }
+            //DEBUG!!!!!!!!!!!!
         }
-        if(!playerAlive)
-        {
-            playerSpotted=false;
-            animator.ResetAlert();
-        }
-        if(playerInRange)
+        else
         {
             navigation.ResetPath();
         }
-        if(PlayerSpotted())
-        {
-            playerSpotted=true;
-        }
-        //DEBUG!!!!!!!!!!!!
+        
+        
     }
     public override void BakeBehavior()
     {

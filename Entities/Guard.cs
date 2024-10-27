@@ -5,17 +5,18 @@ using UnityEngine.AI;
 
 public class Guard : Entity
 {
-    //private  zanimController;
+    private GuardAnimationController animController;
     void Awake()
     {
-       // zanimController = GetComponent<Animator>();
+       animController = GetComponent<GuardAnimationController>();
     }
     void Update()
     {
 
         if(Death())
         {
-            //zanimController.TriggerDeath();
+            animController.TriggerDeath();
+            GetComponent<CapsuleCollider>().enabled = false;
             //GetComponent<NavMeshAgent>().ResetPath();
            // GetComponent<ZombieBehavior>().Deactivate();
         }

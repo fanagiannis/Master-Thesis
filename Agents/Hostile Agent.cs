@@ -10,6 +10,7 @@ public class HostileAgent : Agent
     public void ResetPlayerAlive()
     {
         playerAlive = false;
+        InDanger=false;
     }
     public bool PlayerSpotted()
     {
