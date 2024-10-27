@@ -87,7 +87,7 @@ public class GuardBehavior : HostileAgent
         //CHASE PLAYER
 
         Sequence chaseSequence = new Sequence("Chase Player Sequence");
-        Condition cantShoot = new Condition("CantShootPlayer?", new ConditionLeaf(() => !playerInRange && playerAlive));
+        Condition cantShoot = new Condition("CantShootPlayer?", new ConditionLeaf(() => !playerInRange && playerAlive && !InDanger));
         Action chasePlayer = new Action("Chase Player", new GuardGoTo(this.animator, this.navigation, () => targetPosition.position));
         chaseSequence.AddChild(cantShoot);
         chaseSequence.AddChild(chasePlayer);
