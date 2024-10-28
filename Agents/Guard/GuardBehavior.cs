@@ -60,18 +60,25 @@ public class GuardBehavior : HostileAgent
     {
 
         BT = new BehaviorTree("Guard Logic");
-        
-        // CONDITION DEFINITIONS
+
+        // CONDITIONS
+
+        //SPOT
         Condition notspotPlayer = new Condition("PlayerSpotted?", new ConditionLeaf(() => !playerSpotted && !InDanger));
+        Condition spotPlayer = new Condition("PlayerSpotted?", new ConditionLeaf(() => playerSpotted));
+        Condition spotZombie = new Condition("ZombieSpotted?", new ConditionLeaf(() => lineOfSight.GetVisibleTarget() != null && lineOfSight.GetVisibleTarget().CompareTag("Zombie")));
+        
+        //CHECK DANGER
         Condition checkIfDanger = new Condition("Threatened?", new ConditionLeaf(() => InDanger));
         Condition safe = new Condition("Safe?", new ConditionLeaf(() => !InDanger));
+
+        //SHOOT CONDITIONS
         Condition inRange = new Condition("CanShootPlayer?", new ConditionLeaf(() => playerInRange));
         Condition cantShoot = new Condition("CantShootPlayer?", new ConditionLeaf(() => !playerInRange && EnemyMaster.Instance.PlayerAlive() && !InDanger));
         Condition canShoot = new Condition("CanShootPlayer?", new ConditionLeaf(() => playerInRange));
-        Condition spotPlayer = new Condition("PlayerSpotted?", new ConditionLeaf(() => playerSpotted));
-        Condition spotZombie = new Condition("ZombieSpotted?", new ConditionLeaf(() => lineOfSight.GetVisibleTarget() != null && lineOfSight.GetVisibleTarget().CompareTag("Zombie")));
+        
 
-        // ACTION DEFINITIONS
+        // ACTIONS
         Action patrol = new Action("Guard Patrol", new GuardRandomPatrol(this, this.navigation, this.animator));
         Action takeCover = new Action("Take Cover", new GuardGoTo(this.animator, this.navigation, () => safezone.position));
         Action crouchAction = new Action("Crouch", new Crouch(this.animator));
@@ -140,6 +147,7 @@ public class GuardBehavior : HostileAgent
         Fallback killPlayer = new Fallback("Kill Player");
         killPlayer.AddChild(chooseShootPlayerSequence);
         killPlayer.AddChild(chaseSequence);
+
         playerSpot.AddChild(killPlayer);
 
         Fallback rootFallback = new Fallback("Root");
