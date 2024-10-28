@@ -56,4 +56,9 @@ public class Agent : MonoBehaviour
     }
 
     public virtual bool CheckTarget(){return false;}
+
+    public void SetDanger(bool value)
+    {
+        InDanger=value;
+    }
 }

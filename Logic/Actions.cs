@@ -10,7 +10,6 @@ namespace Actions
         Node.Status Process();
         void Reset(){}
     }
-
     public class ActionReset : IAction
     {
         private IAction action;
@@ -44,7 +43,6 @@ namespace Actions
             return Node.Status.SUCCESS;
         }
     }
-
     public class RandomPatrol : IAction
     {
         private Agent agent;
@@ -152,7 +150,6 @@ namespace Actions
             looksAtTarget = false;
         }
     }
-
     public class GoTo : IAction
         {
             private AnimationController animator;
@@ -183,8 +180,7 @@ namespace Actions
             {
                 navigation.ResetPath();
             }
-        }
-    
+        }   
     namespace ZombieActions
     {
         public class ZombieHit : IAction
@@ -318,6 +314,23 @@ namespace Actions
             }
 
         }
+
+        public class SetDanger : IAction
+        {
+            private Agent agent;
+            private bool value;
+            public SetDanger(Agent agent,bool value)
+            {
+                this.agent = agent;
+                this.value = value;
+            }
+            public Node.Status Process()
+            {
+                agent.SetDanger(value);
+                return Node.Status.SUCCESS;
+            }
+        }
+
 
         public class GuardRandomPatrol : IAction
         {

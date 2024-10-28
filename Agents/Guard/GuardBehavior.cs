@@ -104,6 +104,13 @@ public class GuardBehavior : HostileAgent
         Condition spotPlayer = new Condition("PlayerSpotted?", new ConditionLeaf(() => playerSpotted));
         playerSpot.AddChild(spotPlayer);
 
+        //SPOT ZOMBIE
+        Sequence zombieSpot = new Sequence("Spot Zombie");
+        Condition spotZombie = new Condition("ZombieSpotted?", new ConditionLeaf(() =>  lineOfSight.GetVisibleTarget() != null && lineOfSight.GetVisibleTarget().CompareTag("Zombie")));
+        Action setDanger = new Action("Set Danger",new SetDanger(this,true));
+        zombieSpot.AddChild(spotZombie);
+        zombieSpot.AddChild(setDanger);
+
         //CHASE PLAYER
 
         Sequence chaseSequence = new Sequence("Chase Player Sequence");
@@ -150,6 +157,7 @@ public class GuardBehavior : HostileAgent
 
         Fallback roamFB = new Fallback("RoamFB");
 
+        roamFB.AddChild(zombieSpot);
         roamFB.AddChild(playerSpot);
         roamFB.AddChild(guardPatrol);
 
