@@ -34,7 +34,7 @@ public class GuardBehavior : HostileAgent
             {
                 //navigation.speed = speed;
             }
-            if(!playerAlive)
+            if(!EnemyMaster.Instance.PlayerAlive())
             {
                 playerSpotted=false;
                 animator.ResetAlert();
@@ -107,8 +107,8 @@ public class GuardBehavior : HostileAgent
         //CHASE PLAYER
 
         Sequence chaseSequence = new Sequence("Chase Player Sequence");
-        Condition cantShoot = new Condition("CantShootPlayer?", new ConditionLeaf(() => !playerInRange && playerAlive && !InDanger));
-        Action chasePlayer = new Action("Chase Player", new GuardGoTo(this.animator, this.navigation, () => targetPosition.position));
+        Condition cantShoot = new Condition("CantShootPlayer?", new ConditionLeaf(() => !playerInRange && EnemyMaster.Instance.PlayerAlive() && !InDanger));
+        Action chasePlayer = new Action("Chase Player", new GuardGoTo(this.animator, this.navigation, () => EnemyMaster.Instance.Target().position));
         chaseSequence.AddChild(cantShoot);
         chaseSequence.AddChild(chasePlayer);
 
@@ -117,19 +117,19 @@ public class GuardBehavior : HostileAgent
         Sequence delayAndShootSequence = new Sequence("Delay and Debug Sequence");
         Condition canShoot = new Condition("CanShootPlayer?", new ConditionLeaf(() => playerInRange));
         WaitNode delay1 = new WaitNode("Delay", 3f);
-        Action shootAction = new Action("ShootPlayer", new ShootAction(targetPosition, animator, Shoot));
+        Action shootAction = new Action("ShootPlayer", new ShootAction(EnemyMaster.Instance.Target(), animator, Shoot));
         delayAndShootSequence.AddChild(canShoot);
         delayAndShootSequence.AddChild(delay1);
         delayAndShootSequence.AddChild(shootAction);
 
-        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => playerAlive);
+        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => EnemyMaster.Instance.PlayerAlive());
 
         Sequence shootSequence = new Sequence("Shoot Player Sequence");
         shootSequence.AddChild(repeat);
         shootSequence.AddChild(delayAndShootSequence);
 
         Sequence chooseShootPlayerSequence = new Sequence("Choose Shoot Player Sequence");
-        Action lookAt = new Action("LookAtPlayer", new LookAtTarget(this.navigation, this.animator, () => targetPosition));
+        Action lookAt = new Action("LookAtPlayer", new LookAtTarget(this.navigation, this.animator, () => EnemyMaster.Instance.Target()));
         WaitNode delay = new WaitNode("Chase Delay", 1f);
         Action aim = new Action("Aim At Player", new Aim(this.animator));
         chooseShootPlayerSequence.AddChild(canShoot);
@@ -166,9 +166,9 @@ public class GuardBehavior : HostileAgent
 
     public override bool TargetInRange(float range)
     {
-        if(targetPosition!=null)
+        if(EnemyMaster.Instance.Target()!=null)
         {
-            return Vector3.Distance(this.transform.position,targetPosition.position)<range && lineOfSight.ActiveVisiblePlayer() && playerAlive;
+            return Vector3.Distance(this.transform.position,EnemyMaster.Instance.Target().position)<range && lineOfSight.ActiveVisiblePlayer() && EnemyMaster.Instance.PlayerAlive();
         }
         else
         {

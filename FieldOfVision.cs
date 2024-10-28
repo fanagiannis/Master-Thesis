@@ -36,7 +36,7 @@ public class FieldOfVision : MonoBehaviour
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask)&&target.gameObject.activeSelf)
                 {
                     visibleTargets.Add(target);
-                    agent.SetTarget(target);
+                    // agent.SetTarget(target);
                     //spotPlayer.Invoke();  
 
                 }

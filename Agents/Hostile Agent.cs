@@ -6,18 +6,17 @@ public class HostileAgent : Agent
 {
     
     [SerializeField]protected bool playerInRange;
-    [SerializeField]protected bool playerAlive;
     public void ResetPlayerAlive()
     {
-        playerAlive = false;
+        EnemyMaster.Instance.ResetPlayerAlive();
         InDanger=false;
     }
     public bool PlayerSpotted()
     {
-        return targetPosition != null && playerAlive && lineOfSight.ActiveVisiblePlayer();
+        return EnemyMaster.Instance.Target() != null && EnemyMaster.Instance.PlayerAlive() && lineOfSight.ActiveVisiblePlayer();
     }
     public void SetPlayerDead()
     {
-        playerAlive=false;
+        EnemyMaster.Instance.ResetPlayerAlive();
     }
 }

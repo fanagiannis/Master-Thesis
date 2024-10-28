@@ -43,12 +43,12 @@ public class ZombieBehavior : HostileAgent
         Sequence chasePlayerSequence = new Sequence("Spot Sequence");
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>PlayerSpotted() && !playerInRange));
         WaitNode delay = new WaitNode("Chase Delay",1f);
-        Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,()=>targetPosition));
-        Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>targetPosition.position));
+        Action lookAt = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,()=>EnemyMaster.Instance.Target()));
+        Action chasePlayer = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>EnemyMaster.Instance.Target().position));
 
         Sequence hitPlayer = new Sequence("Hit Player");
         Condition InRange = new Condition("InRange?",new ConditionLeaf(()=>playerInRange && PlayerSpotted()));
-        Action hitAction = new Action("Hit",new ZombieHit(this.animator,this.navigation,()=>targetPosition));
+        Action hitAction = new Action("Hit",new ZombieHit(this.animator,this.navigation,()=>EnemyMaster.Instance.Target()));
 
         hitPlayer.AddChild(InRange);
         hitPlayer.AddChild(hitAction);
