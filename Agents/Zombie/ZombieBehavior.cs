@@ -28,17 +28,35 @@ public class ZombieBehavior : HostileAgent
         if(Active)
         {
             BT.Process();
-            playerInRange=TargetInRange(1f);
+            playerInRange=TargetInRange(EnemyMaster.Instance.Target(),1f);
+            targetInRange=TargetInRange(lineOfSight.GetVisibleTarget(),1f);
         }
-        
     }
     public override void BakeBehavior()
     {
         BT=new BehaviorTree("Zombie Logic");
 
         Sequence zombiePatrol = new Sequence("Zombie Patrol");
-        Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!PlayerSpotted()));
+        Condition notspotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>!PlayerSpotted() || !GetVisibleGuard()));
         Action patrol = new Action("Roam",new ZombieRandomPatrol(this,this.navigation,this.animator));
+
+        Sequence chaseTargetSequence = new Sequence("Spot Target Sequence");
+        Condition spotGuard = new Condition("GuardSpotted?",new ConditionLeaf(()=>GetVisibleGuard() && !targetInRange));
+        WaitNode delayt = new WaitNode("Chase Delay",1f);
+        Action lookAtTarget = new Action("LookAtPlayer",new LookAtTarget(this.navigation,this.animator,()=>lineOfSight.GetVisibleTarget()));
+        Action chaseTarget = new Action("Chase Player",new GoTo(this.animator,this.navigation,()=>lineOfSight.GetVisibleTarget().position));
+
+        chaseTargetSequence.AddChild(spotGuard);
+        chaseTargetSequence.AddChild(delayt);
+        chaseTargetSequence.AddChild(lookAtTarget);
+        chaseTargetSequence.AddChild(chaseTarget);
+
+        Sequence hitTarget = new Sequence("Hit Target");
+        Condition targetInRangeCond = new Condition("InRange?",new ConditionLeaf(()=>targetInRange && GetVisibleGuard()));
+        Action hitTargetAction = new Action("Hit",new ZombieHit(this.animator,this.navigation,()=>lineOfSight.GetVisibleTarget()));
+
+        hitTarget.AddChild(targetInRangeCond);
+        hitTarget.AddChild(hitTargetAction);
 
         Sequence chasePlayerSequence = new Sequence("Spot Sequence");
         Condition spotPlayer = new Condition("PlayerSpotted?",new ConditionLeaf(()=>PlayerSpotted() && !playerInRange));
@@ -58,6 +76,7 @@ public class ZombieBehavior : HostileAgent
         chasePlayerSequence.AddChild(lookAt);
         //chasePlayerSequence.AddChild(delay2);
         chasePlayerSequence.AddChild(chasePlayer);
+        //chasePlayerSequence.AddChild(hitPlayer);
 
         zombiePatrol.AddChild(notspotPlayer);
         zombiePatrol.AddChild(patrol);
@@ -65,10 +84,17 @@ public class ZombieBehavior : HostileAgent
         Fallback rootfallback = new Fallback("Root");
 
         rootfallback.AddChild(zombiePatrol);
+        rootfallback.AddChild(chaseTargetSequence);
+        rootfallback.AddChild(hitTarget);
         rootfallback.AddChild(chasePlayerSequence);
         rootfallback.AddChild(hitPlayer);
         BT.AddChild(rootfallback);
         BT.PrintTree();
+    }
+    public bool GetVisibleGuard()
+    {
+        var target = lineOfSight.GetVisibleTarget();
+        return target != null && target.CompareTag("Guard");
     }
     public void Deactivate()
     {

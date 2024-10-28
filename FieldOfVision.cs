@@ -79,7 +79,14 @@ public class FieldOfVision : MonoBehaviour
 
     public Transform GetVisibleTarget()
     {
-        return visibleTargets[0];
+        if (visibleTargets.Count>0)
+        {
+            return visibleTargets[0];
+        }
+        else{
+            return null;
+        }
+        
         // foreach(Transform target in visibleTargets)
         // {
         //     if(target.tag == searchTag) 

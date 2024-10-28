@@ -18,6 +18,7 @@ public class Zombie : Entity
             zanimController.TriggerDeath();
             GetComponent<NavMeshAgent>().ResetPath();
             GetComponent<ZombieBehavior>().Deactivate();
+            GetComponent<CapsuleCollider>().enabled = false;
         }
     }
 }

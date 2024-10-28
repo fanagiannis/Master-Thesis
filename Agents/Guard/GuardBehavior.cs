@@ -28,7 +28,7 @@ public class GuardBehavior : HostileAgent
         if(!GetComponent<Guard>().Death())
         {
             BT.Process();
-            playerInRange=TargetInRange(10f);
+            playerInRange=TargetInRange(EnemyMaster.Instance.Target(),10f);
             //DEBUG!!!!!!!!!!!!
             if(!InDanger)
             {
@@ -164,7 +164,7 @@ public class GuardBehavior : HostileAgent
         playerSpotted = true;
     }
 
-    public override bool TargetInRange(float range)
+    public override bool TargetInRange(Transform target, float range)
     {
         if(EnemyMaster.Instance.Target()!=null)
         {

@@ -42,11 +42,11 @@ public class Agent : MonoBehaviour
         navigation.ResetPath(); 
         navigation.velocity = Vector3.zero;
     }
-    public virtual bool TargetInRange(float range)
+    public virtual bool TargetInRange(Transform target, float range)
     {
-        if(EnemyMaster.Instance.Target()!=null)
+        if(target!=null)
         {
-            return Vector3.Distance(transform.position, EnemyMaster.Instance.Target().position) <= range;
+            return Vector3.Distance(transform.position, target.position) <= range;
         }
         else
         {

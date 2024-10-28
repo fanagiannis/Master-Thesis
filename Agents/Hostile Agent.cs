@@ -6,6 +6,7 @@ public class HostileAgent : Agent
 {
     
     [SerializeField]protected bool playerInRange;
+    [SerializeField]protected bool targetInRange;
     public void ResetPlayerAlive()
     {
         EnemyMaster.Instance.ResetPlayerAlive();
