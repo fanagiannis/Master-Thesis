@@ -11,15 +11,17 @@ using UnityEngine.Events;
 
 public class GuardBehavior : HostileAgent
 {   
+    protected GuardAnimationController animator;
     [SerializeField]private Transform safezone;
     [SerializeField]protected float speed;
-    protected GuardAnimationController animator;
     [SerializeField]protected bool playerSpotted;
     [SerializeField]protected UnityEvent Shoot;
+    public Blackboard blackboard;
     public override void Start()
     {
         base.Start();
         animator = GetComponent<GuardAnimationController>();
+        blackboard=new Blackboard();
         
         this.navigation.speed = speed;
         BakeBehavior();
@@ -29,7 +31,7 @@ public class GuardBehavior : HostileAgent
         if(!GetComponent<Guard>().Death())
         {
             BT.Process();
-            playerInRange=TargetInRange(10f);//Vector3.Distance(this.transform.position,targetPosition.position)<8f && lineOfSight.ActiveVisiblePlayer() && playerAlive;
+            playerInRange=TargetInRange(10f);
             //DEBUG!!!!!!!!!!!!
             if(!InDanger)
             {
@@ -174,8 +176,7 @@ public class GuardBehavior : HostileAgent
         else
         {
             return false;
-        }
-        
+        }  
     }
 }
     
