@@ -105,12 +105,14 @@ public class GuardBehavior : HostileAgent
         playerSpot.AddChild(spotPlayer);
 
         //SPOT ZOMBIE
+
         Sequence zombieSpot = new Sequence("Spot Zombie");
         Condition spotZombie = new Condition("ZombieSpotted?", new ConditionLeaf(() =>  lineOfSight.GetVisibleTarget() != null && lineOfSight.GetVisibleTarget().CompareTag("Zombie")));
         Action setDanger = new Action("Set Danger",new SetDanger(this,true));
         zombieSpot.AddChild(spotZombie);
         zombieSpot.AddChild(setDanger);
 
+    
         //CHASE PLAYER
 
         Sequence chaseSequence = new Sequence("Chase Player Sequence");
@@ -119,9 +121,11 @@ public class GuardBehavior : HostileAgent
         chaseSequence.AddChild(cantShoot);
         chaseSequence.AddChild(chasePlayer);
 
+        
+
         //SHOOT PLAYER
 
-        Sequence delayAndShootSequence = new Sequence("Delay and Debug Sequence");
+        Sequence delayAndShootSequence = new Sequence("Delay and Shoot Sequence");
         Condition canShoot = new Condition("CanShootPlayer?", new ConditionLeaf(() => playerInRange));
         WaitNode delay1 = new WaitNode("Delay", 3f);
         Action shootAction = new Action("ShootPlayer", new ShootAction(EnemyMaster.Instance.Target(), animator, Shoot));
