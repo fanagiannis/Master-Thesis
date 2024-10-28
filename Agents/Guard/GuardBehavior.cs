@@ -30,9 +30,13 @@ public class GuardBehavior : HostileAgent
             BT.Process();
             playerInRange=TargetInRange(EnemyMaster.Instance.Target(),10f);
             //DEBUG!!!!!!!!!!!!
-            if(!InDanger)
+            if(InDanger)
             {
-                //navigation.speed = speed;
+                lineOfSight.viewAngle=270f;
+            }
+            else
+            {
+                lineOfSight.viewAngle=150f;
             }
             if(!EnemyMaster.Instance.PlayerAlive())
             {
@@ -120,7 +124,10 @@ public class GuardBehavior : HostileAgent
 
         Sequence zombieSpot = new Sequence("Spot Zombie");
         zombieSpot.AddChild(spotZombie);
-        zombieSpot.AddChild(setDanger);
+
+
+
+        //zombieSpot.AddChild(setDanger);
 
         Sequence chaseSequence = new Sequence("Chase Player Sequence");
         chaseSequence.AddChild(cantShoot);
