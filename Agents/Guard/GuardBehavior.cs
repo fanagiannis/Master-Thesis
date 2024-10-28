@@ -95,7 +95,7 @@ public class GuardBehavior : HostileAgent
         Action shootAction = new Action("ShootPlayer", new ShootAction(EnemyMaster.Instance.Target(), animator, Shoot));
 
         WaitNode delay = new WaitNode("Chase Delay", 1f);
-        WaitNode delay1 = new WaitNode("Delay", 3f);
+        WaitNode shootDelay = new WaitNode("Delay", 0.3f); //DELAY CONTROL FROM WEAPON FIRERATE
 
         // TREE STRUCTURE
         Sequence guardPatrol = new Sequence("Patrol");
@@ -135,7 +135,7 @@ public class GuardBehavior : HostileAgent
 
         Sequence delayAndShootSequence = new Sequence("Delay and Shoot Sequence");
         delayAndShootSequence.AddChild(canShoot);
-        delayAndShootSequence.AddChild(delay1);
+        delayAndShootSequence.AddChild(shootDelay);
         delayAndShootSequence.AddChild(shootAction);
 
         RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => EnemyMaster.Instance.PlayerAlive());

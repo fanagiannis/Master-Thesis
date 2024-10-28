@@ -3,6 +3,7 @@ using Behavior;
 using UnityEngine.AI;
 using UnityEngine.Events;
 using System;
+using Unity.VisualScripting;
 
 namespace Actions
 {
@@ -405,11 +406,11 @@ namespace Actions
 
                     Debug.Log("BANG");
                     shootEvent.Invoke();
-                    int random = 5;
                     
-                    if (random > 4)
+                    
+                    if (UnityEngine.Random.Range(0,5) > 1)
                     {
-                        target.TakeDamage(10);
+                        target.TakeDamage(5);
                         return Node.Status.SUCCESS;; 
                     }
                     else

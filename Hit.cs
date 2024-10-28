@@ -12,7 +12,6 @@ public class Hit : MonoBehaviour
         }
         if(other.tag=="Guard")
         {
-            Debug.Log("ddddd");
             other.GetComponent<Guard>().TakeDamage(10);
         }
     }
