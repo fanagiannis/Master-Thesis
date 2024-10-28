@@ -16,13 +16,10 @@ public class GuardBehavior : HostileAgent
     [SerializeField]protected float speed;
     [SerializeField]protected bool playerSpotted;
     [SerializeField]protected UnityEvent Shoot;
-    public Blackboard blackboard;
     public override void Start()
     {
         base.Start();
         animator = GetComponent<GuardAnimationController>();
-        blackboard=new Blackboard();
-        
         this.navigation.speed = speed;
         BakeBehavior();
     }

@@ -1,31 +1,45 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Blackboard : MonoBehaviour
+public class Blackboard : MonoBehaviour 
 {
-    public bool InDanger = false;
-    public bool playerSpotted = false;
-    public bool playerAlive = true;
+    [SerializeField]private Dictionary<string, object> data = new Dictionary<string, object>();
 
-    public Blackboard()
+    void Awake()
     {
-        
+        string value = "";
+        foreach (var key in data.Keys)
+        {
+            value+=key + ":" + data[key]+"\n";
+        }
+        Debug.Log(value);
     }
 
-    public bool SetPlayerSpotted()
+    public void SetValue<T>(string key, T value)
     {
-        return playerSpotted = true;
+        data[key] = value;
     }
 
-    public bool SetInDanger()
+    public T GetValue<T>(string key)
     {
-        return InDanger = true;
+        if (data.TryGetValue(key, out var value) && value is T typedValue)
+        {
+            return typedValue;
+        }
+        return default;
     }
 
-    public bool ResetPlayerAlive()
+    public bool HasKey(string key)
     {
-        return playerAlive = false;
+        return data.ContainsKey(key);
     }
+
+    public void RemoveKey(string key)
+    {
+        data.Remove(key);
+    }
+
 }
