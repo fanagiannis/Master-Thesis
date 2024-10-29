@@ -66,7 +66,6 @@ public class GuardBehavior : HostileAgent
         //SPOT
         Condition notspotTarget = new Condition("Not Target Spotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger && target==null));
         Condition spotTarget = new Condition("Target Spotted?", new ConditionLeaf(() => lineOfSight.GetVisibleTarget()  && !InDanger));
-        Condition targetIsPlayer = new Condition("Player Spotted?", new ConditionLeaf(() => target.gameObject.GetComponent<Player>()!=null  && !InDanger));
         
         //CHECK DANGER
         Condition checkIfDanger = new Condition("Threatened?", new ConditionLeaf(() => InDanger));

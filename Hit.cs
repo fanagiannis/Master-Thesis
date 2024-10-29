@@ -12,7 +12,7 @@ public class Hit : MonoBehaviour
         }
         if(other.tag=="Guard")
         {
-            other.GetComponent<Guard>().TakeDamage(10);
+            other.GetComponent<Guard>().TakeDamage(50);
         }
     }
 }

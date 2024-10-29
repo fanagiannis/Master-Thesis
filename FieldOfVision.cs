@@ -81,7 +81,7 @@ public class FieldOfVision : MonoBehaviour
     {
         if (visibleTargets.Count>0)
         {
-            return visibleTargets[0];
+            return visibleTargets[visibleTargets.Count-1];
         }
         else{
             return null;
