@@ -12,9 +12,9 @@ public class HostileAgent : Agent
         EnemyMaster.Instance.ResetPlayerAlive();
         InDanger=false;
     }
-    public bool PlayerSpotted()
+    public bool TargetSpotted()
     {
-        return EnemyMaster.Instance.Target() != null && EnemyMaster.Instance.PlayerAlive() && lineOfSight.ActiveVisibleTarget();
+        return lineOfSight.GetVisibleTarget() != null  && lineOfSight.ActiveVisibleTarget();
     }
     public void SetPlayerDead()
     {

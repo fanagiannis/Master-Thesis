@@ -75,7 +75,7 @@ public class ZombieBehavior : HostileAgent
     public bool GetVisibleTarget()
     {
         var target = lineOfSight.GetVisibleTarget();
-        return target != null && (target.CompareTag("Guard")||(target.CompareTag("Player")&&PlayerSpotted()));
+        return target != null && (target.CompareTag("Guard")||(target.CompareTag("Player")&&TargetSpotted()));
     }
     public void Deactivate()
     {
