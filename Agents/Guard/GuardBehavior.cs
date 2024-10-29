@@ -15,6 +15,7 @@ public class GuardBehavior : HostileAgent
     [SerializeField]private Transform safezone;
     [SerializeField]protected float speed;
     [SerializeField]protected UnityEvent Shoot;
+    [SerializeField]private Transform target;
 
     public override void Start()
     {
@@ -50,6 +51,8 @@ public class GuardBehavior : HostileAgent
         {
             navigation.ResetPath();
         }
+
+        TargetSpot();
         
         
     }
@@ -61,8 +64,9 @@ public class GuardBehavior : HostileAgent
         // CONDITIONS
 
         //SPOT
-        Condition notspotTarget = new Condition("TargetSpotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger));
-        Condition spotTarget = new Condition("TargetSpotted?", new ConditionLeaf(() => lineOfSight.GetVisibleTarget()  && !InDanger));
+        Condition notspotTarget = new Condition("Not Target Spotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger && target==null));
+        Condition spotTarget = new Condition("Target Spotted?", new ConditionLeaf(() => lineOfSight.GetVisibleTarget()  && !InDanger));
+        Condition targetIsPlayer = new Condition("Player Spotted?", new ConditionLeaf(() => target.gameObject.GetComponent<Player>()!=null  && !InDanger));
         
         //CHECK DANGER
         Condition checkIfDanger = new Condition("Threatened?", new ConditionLeaf(() => InDanger));
@@ -80,6 +84,7 @@ public class GuardBehavior : HostileAgent
         Action standUp = new Action("Stand", new ActionReset(new Crouch(this.animator)));
         Action setDanger = new Action("Set Danger", new SetDanger(this, true));
         Action chaseTarget = new Action("Chase Target", new GuardGoTo(this.animator, this.navigation, () => lineOfSight.GetVisibleTarget().position));
+        Action chasePlayer = new Action("Chase Player", new GuardGoTo(this.animator, this.navigation, () => target.position));
         Action lookAt = new Action("Look At Target", new LookAtTarget(this.navigation, this.animator, () => lineOfSight.GetVisibleTarget()));
         Action aim = new Action("Aim At Target", new Aim(this.animator));
         Action stand = new Action("Stand", new Stand(this.animator));
@@ -97,7 +102,8 @@ public class GuardBehavior : HostileAgent
         checkcoverSafety.AddChild(safe);
         checkcoverSafety.AddChild(standUp);
 
-        Sequence chaseSequence = new Sequence("Chase Player Sequence");
+        Sequence chaseSequence = new Sequence("Chase Target Sequence");
+
         chaseSequence.AddChild(cantShoot);
         chaseSequence.AddChild(chaseTarget);
 
@@ -108,7 +114,7 @@ public class GuardBehavior : HostileAgent
 
         RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => EnemyMaster.Instance.PlayerAlive());
 
-        Sequence shootSequence = new Sequence("Shoot Player Sequence");
+        Sequence shootSequence = new Sequence("Shoot Target Sequence");
         shootSequence.AddChild(repeat);
         shootSequence.AddChild(delayAndShootSequence);
 
@@ -157,8 +163,11 @@ public class GuardBehavior : HostileAgent
 
     public void TargetSpot()
     {
-        
-        
+        if(lineOfSight.GetVisibleTarget()!=null)
+        {
+            target = lineOfSight.GetVisibleTarget();  
+        }
+          
     }
 
     public override bool TargetInRange(Transform target, float range)

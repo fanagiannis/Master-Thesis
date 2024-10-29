@@ -25,4 +25,5 @@ namespace Conditions
             return _condition();
         }
     }
+
 }
