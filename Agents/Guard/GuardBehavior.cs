@@ -28,7 +28,7 @@ public class GuardBehavior : HostileAgent
         if(!GetComponent<Guard>().Death())
         {
             BT.Process();
-            playerInRange=TargetInRange(EnemyMaster.Instance.Target(),10f);
+            targetInRange=TargetInRange(lineOfSight.GetVisibleTarget(),10f);
             //DEBUG!!!!!!!!!!!!
             if(InDanger)
             {
@@ -38,7 +38,7 @@ public class GuardBehavior : HostileAgent
             {
                 lineOfSight.viewAngle=150f;
             }
-            if(playerInRange)
+            if(targetInRange)
             {
                 navigation.ResetPath();
             }
@@ -69,8 +69,8 @@ public class GuardBehavior : HostileAgent
         Condition safe = new Condition("Safe?", new ConditionLeaf(() => !InDanger));
 
         //SHOOT CONDITIONS
-        Condition cantShoot = new Condition("CantShootTarget?", new ConditionLeaf(() => !TargetInRange(lineOfSight.GetVisibleTarget(),10f) && !InDanger));
-        Condition canShoot = new Condition("CanShootTarget?", new ConditionLeaf(() => TargetInRange(lineOfSight.GetVisibleTarget(),10f)));
+        Condition cantShoot = new Condition("CantShootTarget?", new ConditionLeaf(() => !targetInRange && !InDanger));
+        Condition canShoot = new Condition("CanShootTarget?", new ConditionLeaf(() => targetInRange));
         
 
         // ACTIONS
@@ -79,7 +79,7 @@ public class GuardBehavior : HostileAgent
         Action crouchAction = new Action("Crouch", new Crouch(this.animator));
         Action standUp = new Action("Stand", new ActionReset(new Crouch(this.animator)));
         Action setDanger = new Action("Set Danger", new SetDanger(this, true));
-        Action chasePlayer = new Action("Chase Target", new GuardGoTo(this.animator, this.navigation, () => lineOfSight.GetVisibleTarget().position));
+        Action chaseTarget = new Action("Chase Target", new GuardGoTo(this.animator, this.navigation, () => lineOfSight.GetVisibleTarget().position));
         Action lookAt = new Action("Look At Target", new LookAtTarget(this.navigation, this.animator, () => lineOfSight.GetVisibleTarget()));
         Action aim = new Action("Aim At Target", new Aim(this.animator));
         Action stand = new Action("Stand", new Stand(this.animator));
@@ -99,7 +99,7 @@ public class GuardBehavior : HostileAgent
 
         Sequence chaseSequence = new Sequence("Chase Player Sequence");
         chaseSequence.AddChild(cantShoot);
-        chaseSequence.AddChild(chasePlayer);
+        chaseSequence.AddChild(chaseTarget);
 
         Sequence delayAndShootSequence = new Sequence("Delay and Shoot Sequence");
         delayAndShootSequence.AddChild(canShoot);

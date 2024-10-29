@@ -28,7 +28,6 @@ public class ZombieBehavior : HostileAgent
         if(Active)
         {
             BT.Process();
-            playerInRange=TargetInRange(EnemyMaster.Instance.Target(),1f);
             targetInRange=TargetInRange(lineOfSight.GetVisibleTarget(),1f);
         }
     }

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class HostileAgent : Agent
 {
-    
-    [SerializeField]protected bool playerInRange;
     [SerializeField]protected bool targetInRange;
     public void ResetPlayerAlive()
     {
