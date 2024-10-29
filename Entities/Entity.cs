@@ -24,10 +24,13 @@ public class Entity : MonoBehaviour
     {
         if(hp>0)
         {
+            
             return false;
         }
         else
         {
+            this.gameObject.tag = "DeadBody";
+            this.gameObject.layer = 30;
             return true;
         }
     }

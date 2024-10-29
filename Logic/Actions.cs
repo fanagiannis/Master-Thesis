@@ -387,30 +387,30 @@ namespace Actions
 
         public class ShootAction : IAction
         {
-            private Transform player;
+            private Func<Transform> target;
             private AnimationController animator;
             private UnityEvent shootEvent;
 
-            public ShootAction(Transform player, AnimationController animator, UnityEvent shoot)
+            public ShootAction(AnimationController animator, UnityEvent shoot, Func<Transform> target)
             {
-                this.player = player;
+                this.target = target;
                 this.animator = animator;
                 this.shootEvent = shoot;
             }
 
             public Node.Status Process()
             {
-                Player target = player.gameObject.GetComponent<Player>();
+                Transform target = this.target.Invoke();
                 if (target != null)
                 {
-
+                    Entity tg = target.gameObject.GetComponent<Entity>();
                     Debug.Log("BANG");
                     shootEvent.Invoke();
                     
                     
                     if (UnityEngine.Random.Range(0,5) > 1)
                     {
-                        target.TakeDamage(5);
+                        tg.TakeDamage(45);
                         return Node.Status.SUCCESS;; 
                     }
                     else

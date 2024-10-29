@@ -14,7 +14,7 @@ public class HostileAgent : Agent
     }
     public bool PlayerSpotted()
     {
-        return EnemyMaster.Instance.Target() != null && EnemyMaster.Instance.PlayerAlive() && lineOfSight.ActiveVisiblePlayer();
+        return EnemyMaster.Instance.Target() != null && EnemyMaster.Instance.PlayerAlive() && lineOfSight.ActiveVisibleTarget();
     }
     public void SetPlayerDead()
     {
