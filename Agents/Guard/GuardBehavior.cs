@@ -55,7 +55,7 @@ public class GuardBehavior : HostileAgent
     public override void BakeBehavior()
     {
 
-        BT = new BehaviorTree("Guard Logic");
+        BT = new BehaviorTree("Basic Guard Logic");
 
         // CONDITIONS
 
@@ -156,29 +156,29 @@ public class GuardBehavior : HostileAgent
     }
 
     //DEBUG
-    public void TestBehavior()
-    {
-        BT = new BehaviorTree("Guard Logic");
+    // public void TestBehavior()
+    // {
+    //     BT = new BehaviorTree("Guard Logic");
 
-        // CONDITIONS
-        Condition notspotTarget = new Condition("Not Target Spotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger));
+    //     // CONDITIONS
+    //     Condition notspotTarget = new Condition("Not Target Spotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger));
 
-        Action patrol = new Action("Action Patrol",new GuardRandomPatrol(this,this.navigation,this.animator));
+    //     Action patrol = new Action("Action Patrol",new GuardRandomPatrol(this,this.navigation,this.animator));
 
-        Sequence patrolSEQ = new Sequence("Sequence Patrol");
-        patrolSEQ.AddChild(notspotTarget);
-        patrolSEQ.AddChild(patrol);
+    //     Sequence patrolSEQ = new Sequence("Sequence Patrol");
+    //     patrolSEQ.AddChild(notspotTarget);
+    //     patrolSEQ.AddChild(patrol);
 
-        Fallback patrolFB = new Fallback("Fallback Patrol");
-        patrolFB.AddChild(patrolSEQ);
+    //     Fallback patrolFB = new Fallback("Fallback Patrol");
+    //     patrolFB.AddChild(patrolSEQ);
 
-        Fallback rootFB = new Fallback("Fallback Root");
-        rootFB.AddChild(patrolFB);
+    //     Fallback rootFB = new Fallback("Fallback Root");
+    //     rootFB.AddChild(patrolFB);
         
 
-        BT.AddChild(rootFB);
-        BT.PrintTree();
-    }
+    //     BT.AddChild(rootFB);
+    //     BT.PrintTree();
+    // }
 
     public override bool TargetInRange(Transform target, float range)
     {
