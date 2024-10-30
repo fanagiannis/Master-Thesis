@@ -15,7 +15,7 @@ public class Blackboard : MonoBehaviour
         {
             value+=key + ":" + data[key]+"\n";
         }
-        Debug.Log(value);
+        //Debug.Log(value);
     }
 
     public void SetValue<T>(string key, T value)

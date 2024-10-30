@@ -14,6 +14,8 @@ public class FieldOfVision : MonoBehaviour
     public LayerMask obstacleMask;
     public List<Transform> visibleTargets = new List<Transform>();
     public Agent agent;
+    private float timer=0f;
+    private float resetTime=10f;
     void Awake()
     {
         agent = GetComponent<Agent>();
@@ -24,7 +26,7 @@ public class FieldOfVision : MonoBehaviour
     }
     public void FindTargets()
     {
-        visibleTargets.Clear();
+        ClearTargets();
         Collider [] targetsInView = Physics.OverlapSphere(transform.position,viewRadius,targetMask);
         for(int i=0;i<targetsInView.Length;i++)
         {
@@ -56,13 +58,20 @@ public class FieldOfVision : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + viewAngleA * viewRadius);
         Gizmos.DrawLine(transform.position, transform.position + viewAngleB * viewRadius);
 
-        // Gizmos.color = Color.red;
-        // Gizmos.DrawWireSphere(transform.position, viewRadius*2);
-
         Gizmos.color = Color.blue;
         foreach (Transform visibleTarget in visibleTargets)
         {
             Gizmos.DrawLine(transform.position, visibleTarget.position);
+        }
+    }
+
+    public void ClearTargets()
+    {
+        timer+=Time.deltaTime;
+        if(timer>=resetTime)
+        {
+            visibleTargets.Clear();
+            timer=0f;
         }
     }
 
@@ -89,39 +98,6 @@ public class FieldOfVision : MonoBehaviour
         else{
             return null;
         }
-        
-        // foreach(Transform target in visibleTargets)
-        // {
-        //     if(target.tag == searchTag) 
-        //     {
-        //         return target;
-        //     }
-        // }
-        
-        // // Transform visibleFood = null;
-        // Transform visibleTarget = null;
-        // foreach(Transform target in visibleTargets)
-        // {
-        //     if(target.tag == "Player")
-        //     {
-                
-        //     }
-            
-            
-        //     // if(target.tag == "Threat")
-        //     // {
-        //     //     visibleThreat=target;
-        //     // }
-        //     // else if(target.tag == "Food")
-        //     // {
-        //     //     visibleFood=target;
-        //     // }
-            
-        // }
-        // return visibleTarget;
-        
-        // //return visibleTarget!= null ? visibleThreat : visibleFood;
-        
     }
     public void Debugger(string ex)
     {

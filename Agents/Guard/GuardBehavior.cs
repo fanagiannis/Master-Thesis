@@ -11,7 +11,7 @@ public class GuardBehavior : HostileAgent
 {   
     protected GuardAnimationController animator;
     [SerializeField]private Transform safezone;
-    [SerializeField]private Transform target;
+    //[SerializeField]private Transform target;
     [SerializeField]protected float speed;
     [SerializeField]protected UnityEvent Shoot;
     
@@ -22,6 +22,7 @@ public class GuardBehavior : HostileAgent
         animator = GetComponent<GuardAnimationController>();
         this.navigation.speed = speed;
         BakeBehavior();
+        //TestBehavior();
     }
     public override void Update()
     {
@@ -50,10 +51,6 @@ public class GuardBehavior : HostileAgent
         {
             navigation.ResetPath();
         }
-
-        TargetSpot();
-        
-        
     }
     public override void BakeBehavior()
     {
@@ -63,8 +60,8 @@ public class GuardBehavior : HostileAgent
         // CONDITIONS
 
         //SPOT
-        Condition notspotTarget = new Condition("Not Target Spotted?", new ConditionLeaf(() => !target  && !InDanger && target==null));
-        Condition spotTarget = new Condition("Target Spotted?", new ConditionLeaf(() => target  && !InDanger));
+        Condition notspotTarget = new Condition("Not Target Spotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger));
+        Condition spotTarget = new Condition("Target Spotted?", new ConditionLeaf(() => lineOfSight.GetVisibleTarget()   && !InDanger));
         
         //CHECK DANGER
         Condition checkIfDanger = new Condition("Threatened?", new ConditionLeaf(() => InDanger));
@@ -81,12 +78,12 @@ public class GuardBehavior : HostileAgent
         Action crouchAction = new Action("Crouch", new Crouch(this.animator));
         Action standUp = new Action("Stand", new ActionReset(new Crouch(this.animator)));
         Action setDanger = new Action("Set Danger", new SetDanger(this, true));
-        Action chaseTarget = new Action("Chase Target", new GuardGoTo(this.animator, this.navigation, () => target.position));
+        Action chaseTarget = new Action("Chase Target", new GuardGoTo(this.animator, this.navigation, () => lineOfSight.GetVisibleTarget() .position));
         //Action chasePlayer = new Action("Chase Player", new GuardGoTo(this.animator, this.navigation, () => target.position));
-        Action lookAt = new Action("Look At Target", new LookAtTarget(this.navigation, this.animator, () => target));
+        Action lookAt = new Action("Look At Target", new LookAtTarget(this.navigation, this.animator, () => lineOfSight.GetVisibleTarget() ));
         Action aim = new Action("Aim At Target", new Aim(this.animator));
         Action stand = new Action("Stand", new Stand(this.animator));
-        Action shootAction = new Action("Shoot Target", new ShootAction( animator, Shoot, ()=>target));
+        Action shootAction = new Action("Shoot Target", new ShootAction( animator, Shoot, ()=>lineOfSight.GetVisibleTarget() ));
 
         WaitNode delay = new WaitNode("Chase Delay", 1f);
         WaitNode shootDelay = new WaitNode("Delay", 3f); //DELAY CONTROL FROM WEAPON FIRERATE
@@ -110,7 +107,7 @@ public class GuardBehavior : HostileAgent
         delayAndShootSequence.AddChild(shootDelay);
         delayAndShootSequence.AddChild(shootAction);
 
-        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => EnemyMaster.Instance.PlayerAlive() || target);
+        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => EnemyMaster.Instance.PlayerAlive() || lineOfSight.GetVisibleTarget() );
 
         Sequence shootSequence = new Sequence("Shoot Target Sequence");
         shootSequence.AddChild(repeat);
@@ -159,28 +156,36 @@ public class GuardBehavior : HostileAgent
         BT.PrintTree();
     }
 
-    public void TargetSpot()
+    //DEBUG
+    public void TestBehavior()
     {
-        target=ChaseTarget();
-    }
+        BT = new BehaviorTree("Guard Logic");
 
-    public Transform ChaseTarget()
-    {
-        if(target!=null)
-        {
-            return target;
-        }
-        else
-        {
-            return lineOfSight.GetVisibleTarget();
-        }
+        // CONDITIONS
+        Condition notspotTarget = new Condition("Not Target Spotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger));
+
+        Action patrol = new Action("Action Patrol",new GuardRandomPatrol(this,this.navigation,this.animator));
+
+        Sequence patrolSEQ = new Sequence("Sequence Patrol");
+        patrolSEQ.AddChild(notspotTarget);
+        patrolSEQ.AddChild(patrol);
+
+        Fallback patrolFB = new Fallback("Fallback Patrol");
+        patrolFB.AddChild(patrolSEQ);
+
+        Fallback rootFB = new Fallback("Fallback Root");
+        rootFB.AddChild(patrolFB);
+        
+
+        BT.AddChild(rootFB);
+        BT.PrintTree();
     }
 
     public override bool TargetInRange(Transform target, float range)
     {
         if(target!=null)
         {
-            return Vector3.Distance(this.transform.position,target.position)<range && lineOfSight.ActiveVisibleTarget();
+            return Vector3.Distance(this.transform.position,target.position)<range&&!Physics.Raycast(transform.position, (target.position - transform.position).normalized, Vector3.Distance(this.transform.position,target.position), lineOfSight.obstacleMask);
         }
         else
         {
