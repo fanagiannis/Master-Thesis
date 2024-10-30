@@ -478,7 +478,7 @@ namespace Actions
                     navigation.ResetPath();
                     return Node.Status.SUCCESS;
                 }
-                return Node.Status.RUNNING;  
+               return Node.Status.RUNNING;  
             }
             public virtual void Reset()
             {
