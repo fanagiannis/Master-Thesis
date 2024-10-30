@@ -39,10 +39,6 @@ public class FieldOfVision : MonoBehaviour
                     {
                         visibleTargets.Add(target);
                     }
-                    
-                    // agent.SetTarget(target);
-                    //spotPlayer.Invoke();  
-
                 }
             }
         }
@@ -59,6 +55,9 @@ public class FieldOfVision : MonoBehaviour
 
         Gizmos.DrawLine(transform.position, transform.position + viewAngleA * viewRadius);
         Gizmos.DrawLine(transform.position, transform.position + viewAngleB * viewRadius);
+
+        // Gizmos.color = Color.red;
+        // Gizmos.DrawWireSphere(transform.position, viewRadius*2);
 
         Gizmos.color = Color.blue;
         foreach (Transform visibleTarget in visibleTargets)
