@@ -82,7 +82,7 @@ public class GuardBehavior : HostileAgent
         Action crouchAction = new Action("Crouch", new Crouch(this.animator));
         Action standUp = new Action("Stand", new ActionReset(new Crouch(this.animator)));
         Action setDanger = new Action("Set Danger", new SetDanger(this, true));
-        Action chaseTarget = new Action("Chase Target", new GuardGoTo(this.animator, this.navigation, () => lineOfSight.GetVisibleTarget().position));
+        Action chaseTarget = new Action("Chase Target", new GuardGoTo(this.animator, this.navigation, () => SetChaseTarget().position));
         Action chasePlayer = new Action("Chase Player", new GuardGoTo(this.animator, this.navigation, () => target.position));
         Action lookAt = new Action("Look At Target", new LookAtTarget(this.navigation, this.animator, () => lineOfSight.GetVisibleTarget()));
         Action aim = new Action("Aim At Target", new Aim(this.animator));
@@ -165,8 +165,19 @@ public class GuardBehavior : HostileAgent
         if(lineOfSight.GetVisibleTarget()!=null)
         {
             target = lineOfSight.GetVisibleTarget();  
+        } 
+    }
+
+    public Transform SetChaseTarget()
+    {
+        if(target!=null)
+        {
+            return target;
         }
-          
+        else
+        {
+            return lineOfSight.GetVisibleTarget();
+        }
     }
 
     public override bool TargetInRange(Transform target, float range)
