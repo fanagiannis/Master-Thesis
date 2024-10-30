@@ -60,77 +60,77 @@ public class GuardBehavior : HostileAgent
         // CONDITIONS
 
         //SPOT
-        Condition notspotTarget = new Condition("Not Target Spotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger));
-        Condition spotTarget = new Condition("Target Spotted?", new ConditionLeaf(() => lineOfSight.GetVisibleTarget()   && !InDanger));
+        Condition notspotTarget = new Condition("Condition Not Target Spotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger));
+        Condition spotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => lineOfSight.GetVisibleTarget()   && !InDanger));
         
         //CHECK DANGER
-        Condition checkIfDanger = new Condition("Threatened?", new ConditionLeaf(() => InDanger));
-        Condition safe = new Condition("Safe?", new ConditionLeaf(() => !InDanger));
+        Condition checkIfDanger = new Condition("Condition Threatened?", new ConditionLeaf(() => InDanger));
+        Condition safe = new Condition("Condition Safe?", new ConditionLeaf(() => !InDanger));
 
         //SHOOT CONDITIONS
-        Condition cantShoot = new Condition("CantShootTarget?", new ConditionLeaf(() => !targetInRange && !InDanger));
-        Condition canShoot = new Condition("CanShootTarget?", new ConditionLeaf(() => targetInRange));
+        Condition cantShoot = new Condition("Condition CantShootTarget?", new ConditionLeaf(() => !targetInRange && !InDanger));
+        Condition canShoot = new Condition("Condition CanShootTarget?", new ConditionLeaf(() => targetInRange));
         
 
         // ACTIONS
-        Action patrol = new Action("Guard Patrol", new GuardRandomPatrol(this, this.navigation, this.animator));
-        Action takeCover = new Action("Take Cover", new GuardGoTo(this.animator, this.navigation, () => safezone.position));
-        Action crouchAction = new Action("Crouch", new Crouch(this.animator));
-        Action standUp = new Action("Stand", new ActionReset(new Crouch(this.animator)));
-        Action setDanger = new Action("Set Danger", new SetDanger(this, true));
-        Action chaseTarget = new Action("Chase Target", new GuardGoTo(this.animator, this.navigation, () => lineOfSight.GetVisibleTarget() .position));
+        Action patrol = new Action("Action Guard Patrol", new GuardRandomPatrol(this, this.navigation, this.animator));
+        Action takeCover = new Action("Action Take Cover", new GuardGoTo(this.animator, this.navigation, () => safezone.position));
+        Action crouchAction = new Action("Action Crouch", new Crouch(this.animator));
+        Action standUp = new Action("Action Stand", new ActionReset(new Crouch(this.animator)));
+        Action setDanger = new Action("Action Set Danger", new SetDanger(this, true));
+        Action chaseTarget = new Action("Action Chase Target", new GuardGoTo(this.animator, this.navigation, () => lineOfSight.GetVisibleTarget() .position));
         //Action chasePlayer = new Action("Chase Player", new GuardGoTo(this.animator, this.navigation, () => target.position));
-        Action lookAt = new Action("Look At Target", new LookAtTarget(this.navigation, this.animator, () => lineOfSight.GetVisibleTarget() ));
-        Action aim = new Action("Aim At Target", new Aim(this.animator));
-        Action stand = new Action("Stand", new Stand(this.animator));
-        Action shootAction = new Action("Shoot Target", new ShootAction( animator, Shoot, ()=>lineOfSight.GetVisibleTarget() ));
+        Action lookAt = new Action("Action Look At Target", new LookAtTarget(this.navigation, this.animator, () => lineOfSight.GetVisibleTarget() ));
+        Action aim = new Action("Action Aim At Target", new Aim(this.animator));
+        Action stand = new Action("Action Stand", new Stand(this.animator));
+        Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot, ()=>lineOfSight.GetVisibleTarget() ));
 
-        WaitNode delay = new WaitNode("Chase Delay", 1f);
+        WaitNode delay = new WaitNode("Delay Chase", 1f);
         WaitNode shootDelay = new WaitNode("Delay", 3f); //DELAY CONTROL FROM WEAPON FIRERATE
 
         // TREE STRUCTURE
-        Sequence guardPatrol = new Sequence("Patrol Sequence");
+        Sequence guardPatrol = new Sequence("Sequence Patrol");
         guardPatrol.AddChild(notspotTarget);
         guardPatrol.AddChild(patrol);
 
-        Sequence checkcoverSafety = new Sequence("Check Cover Safety Sequence");
+        Sequence checkcoverSafety = new Sequence("Sequence Check Cover Safety");
         checkcoverSafety.AddChild(safe);
         checkcoverSafety.AddChild(standUp);
 
-        Sequence chaseSequence = new Sequence("Chase Target Sequence");
+        Sequence chaseSequence = new Sequence("Sequence Chase Target");
 
         chaseSequence.AddChild(cantShoot);
         chaseSequence.AddChild(chaseTarget);
 
-        Sequence delayAndShootSequence = new Sequence("Delay and Shoot Sequence");
+        Sequence delayAndShootSequence = new Sequence("Sequence Delay and Shoot");
         delayAndShootSequence.AddChild(canShoot);
         delayAndShootSequence.AddChild(shootDelay);
         delayAndShootSequence.AddChild(shootAction);
 
         RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => EnemyMaster.Instance.PlayerAlive() || lineOfSight.GetVisibleTarget() );
 
-        Sequence shootSequence = new Sequence("Shoot Target Sequence");
+        Sequence shootSequence = new Sequence("Sequence Shoot Target");
         shootSequence.AddChild(repeat);
         shootSequence.AddChild(delayAndShootSequence);
 
-        Sequence chooseShootTargetSequence = new Sequence("Choose Shoot Target Sequence");
+        Sequence chooseShootTargetSequence = new Sequence("Sequence Choose Shoot Target");
         chooseShootTargetSequence.AddChild(canShoot);
         chooseShootTargetSequence.AddChild(lookAt);
         chooseShootTargetSequence.AddChild(delay);
         chooseShootTargetSequence.AddChild(aim);
         chooseShootTargetSequence.AddChild(shootSequence);
 
-        Fallback killPlayer = new Fallback("Kill Player Fallback");
+        Fallback killPlayer = new Fallback("Fallback Kill Player");
         killPlayer.AddChild(chooseShootTargetSequence);
         killPlayer.AddChild(chaseSequence);
 
-        Sequence hideSequence = new Sequence("Take Cover Sequence");
+        Sequence hideSequence = new Sequence("Sequence Take Cover");
         hideSequence.AddChild(checkIfDanger);
         hideSequence.AddChild(takeCover);
         hideSequence.AddChild(crouchAction);
 
-        Fallback CoverFireFB = new Fallback("Cover Fire Fallback");
-        Sequence coverFireSequence = new Sequence("Cover Fire Sequence");
+        Fallback CoverFireFB = new Fallback("Fallback Cover Fire");
+        Sequence coverFireSequence = new Sequence("Sequence Cover Fire");
         coverFireSequence.AddChild(canShoot);
         coverFireSequence.AddChild(stand);
         coverFireSequence.AddChild(chooseShootTargetSequence);
@@ -140,15 +140,15 @@ public class GuardBehavior : HostileAgent
         hideSequence.AddChild(CoverFireFB);
         hideSequence.AddChild(checkcoverSafety);
 
-        Sequence targetSpotSequence = new Sequence("Spot Target Sequence");
+        Sequence targetSpotSequence = new Sequence("Sequence Spot Target");
         targetSpotSequence.AddChild(spotTarget);
         targetSpotSequence.AddChild(killPlayer);
         
-        Fallback roamFB = new Fallback("Roam Fallback");
+        Fallback roamFB = new Fallback("Fallback Roam");
         roamFB.AddChild(targetSpotSequence);
         roamFB.AddChild(guardPatrol);
         
-        Fallback rootFallback = new Fallback("Root Fallback");
+        Fallback rootFallback = new Fallback("Fallback Root");
         rootFallback.AddChild(hideSequence);
         rootFallback.AddChild(roamFB);
 
