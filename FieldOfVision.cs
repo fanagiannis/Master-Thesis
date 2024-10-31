@@ -49,9 +49,7 @@ public class FieldOfVision : MonoBehaviour
                 }
             }
         }
-
     }
-
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

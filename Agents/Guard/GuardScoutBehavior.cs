@@ -13,6 +13,15 @@ public class GuardScoutBehavior : GuardBehavior
     {
         BT = new BehaviorTree("Scout Guard Logic");
 
+        //CONDITIONS
+
+        Condition notspotTarget = new Condition("Condition Not Target Spotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger));
+        Condition spotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => lineOfSight.GetVisibleTarget()   && !InDanger));
+
+        //SHOOT
+        Condition cantShoot = new Condition("Condition CantShootTarget?", new ConditionLeaf(() => !targetInRange && !InDanger));
+        Condition canShoot = new Condition("Condition CanShootTarget?", new ConditionLeaf(() => targetInRange));
+
         Fallback rootFallback = new Fallback("Fallback Root");
 
         BT.AddChild(rootFallback);
