@@ -5,6 +5,8 @@ using UnityEngine;
 public class HostileAgent : Agent
 {
     [SerializeField]protected bool targetInRange;
+    [Header("Entity")]
+    [SerializeField]protected Guard entity;
     public void ResetPlayerAlive()
     {
         EnemyMaster.Instance.ResetPlayerAlive();

@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class Guard : Entity
 {
     private GuardAnimationController animController;
+    [SerializeField]private float damage;
     void Awake()
     {
        animController = GetComponent<GuardAnimationController>();
@@ -20,5 +21,10 @@ public class Guard : Entity
             //GetComponent<NavMeshAgent>().ResetPath();
            // GetComponent<ZombieBehavior>().Deactivate();
         }
+    }
+
+    public float Damage()
+    {
+        return damage;
     }
 }

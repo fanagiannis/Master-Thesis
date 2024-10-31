@@ -395,12 +395,15 @@ namespace Actions
             private Func<Transform> target;
             private AnimationController animator;
             private UnityEvent shootEvent;
+            private float damage;
 
-            public ShootAction(AnimationController animator, UnityEvent shoot, Func<Transform> target)
+            public ShootAction(AnimationController animator, UnityEvent shoot,float damage, Func<Transform> target)
             {
                 this.target = target;
                 this.animator = animator;
+                this.damage = damage;
                 this.shootEvent = shoot;
+                
             }
 
             public Node.Status Process()
@@ -415,7 +418,7 @@ namespace Actions
                     
                     if (UnityEngine.Random.Range(0,5) > 1)
                     {
-                        tg.TakeDamage(45);
+                        tg.TakeDamage((int)damage);
                         return Node.Status.SUCCESS;; 
                     }
                     else
@@ -507,6 +510,8 @@ namespace Actions
 
             public Node.Status Process()
             {
+                LineRenderer lineRenderer = guardTransform.GetComponent<LineRenderer>();
+                lineRenderer.enabled = false;
                 if (rotatingRight)
                 {
                     currentAngle += rotationSpeed * Time.deltaTime;
@@ -527,6 +532,55 @@ namespace Actions
             {
                 rotatingRight = true;
                 currentAngle = guardTransform.localEulerAngles.y;
+            }
+        }
+
+        public class AimTarget : IAction
+        {
+            private Transform guardTransform;
+            private Func<Transform> getTarget;
+            private float rotationSpeed;
+
+            public AimTarget(Transform guardTransform, Func<Transform> getTarget, float rotationSpeed )
+            {
+                this.guardTransform = guardTransform;
+                this.getTarget = getTarget;
+                this.rotationSpeed = rotationSpeed;
+            }
+
+            public Node.Status Process()
+            {
+                Transform target = getTarget();
+                if (target == null)
+                {
+                    return Node.Status.FAILURE; 
+                }
+
+                Vector3 directionToTarget = (target.position - guardTransform.position).normalized;
+                Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+                guardTransform.rotation = Quaternion.RotateTowards(guardTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                float angleToTarget = Quaternion.Angle(guardTransform.rotation, targetRotation);
+
+                LineRenderer lineRenderer = guardTransform.GetComponent<LineRenderer>();
+                lineRenderer.enabled = true;
+                if (lineRenderer != null)
+                {
+                    lineRenderer.positionCount = 2;
+                    lineRenderer.SetPosition(0, guardTransform.position+new Vector3(0,1f,0)); 
+                    lineRenderer.SetPosition(1, target.position+new Vector3(0,1f,0));        
+                    lineRenderer.startColor = Color.red;                
+                    lineRenderer.endColor = Color.red;
+                }
+                if (angleToTarget < 1f) 
+                {
+                    return Node.Status.SUCCESS; 
+                }
+
+                return Node.Status.SUCCESS; 
+            }
+            public void Reset()
+            {
+                
             }
         }
 

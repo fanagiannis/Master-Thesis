@@ -34,9 +34,9 @@ public class GuardScoutBehavior : GuardBehavior
         //ACTIONS
         Action searchAction = new Action("Action Search",new GuardSearch(this.gameObject.transform,5f,0f,100f));
         Action setDanger = new Action("Action Set Danger", new SetDanger(this, true));
-        Action lookAt = new Action("Action Look At Target", new LookAtTarget(this.navigation, this.animator, () => lineOfSight.GetVisibleTarget() ));
+        Action lookAt = new Action("Action Look At Target", new AimTarget(this.gameObject.transform, () => lineOfSight.GetVisibleTarget(),10f));
         Action stand = new Action("Action Stand", new Stand(this.animator));
-        Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot, ()=>lineOfSight.GetVisibleTarget() ));
+        Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot, entity.Damage(), ()=>lineOfSight.GetVisibleTarget() ));
 
         WaitNode shootDelay = new WaitNode("Delay", 5f); //DELAY CONTROL FROM WEAPON FIRERATE
 

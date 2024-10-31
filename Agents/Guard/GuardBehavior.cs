@@ -13,12 +13,12 @@ public class GuardBehavior : HostileAgent
     [SerializeField]protected float range; 
     [SerializeField]protected float speed;
     [SerializeField]protected UnityEvent Shoot;
-    
 
     public override void Start()
     {
         base.Start();
         animator = GetComponent<GuardAnimationController>();
+        entity = GetComponent<Guard>();
         BakeBehavior();
     }
     public override void Update()

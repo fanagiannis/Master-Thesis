@@ -76,7 +76,7 @@ public class GuardPatrolBehavior : GuardBehavior
         Action lookAt = new Action("Action Look At Target", new LookAtTarget(this.navigation, this.animator, () => lineOfSight.GetVisibleTarget() ));
         Action aim = new Action("Action Aim At Target", new Aim(this.animator));
         Action stand = new Action("Action Stand", new Stand(this.animator));
-        Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot, ()=>lineOfSight.GetVisibleTarget() ));
+        Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot , entity.Damage() , ()=>lineOfSight.GetVisibleTarget() ));
 
         WaitNode delay = new WaitNode("Delay Chase", 1f);
         WaitNode shootDelay = new WaitNode("Delay", 3f); //DELAY CONTROL FROM WEAPON FIRERATE
