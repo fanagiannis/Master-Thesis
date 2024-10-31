@@ -8,14 +8,19 @@ using UnityEngine.Events;
 public class FieldOfVision : MonoBehaviour
 {
     //[SerializeField]private UnityEvent spotPlayer;
+    [Header("FOV Customization")]
     public float viewRadius=50f;
     public float viewAngle=150f;
+    [Header("Masks")]
     public LayerMask targetMask;
     public LayerMask obstacleMask;
+    [Header("Timers")]
+    [SerializeField]private float timer=0f;
+    [SerializeField]private float resetTime=10f;
+    [Header("Visible Targets")]
     public List<Transform> visibleTargets = new List<Transform>();
     public Agent agent;
-    private float timer=0f;
-    private float resetTime=10f;
+    
     void Awake()
     {
         agent = GetComponent<Agent>();
