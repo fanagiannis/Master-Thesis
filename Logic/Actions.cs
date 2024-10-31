@@ -485,7 +485,50 @@ namespace Actions
                 //navigation.ResetPath();
             }
         }
+        
+        public class GuardSearch : IAction
+        {
+            private Transform guardTransform;
+            private float rotationSpeed;
+            private float minAngle;
+            private float maxAngle;
+            private float currentAngle;
+            private bool rotatingRight;
 
+            public GuardSearch(Transform guardTransform, float rotationSpeed, float minAngle, float maxAngle)
+            {
+                this.guardTransform = guardTransform;
+                this.rotationSpeed = rotationSpeed;
+                this.minAngle = minAngle;
+                this.maxAngle = maxAngle;
+                this.currentAngle = guardTransform.localEulerAngles.y;
+                this.rotatingRight = true;
+            }
+
+            public Node.Status Process()
+            {
+                if (rotatingRight)
+                {
+                    currentAngle += rotationSpeed * Time.deltaTime;
+                    if (currentAngle >= maxAngle) rotatingRight = false;
+                }
+                else
+                {
+                    currentAngle -= rotationSpeed * Time.deltaTime;
+                    if (currentAngle <= minAngle) rotatingRight = true;
+                }
+                currentAngle = Mathf.Clamp(currentAngle, minAngle, maxAngle);
+                guardTransform.localEulerAngles = new Vector3(guardTransform.localEulerAngles.x, currentAngle, guardTransform.localEulerAngles.z);
+
+                return Node.Status.RUNNING;
+            }
+
+            public void Reset()
+            {
+                rotatingRight = true;
+                currentAngle = guardTransform.localEulerAngles.y;
+            }
+        }
 
     }
     

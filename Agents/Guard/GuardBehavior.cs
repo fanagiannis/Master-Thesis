@@ -10,6 +10,7 @@ using UnityEngine.Events;
 public class GuardBehavior : HostileAgent
 {   
     protected GuardAnimationController animator;
+    [SerializeField]protected float range; 
     [SerializeField]protected float speed;
     [SerializeField]protected UnityEvent Shoot;
     
@@ -18,7 +19,35 @@ public class GuardBehavior : HostileAgent
     {
         base.Start();
         animator = GetComponent<GuardAnimationController>();
-        this.navigation.speed = speed;
+        BakeBehavior();
+    }
+    public override void Update()
+    {
+        if(!GetComponent<Guard>().Death())
+        {
+            BT.Process();
+            targetInRange=TargetInRange(lineOfSight.GetVisibleTarget(),range);
+            //DEBUG!!!!!!!!!!!!
+            if(InDanger)
+            {
+                lineOfSight.viewAngle=270f;
+            }
+            else
+            {
+                lineOfSight.viewAngle=150f;
+            }
+            if(targetInRange)
+            {
+                navigation.ResetPath();
+            }
+            //DEBUG!!!!!!!!!!!!
+
+            
+        }
+        else
+        {
+            navigation.ResetPath();
+        }
     }
 
     public override bool TargetInRange(Transform target, float range)
