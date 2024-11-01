@@ -133,21 +133,28 @@ namespace Actions
 
         public Node.Status Process()
         {
-            if(targetposition()!=null)
+            if (targetposition() != null)
             {
                 Transform target = targetposition();
                 Vector3 directionToTarget = (target.position - animator.gameObject.transform.position).normalized;
                 float dotProduct = Vector3.Dot(animator.gameObject.transform.forward, directionToTarget);
-                if (dotProduct < 0.9f)  
+                
+                if (dotProduct < 0.9f)
                 {
-                    animator.gameObject.transform.LookAt(target.position);
+                    Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+                    animator.gameObject.transform.rotation = Quaternion.RotateTowards(
+                        animator.gameObject.transform.rotation, 
+                        targetRotation, 
+                        navigation.angularSpeed * Time.deltaTime 
+                    );
+                    
                     this.navigation.ResetPath();
                     looksAtTarget = true;
                 }
-                
+
                 return Node.Status.SUCCESS;
-            }   
-            return Node.Status.SUCCESS;
+            }
+            return Node.Status.SUCCESS; 
             
         }
 

@@ -81,7 +81,7 @@ public class AISensors : MonoBehaviour
             Vector3 directionToTarget = (target.position - transform.position).normalized;
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
             SoundSource src = target.GetComponent<SoundSource>();
-            if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask) && target.gameObject.activeSelf)
+            if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget,layerMask:0) && target.gameObject.activeSelf)
             {  
                 ClearTargets(detectedSoundSources);
                 if (!src.Sound() && !detectedSoundSources.Contains(target))

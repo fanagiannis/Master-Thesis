@@ -146,14 +146,11 @@ public class GuardPatrolBehavior : GuardBehavior
 
         Sequence InvestigateSequence = new Sequence("Sequence Investigate");
         InvestigateSequence.AddChild(lookAtSound);
-        InvestigateSequence.AddChild(delay2);
-        InvestigateSequence.AddChild(aim);
         InvestigateSequence.AddChild(delay3);
+        InvestigateSequence.AddChild(aim);
+        InvestigateSequence.AddChild(delay2);
         InvestigateSequence.AddChild(inspectSource);
         InvestigateSequence.AddChild(delay4);
-        //LOOK AT
-        //GO TO SOURCE
-        //RESET HEARD
 
         Sequence SoundAlertSequence = new Sequence("Sequence Sound Alert");
         SoundAlertSequence.AddChild(soundHeard);
