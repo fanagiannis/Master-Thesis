@@ -30,7 +30,7 @@ public class AISensors : MonoBehaviour
     [Header("Visible Targets")]
     public List<Transform> visibleTargets = new List<Transform>();
     public List<Transform> detectedSoundSources = new List<Transform>();
-    public Transform test;
+    public Transform InspectingSource;
     public Agent agent;
     
     void Awake()
@@ -44,7 +44,7 @@ public class AISensors : MonoBehaviour
         VisionCone();
         if(detectedSoundSources.Count>0)
         {
-            test=FindSoundSource();
+            InspectingSource=FindSoundSource();
         }
         
     }
@@ -72,7 +72,7 @@ public class AISensors : MonoBehaviour
 
     public void AudioCone()
     {
-        ClearTargets(detectedSoundSources);   
+        //ClearTargets(detectedSoundSources);   
         Collider[] sourcesHeared = Physics.OverlapSphere(transform.position, hearingRadius, soundSourceMask);
 
         for (int i = 0; i < sourcesHeared.Length; i++)
@@ -80,10 +80,13 @@ public class AISensors : MonoBehaviour
             Transform target = sourcesHeared[i].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            SoundSource src = target.GetComponent<SoundSource>();
             if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask) && target.gameObject.activeSelf)
-            {
-                if (!detectedSoundSources.Contains(target))
+            {  
+                ClearTargets(detectedSoundSources);
+                if (!src.Sound() && !detectedSoundSources.Contains(target))
                 {
+                    
                     detectedSoundSources.Add(target);
                 }
             }
