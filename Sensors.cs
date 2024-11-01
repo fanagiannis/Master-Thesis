@@ -5,10 +5,14 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 public class AISensors : MonoBehaviour
 {
     //[SerializeField]private UnityEvent spotPlayer;
+    [Header("Gizmo Colors")]
+    [SerializeField]private Color fieldOfVisionColor;
+    [SerializeField]private Color hearingRadiusColor;
     [Header("Vision Cone")]
     public float viewRadius=50f;
     public float viewAngle=150f;
@@ -17,7 +21,8 @@ public class AISensors : MonoBehaviour
     public float hearingRadius=10f;
     //public float hearingAngle=150f;
     [Header("Masks")]
-    public LayerMask targetMask;
+    public LayerMask visibleTargetMask;
+    public LayerMask soundSourceMask;
     public LayerMask obstacleMask;
     [Header("Timers")]
     [SerializeField]private float timer=0f;
@@ -39,7 +44,7 @@ public class AISensors : MonoBehaviour
     public void VisionCone()
     {
         ClearTargets();
-        Collider [] targetsInView = Physics.OverlapSphere(transform.position,viewRadius,targetMask);
+        Collider [] targetsInView = Physics.OverlapSphere(transform.position,viewRadius,visibleTargetMask);
         for(int i=0;i<targetsInView.Length;i++)
         {
             Transform target = targetsInView[i].transform;
@@ -61,10 +66,10 @@ public class AISensors : MonoBehaviour
     public void AudioCone()
     {
         ClearTargets();
-        Collider [] targetsInView = Physics.OverlapSphere(transform.position,viewRadius,targetMask);
-        for(int i=0;i<targetsInView.Length;i++)
+        Collider [] sourcesHeared = Physics.OverlapSphere(transform.position,hearingRadius,soundSourceMask);
+        for(int i=0;i<sourcesHeared.Length;i++)
         {
-            Transform target = targetsInView[i].transform;
+            Transform target = sourcesHeared[i].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
             if (Vector3.Angle(transform.forward, directionToTarget) < viewAngle / 2)
             {
@@ -82,13 +87,12 @@ public class AISensors : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Handles.color = Color.green;
+        //Handles.zTest=CompareFunction.LessEqual;
+        Handles.color = hearingRadiusColor;
         Handles.DrawSolidDisc(transform.position,Vector3.up, hearingRadius);
-        
-
-        Handles.color = Color.red;
+        Handles.color = fieldOfVisionColor;
         Handles.DrawSolidArc(transform.position, Vector3.up,DirFromAngle(-viewAngle / 2, false), viewAngle, viewRadius);
-        Handles.Label(transform.position+new Vector3(0,0,-5),"FieldOfHearing");
+        Handles.Label(transform.position+new Vector3(0,0,-7),"FieldOfHearing");
         Handles.Label(transform.position+new Vector3(0,0,3),"FieldOfVision");
 
         Gizmos.color = Color.blue;
