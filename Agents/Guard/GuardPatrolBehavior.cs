@@ -6,6 +6,7 @@ using Actions;
 using Actions.GuardActions;
 using Conditions;
 using UnityEngine.Events;
+using System.Linq.Expressions;
 
 public class GuardPatrolBehavior : GuardBehavior
 {
@@ -56,6 +57,7 @@ public class GuardPatrolBehavior : GuardBehavior
         //SPOT
         Condition notspotTarget = new Condition("Condition Not Target Spotted?", new ConditionLeaf(() => !sensors.GetVisibleTarget()  && !InDanger));
         Condition spotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => sensors.GetVisibleTarget()   && !InDanger));
+        Condition soundHeard = new Condition("Condition Heard Sound",new ConditionLeaf(()=>sensors.Heard()));
         
         //CHECK DANGER
         Condition checkIfDanger = new Condition("Condition Threatened?", new ConditionLeaf(() => InDanger));
@@ -74,11 +76,16 @@ public class GuardPatrolBehavior : GuardBehavior
         Action setDanger = new Action("Action Set Danger", new SetDanger(this, true));
         Action chaseTarget = new Action("Action Chase Target", new GuardGoTo(this.animator, this.navigation, () => sensors.GetVisibleTarget() .position));
         Action lookAt = new Action("Action Look At Target", new LookAtTarget(this.navigation, this.animator, () => sensors.GetVisibleTarget() ));
+        Action lookAtSound = new Action("Action Look At Sound Source", new LookAtTarget(this.navigation, this.animator, () => sensors.FindSoundSource() ));
+        Action inspectSource = new Action("Action Go To Sound Source", new Inspect(this.animator, this.navigation, this.sensors,() => sensors.InspectingSource.position));
         Action aim = new Action("Action Aim At Target", new Aim(this.animator));
         Action stand = new Action("Action Stand", new Stand(this.animator));
         Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot , entity.Damage() , ()=>sensors.GetVisibleTarget() ));
 
         WaitNode delay = new WaitNode("Delay Chase", 1f);
+        WaitNode delay2 = new WaitNode("Delay Chase", 2f);
+        WaitNode delay3 = new WaitNode("Delay Chase", 3f);
+        WaitNode delay4 = new WaitNode("Delay Chase", 4f);
         WaitNode shootDelay = new WaitNode("Delay", 3f); //DELAY CONTROL FROM WEAPON FIRERATE
 
         // TREE STRUCTURE
@@ -136,9 +143,26 @@ public class GuardPatrolBehavior : GuardBehavior
         Sequence targetSpotSequence = new Sequence("Sequence Spot Target");
         targetSpotSequence.AddChild(spotTarget);
         targetSpotSequence.AddChild(killPlayer);
+
+        Sequence InvestigateSequence = new Sequence("Sequence Investigate");
+        InvestigateSequence.AddChild(lookAtSound);
+        InvestigateSequence.AddChild(delay2);
+        InvestigateSequence.AddChild(aim);
+        InvestigateSequence.AddChild(delay3);
+        InvestigateSequence.AddChild(inspectSource);
+        InvestigateSequence.AddChild(delay4);
+        //LOOK AT
+        //GO TO SOURCE
+        //RESET HEARD
+
+        Sequence SoundAlertSequence = new Sequence("Sequence Sound Alert");
+        SoundAlertSequence.AddChild(soundHeard);
+        SoundAlertSequence.AddChild(InvestigateSequence);
+
         
         Fallback roamFB = new Fallback("Fallback Roam");
         roamFB.AddChild(targetSpotSequence);
+        roamFB.AddChild(SoundAlertSequence);
         roamFB.AddChild(guardPatrol);
         
         Fallback rootFallback = new Fallback("Fallback Root");

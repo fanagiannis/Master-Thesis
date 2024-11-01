@@ -160,6 +160,13 @@ public class AISensors : MonoBehaviour
         return closestSource; 
     }
 
+    public bool Heard()
+    {
+        return InspectingSource!=null;
+    }
+
+    public void ClearSource()=>InspectingSource=null;
+
     public bool ActiveVisibleTarget()
     {
         return visibleTargets.Count>0;

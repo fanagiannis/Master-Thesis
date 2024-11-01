@@ -488,6 +488,43 @@ namespace Actions
                 //navigation.ResetPath();
             }
         }
+
+        public class Inspect : IAction
+        {
+            private AnimationController animator;
+            private NavMeshAgent navigation;
+            private AISensors sensors;
+            private System.Func<Vector3> getdestination;
+            public Inspect (AnimationController animator ,NavMeshAgent navigation ,AISensors sensors ,System.Func<Vector3> getdestination)
+            {
+                this.animator = animator;
+                this.navigation=navigation;
+                this.sensors=sensors;
+                this.getdestination = getdestination;
+                navigation.ResetPath();
+                    
+            }
+            public virtual Node.Status Process()
+            {
+                Vector3 destination = getdestination();
+                animator.Walk();
+                this.navigation.speed = 2f;
+                navigation.SetDestination(destination); 
+                if(navigation.remainingDistance< 2f && !navigation.pathPending)
+                {
+                    animator.Idle();
+                    this.navigation.speed = 0f;
+                    sensors.ClearSource();
+                    navigation.ResetPath();
+                    return Node.Status.SUCCESS;
+                }
+               return Node.Status.RUNNING;  
+            }
+            public virtual void Reset()
+            {
+                //navigation.ResetPath();
+            }
+        }
         
         public class GuardSearch : IAction
         {
@@ -583,7 +620,5 @@ namespace Actions
                 
             }
         }
-
-    }
-    
+    }  
 }
