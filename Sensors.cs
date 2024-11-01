@@ -2,15 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class FieldOfVision : MonoBehaviour
+public class AISensors : MonoBehaviour
 {
     //[SerializeField]private UnityEvent spotPlayer;
-    [Header("FOV Customization")]
+    [Header("Vision Cone")]
     public float viewRadius=50f;
     public float viewAngle=150f;
+
+    [Header("Sound Cone")]
+    public float hearingRadius=10f;
+    //public float hearingAngle=150f;
     [Header("Masks")]
     public LayerMask targetMask;
     public LayerMask obstacleMask;
@@ -19,17 +24,19 @@ public class FieldOfVision : MonoBehaviour
     [SerializeField]private float resetTime=10f;
     [Header("Visible Targets")]
     public List<Transform> visibleTargets = new List<Transform>();
+    public List<Transform> detectedSoundSources = new List<Transform>();
     public Agent agent;
     
     void Awake()
     {
         agent = GetComponent<Agent>();
+        
     }
     void Update()
     {
-        FindTargets();
+        VisionCone();
     }
-    public void FindTargets()
+    public void VisionCone()
     {
         ClearTargets();
         Collider [] targetsInView = Physics.OverlapSphere(transform.position,viewRadius,targetMask);
@@ -50,16 +57,39 @@ public class FieldOfVision : MonoBehaviour
             }
         }
     }
+
+    public void AudioCone()
+    {
+        ClearTargets();
+        Collider [] targetsInView = Physics.OverlapSphere(transform.position,viewRadius,targetMask);
+        for(int i=0;i<targetsInView.Length;i++)
+        {
+            Transform target = targetsInView[i].transform;
+            Vector3 directionToTarget = (target.position - transform.position).normalized;
+            if (Vector3.Angle(transform.forward, directionToTarget) < viewAngle / 2)
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, target.position);
+                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask)&&target.gameObject.activeSelf)
+                {
+                    if(!visibleTargets.Contains(target))
+                    {
+                        visibleTargets.Add(target);
+                    }
+                }
+            }
+        }
+    }
+
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, viewRadius);
+        Handles.color = Color.green;
+        Handles.DrawSolidDisc(transform.position,Vector3.up, hearingRadius);
+        
 
-        Vector3 viewAngleA = DirFromAngle(-viewAngle / 2, false);
-        Vector3 viewAngleB = DirFromAngle(viewAngle / 2, false);
-
-        Gizmos.DrawLine(transform.position, transform.position + viewAngleA * viewRadius);
-        Gizmos.DrawLine(transform.position, transform.position + viewAngleB * viewRadius);
+        Handles.color = Color.red;
+        Handles.DrawSolidArc(transform.position, Vector3.up,DirFromAngle(-viewAngle / 2, false), viewAngle, viewRadius);
+        Handles.Label(transform.position+new Vector3(0,0,-5),"FieldOfHearing");
+        Handles.Label(transform.position+new Vector3(0,0,3),"FieldOfVision");
 
         Gizmos.color = Color.blue;
         foreach (Transform visibleTarget in visibleTargets)

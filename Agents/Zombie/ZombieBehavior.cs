@@ -28,7 +28,7 @@ public class ZombieBehavior : HostileAgent
         if(Active)
         {
             BT.Process();
-            targetInRange=TargetInRange(lineOfSight.GetVisibleTarget(),1f);
+            targetInRange=TargetInRange(sensors.GetVisibleTarget(),1f);
         }
     }
     public override void BakeBehavior()
@@ -42,9 +42,9 @@ public class ZombieBehavior : HostileAgent
 
         // ACTION DEFINITIONS
         Action patrol = new Action("Roam", new ZombieRandomPatrol(this, this.navigation, this.animator));
-        Action lookAtTarget = new Action("LookAtPlayer", new LookAtTarget(this.navigation, this.animator, () => lineOfSight.GetVisibleTarget()));
-        Action chaseTarget = new Action("Chase Player", new GoTo(this.animator, this.navigation, () => lineOfSight.GetVisibleTarget().position));
-        Action hitTargetAction = new Action("Hit", new ZombieHit(this.animator, this.navigation, () => lineOfSight.GetVisibleTarget()));
+        Action lookAtTarget = new Action("LookAtPlayer", new LookAtTarget(this.navigation, this.animator, () => sensors.GetVisibleTarget()));
+        Action chaseTarget = new Action("Chase Player", new GoTo(this.animator, this.navigation, () => sensors.GetVisibleTarget().position));
+        Action hitTargetAction = new Action("Hit", new ZombieHit(this.animator, this.navigation, () => sensors.GetVisibleTarget()));
 
         WaitNode delayt = new WaitNode("Chase Delay", 1f);
 
@@ -73,7 +73,7 @@ public class ZombieBehavior : HostileAgent
     }
     public bool GetVisibleTarget()
     {
-        var target = lineOfSight.GetVisibleTarget();
+        var target = sensors.GetVisibleTarget();
         return target != null && (target.CompareTag("Guard")||(target.CompareTag("Player")&&TargetSpotted()));
     }
     public void Deactivate()

@@ -14,7 +14,7 @@ public class HostileAgent : Agent
     }
     public bool TargetSpotted()
     {
-        return lineOfSight.GetVisibleTarget() != null  && lineOfSight.ActiveVisibleTarget();
+        return sensors.GetVisibleTarget() != null  && sensors.ActiveVisibleTarget();
     }
     public void SetPlayerDead()
     {

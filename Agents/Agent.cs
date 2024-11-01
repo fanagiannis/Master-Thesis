@@ -1,6 +1,4 @@
-
 using System.Collections;
-// using Leaves;
 using Behavior;
 using UnityEngine;
 using UnityEngine.AI;
@@ -10,14 +8,14 @@ public class Agent : MonoBehaviour
     protected NavMeshAgent navigation;
     protected Vector3 destination;
     protected BehaviorTree BT;
-    protected FieldOfVision lineOfSight;
+    protected AISensors sensors;
     [Header("Booleans")]
     [SerializeField] protected bool InDanger;
     [SerializeField] protected bool Active;
     public virtual void Start()
     {
         navigation = GetComponent<NavMeshAgent>();
-        lineOfSight = GetComponent<FieldOfVision>();
+        sensors = GetComponent<AISensors>();
     }
     public virtual void Update()
     {

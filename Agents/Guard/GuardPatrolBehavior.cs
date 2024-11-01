@@ -23,16 +23,16 @@ public class GuardPatrolBehavior : GuardBehavior
         if(!GetComponent<Guard>().Death())
         {
             BT.Process();
-            targetInRange=TargetInRange(lineOfSight.GetVisibleTarget(),10f);
+            targetInRange=TargetInRange(sensors.GetVisibleTarget(),10f);
             //DEBUG!!!!!!!!!!!!
-            if(InDanger)
-            {
-                lineOfSight.viewAngle=270f;
-            }
-            else
-            {
-                lineOfSight.viewAngle=150f;
-            }
+            // if(InDanger)
+            // {
+            //     sensors.viewAngle=270f;
+            // }
+            // else
+            // {
+            //     sensors.viewAngle=150f;
+            // }
             if(targetInRange)
             {
                 navigation.ResetPath();
@@ -54,8 +54,8 @@ public class GuardPatrolBehavior : GuardBehavior
         // CONDITIONS
 
         //SPOT
-        Condition notspotTarget = new Condition("Condition Not Target Spotted?", new ConditionLeaf(() => !lineOfSight.GetVisibleTarget()  && !InDanger));
-        Condition spotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => lineOfSight.GetVisibleTarget()   && !InDanger));
+        Condition notspotTarget = new Condition("Condition Not Target Spotted?", new ConditionLeaf(() => !sensors.GetVisibleTarget()  && !InDanger));
+        Condition spotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => sensors.GetVisibleTarget()   && !InDanger));
         
         //CHECK DANGER
         Condition checkIfDanger = new Condition("Condition Threatened?", new ConditionLeaf(() => InDanger));
@@ -72,11 +72,11 @@ public class GuardPatrolBehavior : GuardBehavior
         Action crouchAction = new Action("Action Crouch", new Crouch(this.animator));
         Action standUp = new Action("Action Stand", new ActionReset(new Crouch(this.animator)));
         Action setDanger = new Action("Action Set Danger", new SetDanger(this, true));
-        Action chaseTarget = new Action("Action Chase Target", new GuardGoTo(this.animator, this.navigation, () => lineOfSight.GetVisibleTarget() .position));
-        Action lookAt = new Action("Action Look At Target", new LookAtTarget(this.navigation, this.animator, () => lineOfSight.GetVisibleTarget() ));
+        Action chaseTarget = new Action("Action Chase Target", new GuardGoTo(this.animator, this.navigation, () => sensors.GetVisibleTarget() .position));
+        Action lookAt = new Action("Action Look At Target", new LookAtTarget(this.navigation, this.animator, () => sensors.GetVisibleTarget() ));
         Action aim = new Action("Action Aim At Target", new Aim(this.animator));
         Action stand = new Action("Action Stand", new Stand(this.animator));
-        Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot , entity.Damage() , ()=>lineOfSight.GetVisibleTarget() ));
+        Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot , entity.Damage() , ()=>sensors.GetVisibleTarget() ));
 
         WaitNode delay = new WaitNode("Delay Chase", 1f);
         WaitNode shootDelay = new WaitNode("Delay", 3f); //DELAY CONTROL FROM WEAPON FIRERATE
@@ -100,7 +100,7 @@ public class GuardPatrolBehavior : GuardBehavior
         delayAndShootSequence.AddChild(shootDelay);
         delayAndShootSequence.AddChild(shootAction);
 
-        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => EnemyMaster.Instance.PlayerAlive() || lineOfSight.GetVisibleTarget() );
+        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => EnemyMaster.Instance.PlayerAlive() || sensors.GetVisibleTarget() );
 
         Sequence shootSequence = new Sequence("Sequence Shoot Target");
         shootSequence.AddChild(repeat);
@@ -153,7 +153,7 @@ public class GuardPatrolBehavior : GuardBehavior
     {
         if(target!=null)
         {
-            return Vector3.Distance(this.transform.position,target.position)<range&&!Physics.Raycast(transform.position, (target.position - transform.position).normalized, Vector3.Distance(this.transform.position,target.position), lineOfSight.obstacleMask);
+            return Vector3.Distance(this.transform.position,target.position)<range&&!Physics.Raycast(transform.position, (target.position - transform.position).normalized, Vector3.Distance(this.transform.position,target.position), sensors.obstacleMask);
         }
         else
         {

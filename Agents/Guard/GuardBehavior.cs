@@ -26,16 +26,16 @@ public class GuardBehavior : HostileAgent
         if(!GetComponent<Guard>().Death())
         {
             BT.Process();
-            targetInRange=TargetInRange(lineOfSight.GetVisibleTarget(),range);
+            targetInRange=TargetInRange(sensors.GetVisibleTarget(),range);
             //DEBUG!!!!!!!!!!!!
-            if(InDanger)
-            {
-                lineOfSight.viewAngle=270f;
-            }
-            else
-            {
-                lineOfSight.viewAngle=150f;
-            }
+            // if(InDanger)
+            // {
+            //     sensors.viewAngle=270f;
+            // }
+            // else
+            // {
+            //     sensors.viewAngle=150f;
+            // }
             if(targetInRange)
             {
                 navigation.ResetPath();
@@ -54,7 +54,7 @@ public class GuardBehavior : HostileAgent
     {
         if(target!=null)
         {
-            return Vector3.Distance(this.transform.position,target.position)<range&&!Physics.Raycast(transform.position, (target.position - transform.position).normalized, Vector3.Distance(this.transform.position,target.position), lineOfSight.obstacleMask);
+            return Vector3.Distance(this.transform.position,target.position)<range&&!Physics.Raycast(transform.position, (target.position - transform.position).normalized, Vector3.Distance(this.transform.position,target.position), sensors.obstacleMask);
         }
         else
         {
