@@ -154,7 +154,7 @@ public class AISensors : MonoBehaviour
             }
         }
 
-        return closestSource; // Return the closest sound source
+        return closestSource; 
     }
 
     public bool ActiveVisibleTarget()
