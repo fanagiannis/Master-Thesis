@@ -18,7 +18,7 @@ public class AISensors : MonoBehaviour
     public float viewAngle=150f;
 
     [Header("Sound Cone")]
-    public float hearingRadius=10f;
+    public float hearingRadius;
     //public float hearingAngle=150f;
     [Header("Masks")]
     public LayerMask visibleTargetMask;
@@ -39,11 +39,13 @@ public class AISensors : MonoBehaviour
     }
     void Update()
     {
+        AudioCone();
         VisionCone();
+        
     }
     public void VisionCone()
     {
-        ClearTargets();
+        ClearTargets(visibleTargets);
         Collider [] targetsInView = Physics.OverlapSphere(transform.position,viewRadius,visibleTargetMask);
         for(int i=0;i<targetsInView.Length;i++)
         {
@@ -65,21 +67,19 @@ public class AISensors : MonoBehaviour
 
     public void AudioCone()
     {
-        ClearTargets();
-        Collider [] sourcesHeared = Physics.OverlapSphere(transform.position,hearingRadius,soundSourceMask);
-        for(int i=0;i<sourcesHeared.Length;i++)
+        ClearTargets(detectedSoundSources);
+        Collider[] sourcesHeared = Physics.OverlapSphere(transform.position, hearingRadius, soundSourceMask);
+
+        for (int i = 0; i < sourcesHeared.Length; i++)
         {
             Transform target = sourcesHeared[i].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
-            if (Vector3.Angle(transform.forward, directionToTarget) < viewAngle / 2)
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask) && target.gameObject.activeSelf)
             {
-                float distanceToTarget = Vector3.Distance(transform.position, target.position);
-                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask)&&target.gameObject.activeSelf)
+                if (!detectedSoundSources.Contains(target))
                 {
-                    if(!visibleTargets.Contains(target))
-                    {
-                        visibleTargets.Add(target);
-                    }
+                    detectedSoundSources.Add(target);
                 }
             }
         }
@@ -87,7 +87,9 @@ public class AISensors : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        //Handles.zTest=CompareFunction.LessEqual;
+        // Gizmos.color = Color.yellow;
+        // Gizmos.DrawWireSphere(transform.position, hearingRadius);
+
         Handles.color = hearingRadiusColor;
         Handles.DrawSolidDisc(transform.position,Vector3.up, hearingRadius);
         Handles.color = fieldOfVisionColor;
@@ -100,14 +102,19 @@ public class AISensors : MonoBehaviour
         {
             Gizmos.DrawLine(transform.position, visibleTarget.position);
         }
+        Gizmos.color = Color.white;
+        foreach (Transform hearedSource in detectedSoundSources)
+        {
+            Gizmos.DrawLine(transform.position, hearedSource.position);
+        }
     }
 
-    public void ClearTargets()
+    public void ClearTargets(List<Transform> list)
     {
         timer+=Time.deltaTime;
         if(timer>=resetTime)
         {
-            visibleTargets.Clear();
+            list.Clear();
             timer=0f;
         }
     }
