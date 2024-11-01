@@ -30,6 +30,7 @@ public class AISensors : MonoBehaviour
     [Header("Visible Targets")]
     public List<Transform> visibleTargets = new List<Transform>();
     public List<Transform> detectedSoundSources = new List<Transform>();
+    public Transform test;
     public Agent agent;
     
     void Awake()
@@ -41,6 +42,10 @@ public class AISensors : MonoBehaviour
     {
         AudioCone();
         VisionCone();
+        if(detectedSoundSources.Count>0)
+        {
+            test=FindSoundSource();
+        }
         
     }
     public void VisionCone()
@@ -67,7 +72,7 @@ public class AISensors : MonoBehaviour
 
     public void AudioCone()
     {
-        ClearTargets(detectedSoundSources);
+        ClearTargets(detectedSoundSources);   
         Collider[] sourcesHeared = Physics.OverlapSphere(transform.position, hearingRadius, soundSourceMask);
 
         for (int i = 0; i < sourcesHeared.Length; i++)
@@ -126,6 +131,30 @@ public class AISensors : MonoBehaviour
             angleInDegrees += transform.eulerAngles.y;
         }
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
+    public Transform FindSoundSource()
+    {
+        if (detectedSoundSources.Count == 0)
+        {
+            return null; 
+        }
+
+        Transform closestSource = detectedSoundSources[0];
+        float closestDistance = Vector3.Distance(transform.position, closestSource.position);
+
+        for (int i = 1; i < detectedSoundSources.Count; i++)
+        {
+            Transform currentSource = detectedSoundSources[i];
+            float currentDistance = Vector3.Distance(transform.position, currentSource.position);
+
+            if (currentDistance < closestDistance)
+            {
+                closestDistance = currentDistance;
+                closestSource = currentSource;
+            }
+        }
+
+        return closestSource; // Return the closest sound source
     }
 
     public bool ActiveVisibleTarget()
