@@ -10,6 +10,7 @@ public class WeaponManager : MonoBehaviour
     public void Fire(Transform origin)
     {
         RaycastHit hit;
+        GetComponent<AudioSource>().pitch = Random.Range(0.85f, 1.15f);
         GetComponent<AudioSource>().PlayOneShot(weaponData.Sound);
         if(Physics.Raycast(origin.position+new Vector3(0,1,0),origin.forward,out hit)){
             Debug.Log($"Hit {hit.collider.gameObject.name}");
