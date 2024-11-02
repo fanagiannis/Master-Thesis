@@ -43,10 +43,6 @@ public class GuardPatrolBehavior : GuardBehavior
 
             
         }
-        else
-        {
-            navigation.ResetPath();
-        }
     }
     public override void BakeBehavior()
     {

@@ -17,9 +17,45 @@ public class Guard : Entity
         if(Death())
         {
             animController.TriggerDeath();
-            GetComponent<CapsuleCollider>().enabled = false;
-            //GetComponent<NavMeshAgent>().ResetPath();
-           // GetComponent<ZombieBehavior>().Deactivate();
+            foreach (var component in GetComponents<Component>())
+            {
+                if (component is MeshRenderer) continue; 
+                if (component is Animator) animController.enabled = false;
+
+                if (component is MonoBehaviour monoBehaviour)
+                {
+                    monoBehaviour.enabled = false;
+                }
+                else if (component is Collider collider)
+                {
+                    collider.enabled = false;
+                }
+                else if (component is NavMeshAgent navMeshAgent)
+                {
+                    navMeshAgent.enabled = false;
+                }
+            }
+            foreach (var component in GetComponentsInChildren<Component>())
+            {
+                if (component is MeshRenderer) continue; 
+
+                if (component is MonoBehaviour monoBehaviour)
+                {
+                    monoBehaviour.enabled = false;
+                }
+                else if (component is Collider collider)
+                {
+                    collider.enabled = false;
+                }
+                else if (component is NavMeshAgent navMeshAgent)
+                {
+                    navMeshAgent.enabled = false;
+                }
+                else if (component is Light light)
+                {
+                    light.enabled = false;
+                }
+            }
         }
     }
 
