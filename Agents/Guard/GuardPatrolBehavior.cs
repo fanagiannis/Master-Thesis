@@ -81,6 +81,7 @@ public class GuardPatrolBehavior : GuardBehavior
         Action aim = new Action("Action Aim At Target", new Aim(this.animator));
         Action stand = new Action("Action Stand", new Stand(this.animator));
         Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot , entity.Damage() , ()=>sensors.GetVisibleTarget() ));
+        Action stop = new Action("Action Stop",new Stop(this,this.navigation,this.animator));
 
         WaitNode delay = new WaitNode("Delay Chase", 1f);
         WaitNode delay2 = new WaitNode("Delay Chase", 2f);
@@ -91,6 +92,7 @@ public class GuardPatrolBehavior : GuardBehavior
         // TREE STRUCTURE
         Sequence guardPatrol = new Sequence("Sequence Patrol");
         guardPatrol.AddChild(notspotTarget);
+        guardPatrol.AddChild(delay);
         guardPatrol.AddChild(patrol);
 
         Sequence checkcoverSafety = new Sequence("Sequence Check Cover Safety");
@@ -146,11 +148,10 @@ public class GuardPatrolBehavior : GuardBehavior
 
         Sequence InvestigateSequence = new Sequence("Sequence Investigate");
         InvestigateSequence.AddChild(lookAtSound);
-        InvestigateSequence.AddChild(delay3);
         InvestigateSequence.AddChild(aim);
         InvestigateSequence.AddChild(delay2);
         InvestigateSequence.AddChild(inspectSource);
-        InvestigateSequence.AddChild(delay4);
+        InvestigateSequence.AddChild(delay);
 
         Sequence SoundAlertSequence = new Sequence("Sequence Sound Alert");
         SoundAlertSequence.AddChild(soundHeard);

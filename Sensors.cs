@@ -61,6 +61,7 @@ public class AISensors : MonoBehaviour
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask)&&target.gameObject.activeSelf)
                 {
+                    timer=0f;
                     if(!visibleTargets.Contains(target))
                     {
                         visibleTargets.Add(target);

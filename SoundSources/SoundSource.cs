@@ -7,7 +7,7 @@ public class SoundSource : MonoBehaviour
     [SerializeField]private float volume;
     [SerializeField]private AudioSource audioSource;
     [SerializeField]private bool played=true;
-    private float timer=0.5f;
+    private float timer=0.2f;
     void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -32,7 +32,7 @@ public class SoundSource : MonoBehaviour
             {
                 PlaySound();
                 played=true;
-                timer=0.5f;
+                timer=0.2f;
             }
             
         }

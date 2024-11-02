@@ -96,17 +96,21 @@ namespace Actions
     {
         private NavMeshAgent navigation;
         private Agent agent;
+        private GuardAnimationController animator;
 
-        public Stop(Agent agent,NavMeshAgent navigation)
+        public Stop(Agent agent,NavMeshAgent navigation,GuardAnimationController animator)
         {
             this.navigation = navigation;
             this.agent = agent;
+            this.animator = animator;
         }
 
         public Node.Status Process()
         {
-            navigation.isStopped = true;
-            agent.StopAgent();
+            animator.Idle();
+            animator.ResetAlert();
+            navigation.speed = 0f;
+            navigation.ResetPath();
             return Node.Status.SUCCESS;
         }
 
@@ -466,10 +470,10 @@ namespace Actions
 
         public class GuardGoTo : IAction
         {
-            private AnimationController animator;
+            private GuardAnimationController animator;
             private NavMeshAgent navigation;
             private System.Func<Vector3> getdestination;
-            public GuardGoTo (AnimationController animator ,NavMeshAgent navigation,System.Func<Vector3> getdestination)
+            public GuardGoTo (GuardAnimationController animator ,NavMeshAgent navigation,System.Func<Vector3> getdestination)
             {
                 this.animator = animator;
                 this.navigation=navigation;
@@ -498,11 +502,11 @@ namespace Actions
 
         public class Inspect : IAction
         {
-            private AnimationController animator;
+            private GuardAnimationController animator;
             private NavMeshAgent navigation;
             private AISensors sensors;
             private System.Func<Vector3> getdestination;
-            public Inspect (AnimationController animator ,NavMeshAgent navigation ,AISensors sensors ,System.Func<Vector3> getdestination)
+            public Inspect (GuardAnimationController animator ,NavMeshAgent navigation ,AISensors sensors ,System.Func<Vector3> getdestination)
             {
                 this.animator = animator;
                 this.navigation=navigation;
@@ -519,9 +523,10 @@ namespace Actions
                 navigation.SetDestination(destination); 
                 if(navigation.remainingDistance< 2f && !navigation.pathPending)
                 {
-                    animator.Idle();
                     this.navigation.speed = 0f;
+                    animator.Idle();
                     sensors.ClearSource();
+                    animator.ResetAlert();
                     navigation.ResetPath();
                     return Node.Status.SUCCESS;
                 }
