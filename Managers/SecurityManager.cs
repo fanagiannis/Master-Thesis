@@ -17,4 +17,14 @@ public class SecurityManager : MonoBehaviour
     {
         return enemyManager;
     }
+
+    public bool GetPlayerAlive()
+    {
+        return enemyManager.PlayerAlive();
+    }
+
+    public void ResetPlayerAlive()
+    {
+        enemyManager.ResetPlayerAlive();
+    }
 }

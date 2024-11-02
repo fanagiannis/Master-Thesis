@@ -45,7 +45,7 @@ public class GuardScoutBehavior : GuardBehavior
         delayAndShootSequence.AddChild(shootDelay);
         delayAndShootSequence.AddChild(shootAction);
 
-        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => EnemyMaster.Instance.PlayerAlive() || sensors.GetVisibleTarget() );
+        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => SecurityManager.Instance.GetPlayerAlive() || sensors.GetVisibleTarget() );
 
         Sequence shootSequence = new Sequence("Sequence Shoot Target");
         shootSequence.AddChild(repeat);

@@ -9,7 +9,7 @@ public class HostileAgent : Agent
     [SerializeField]protected Guard entity;
     public void ResetPlayerAlive()
     {
-        EnemyMaster.Instance.ResetPlayerAlive();
+        SecurityManager.Instance.ResetPlayerAlive();
         InDanger=false;
     }
     public bool TargetSpotted()
@@ -18,6 +18,6 @@ public class HostileAgent : Agent
     }
     public void SetPlayerDead()
     {
-        EnemyMaster.Instance.ResetPlayerAlive();
+        SecurityManager.Instance.ResetPlayerAlive();
     }
 }
