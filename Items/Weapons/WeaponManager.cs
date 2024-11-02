@@ -16,14 +16,14 @@ public class WeaponManager : MonoBehaviour
             Debug.Log($"Hit {hit.collider.gameObject.name}");
             if(hit.collider.gameObject.CompareTag("Guard")||hit.collider.gameObject.CompareTag("Zombie"))
             {
-                GameObject impact = Instantiate(enemyHitFX, hit.point+new Vector3(0,Random.Range(0.2f,0.7f),0), Quaternion.LookRotation(-hit.normal),parent:hit.collider.gameObject.transform);
+                GameObject impact = Instantiate(enemyHitFX, hit.point+new Vector3(0,Random.Range(0.2f,0.7f),Random.Range(0.2f,0.7f)), Quaternion.LookRotation(-hit.normal),parent:hit.collider.gameObject.transform);
                 hit.collider.gameObject.GetComponent<Entity>().TakeDamage(10);
                 Destroy(impact, 0.5f);
             }
 
             else if(hit.collider.gameObject.CompareTag("Wall"))
             {
-                GameObject impact = Instantiate(hitFX, hit.point+new Vector3(0,Random.Range(0f,0.7f),0), Quaternion.LookRotation(hit.normal));
+                GameObject impact = Instantiate(hitFX, hit.point+new Vector3(0,Random.Range(0.2f,0.7f),Random.Range(0.2f,0.7f)), Quaternion.LookRotation(hit.normal));
                 Destroy(impact, 2f);
             } 
         }
