@@ -26,15 +26,7 @@ public class GuardPatrolBehavior : GuardBehavior
         {
             BT.Process();
             targetInRange=TargetInRange(sensors.GetVisibleTarget(),10f);
-            //DEBUG!!!!!!!!!!!!
-            // if(InDanger)
-            // {
-            //     sensors.viewAngle=270f;
-            // }
-            // else
-            // {
-            //     sensors.viewAngle=150f;
-            // }
+            //DEBUG!!!!!!!!!!!
             if(targetInRange)
             {
                 navigation.ResetPath();

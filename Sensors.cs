@@ -62,10 +62,7 @@ public class AISensors : MonoBehaviour
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask)&&target.gameObject.activeSelf)
                 {
                     timer=0f;
-                    if(!visibleTargets.Contains(target))
-                    {
-                        visibleTargets.Add(target);
-                    }
+                    SpotTarget(target);
                 }
             }
         }
@@ -87,7 +84,6 @@ public class AISensors : MonoBehaviour
                 ClearTargets(detectedSoundSources);
                 if (!src.Sound() && !detectedSoundSources.Contains(target))
                 {
-                    
                     detectedSoundSources.Add(target);
                 }
             }
@@ -115,6 +111,14 @@ public class AISensors : MonoBehaviour
         foreach (Transform hearedSource in detectedSoundSources)
         {
             Gizmos.DrawLine(transform.position, hearedSource.position);
+        }
+    }
+
+    public void SpotTarget(Transform target)
+    {
+        if(!visibleTargets.Contains(target))
+        {
+            visibleTargets.Add(target);
         }
     }
 

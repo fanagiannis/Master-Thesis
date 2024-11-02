@@ -8,7 +8,6 @@ public class EnemyManager : MonoBehaviour
     public List<Zombie> zombiesList;
     public List<Guard> guardsList;
     public GameObject zombiePrefab,guardPrefab;
-    [SerializeField]private Transform targetPosition;
     [SerializeField]private bool playerAlive=true;
     public float timer;
     void Awake()
@@ -16,17 +15,18 @@ public class EnemyManager : MonoBehaviour
         zombiesList=new List<Zombie>();
         guardsList=new List<Guard>();
         ResetTimer();
+        SearchGuards();
     }
     void Update()
     {
         //ZombieSpawner();
         //GuardSpawner();
     }
-    void ResetTimer()
+    private void ResetTimer()
     {
         timer=Random.Range(2f,3f);
     }
-    void ZombieSpawner()
+    private void ZombieSpawner()
     {
         timer-=Time.deltaTime;
         if (timer < 0)
@@ -37,7 +37,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    void GuardSpawner()
+    private void GuardSpawner()
     {
         timer-=Time.deltaTime;
         if (timer < 0)
@@ -46,6 +46,19 @@ public class EnemyManager : MonoBehaviour
             var obj = Instantiate(guardPrefab,spawnLocations[Random.Range(0,spawnLocations.Count)]);
             guardsList.Add(obj.gameObject.GetComponent<Guard>());
             ResetTimer();
+        }
+    }
+
+    private void SearchGuards()
+    {
+        GameObject[] guardObjects = GameObject.FindGameObjectsWithTag("Guard");
+        foreach (var guardObject in guardObjects)
+        {
+            Guard guard = guardObject.GetComponent<Guard>();
+            if (guard != null)
+            {
+                guardsList.Add(guard);
+            }
         }
     }
 
@@ -59,10 +72,6 @@ public class EnemyManager : MonoBehaviour
         {
             guard.gameObject.GetComponent<GuardBehavior>().SetPlayerDead();
         }
-    }
-    public Transform Target()
-    {
-        return targetPosition;
     }
     public void ResetPlayerAlive()
     {
