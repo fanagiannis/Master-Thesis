@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMaster : MonoBehaviour
+public class EnemyManager : MonoBehaviour
 {
     public List<Transform> spawnLocations;
     public List<Zombie> zombiesList;
     public List<Guard> guardsList;
     public GameObject zombiePrefab,guardPrefab;
-    public static EnemyMaster Instance;
+    public static EnemyManager Instance;
     [SerializeField]private Transform targetPosition;
     [SerializeField]private bool playerAlive=true;
     public float timer;
