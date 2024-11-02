@@ -8,13 +8,11 @@ public class EnemyManager : MonoBehaviour
     public List<Zombie> zombiesList;
     public List<Guard> guardsList;
     public GameObject zombiePrefab,guardPrefab;
-    public static EnemyManager Instance;
     [SerializeField]private Transform targetPosition;
     [SerializeField]private bool playerAlive=true;
     public float timer;
     void Awake()
     {
-        Instance = this;
         zombiesList=new List<Zombie>();
         guardsList=new List<Guard>();
         ResetTimer();
