@@ -4,6 +4,7 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using System;
 using Unity.VisualScripting;
+using System.Collections.Generic;
 
 namespace Actions
 {
@@ -400,6 +401,73 @@ namespace Actions
                 navigation.ResetPath(); 
             }
         }
+
+        public class GuardPatrol : IAction
+        {
+            private Agent agent;
+            private NavMeshAgent navigation;
+            private AnimationController animator;
+            private List<Transform> patrolPoints;
+            private float waitTime = 2f; 
+            private float timer; 
+            private bool isWaiting = false;
+            private int currentPatrolIndex = 0; 
+
+            public GuardPatrol(Agent agent, NavMeshAgent navigation, AnimationController animator, List<Transform> patrolPoints)
+            {
+                this.agent = agent;
+                this.navigation = navigation;
+                this.animator = animator;
+                this.patrolPoints = patrolPoints;
+            }
+
+            public Node.Status Process()
+            {
+                if (isWaiting)
+                {
+                    if (Time.time - timer >= waitTime)
+                    {
+                        isWaiting = false;
+                        SetNextDestination(); 
+                    }
+                    return Node.Status.RUNNING;
+                }
+                
+                if (HasReachedDestination())
+                {
+                    animator.Idle();
+                    isWaiting = true;
+                    timer = Time.time; 
+                    return Node.Status.RUNNING; 
+                }
+
+                return Node.Status.RUNNING;
+            }
+
+            private bool HasReachedDestination()
+            {
+                return !navigation.pathPending && navigation.remainingDistance < 0.5f;
+            }
+
+            private void SetNextDestination()
+            {
+                navigation.speed = 2f;
+                animator.Walk();
+                if (patrolPoints.Count > 0)
+                {
+                    navigation.SetDestination(patrolPoints[currentPatrolIndex].position);
+                    currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count; 
+                }
+            }
+
+            public void Reset()
+            {
+                isWaiting = false;
+                currentPatrolIndex = 0; 
+                navigation.ResetPath(); 
+            }
+        }
+
 
         public class ShootAction : IAction
         {

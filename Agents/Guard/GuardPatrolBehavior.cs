@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 public class GuardPatrolBehavior : GuardBehavior
 {
     [Header("Patrol Variables")]
+    [SerializeField]private List<Transform> patrolPoints;
     [SerializeField]private Transform safezone;
     
     public override void Start()
@@ -69,7 +70,8 @@ public class GuardPatrolBehavior : GuardBehavior
         
 
         // ACTIONS
-        Action patrol = new Action("Action Guard Patrol", new GuardRandomPatrol(this, this.navigation, this.animator));
+        Action randompatrol = new Action("Action Guard Random Patrol", new GuardRandomPatrol(this, this.navigation, this.animator));
+        Action patrol = new Action("Action Guard Patrol", new GuardPatrol(this, this.navigation, this.animator,patrolPoints));
         Action takeCover = new Action("Action Take Cover", new GuardGoTo(this.animator, this.navigation, () => safezone.position));
         Action crouchAction = new Action("Action Crouch", new Crouch(this.animator));
         Action standUp = new Action("Action Stand", new ActionReset(new Crouch(this.animator)));
