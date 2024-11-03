@@ -14,6 +14,7 @@ public class GuardScoutBehavior : GuardBehavior
         base.Start();
         animator.Alert();
         range = 2*sensors.Range();
+        GetComponentInChildren<Light>().range = sensors.Range();;
     }
     public override void Update()
     {
