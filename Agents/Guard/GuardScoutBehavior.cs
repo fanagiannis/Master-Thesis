@@ -13,6 +13,7 @@ public class GuardScoutBehavior : GuardBehavior
     {
         base.Start();
         animator.Alert();
+        range = 2*sensors.Range();
     }
     public override void Update()
     {
@@ -32,7 +33,7 @@ public class GuardScoutBehavior : GuardBehavior
         Condition canShoot = new Condition("Condition CanShootTarget?", new ConditionLeaf(() => targetInRange));
 
         //ACTIONS
-        Action searchAction = new Action("Action Search",new GuardSearch(this.gameObject.transform,5f,0f,100f));
+        Action searchAction = new Action("Action Search",new GuardSearch(this.gameObject.transform,2f,0f,100f));
         Action setDanger = new Action("Action Set Danger", new SetDanger(this, true));
         Action lookAt = new Action("Action Look At Target", new AimTarget(this.gameObject.transform, () => sensors.GetVisibleTarget(),10f));
         Action stand = new Action("Action Stand", new Stand(this.animator));

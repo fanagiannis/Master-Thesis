@@ -187,6 +187,10 @@ public class AISensors : MonoBehaviour
             return null;
         }
     }
+    public float Range()
+    {
+        return viewRadius;
+    }
     public void Debugger(string ex)
     {
         Debug.Log(ex);
