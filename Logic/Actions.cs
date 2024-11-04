@@ -700,5 +700,20 @@ namespace Actions
                 
             }
         }
+
+        public class Explode : IAction
+        {
+            private GameObject entity;
+            public Explode(GameObject gameObject)
+            {
+                entity=gameObject;
+            }
+            public Node.Status Process()
+            {
+                entity.SetActive(false);
+                return Node.Status.SUCCESS;
+            }
+
+        }
     }  
 }

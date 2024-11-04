@@ -19,6 +19,11 @@ public class GuardBehavior : HostileAgent
         base.Start();
         animator = GetComponent<GuardAnimationController>();
         entity = GetComponent<Guard>();
+        if(GetComponentInChildren<Light>()!=null)
+        {
+            GetComponentInChildren<Light>().range = sensors.Range();
+        }
+        
         BakeBehavior();
     }
     public override void Update()
@@ -28,15 +33,7 @@ public class GuardBehavior : HostileAgent
             BT.Process();
             targetInRange=TargetInRange(sensors.GetVisibleTarget(),range);
             //DEBUG!!!!!!!!!!!!
-            // if(InDanger)
-            // {
-            //     sensors.viewAngle=270f;
-            // }
-            // else
-            // {
-            //     sensors.viewAngle=150f;
-            // }
-            if(targetInRange)
+            if(this.gameObject.activeSelf && targetInRange)
             {
                 navigation.ResetPath();
             }

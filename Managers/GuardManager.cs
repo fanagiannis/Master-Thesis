@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
+    [Header("Lists")]
     public List<Transform> spawnLocations;
     public List<Zombie> zombiesList;
     public List<Guard> guardsList;
-    public GameObject zombiePrefab,guardPrefab;
-    [SerializeField]private bool playerAlive=true;
+    [Header("Prefabs")]
+    public GameObject zombiePrefab;
+    public GameObject guardPrefab;
+    [Header("Timer")]
     public float timer;
     void Awake()
     {
@@ -75,10 +78,10 @@ public class EnemyManager : MonoBehaviour
     }
     public void ResetPlayerAlive()
     {
-        playerAlive=false;
+        SecurityManager.Instance.SetPlayerAlive(false);
     }
     public bool PlayerAlive()
     {
-        return playerAlive;
+        return SecurityManager.Instance.PlayerAlive();
     }
 }

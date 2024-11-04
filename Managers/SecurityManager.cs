@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SecurityManager : MonoBehaviour
 {
     public static SecurityManager Instance;
     public enum SecurityState{Alert,Cautious,Idle}
+    [Header("Enemy Manager")]
     [SerializeField]private EnemyManager enemyManager;
+    [Header("Security State")]
     [SerializeField]private SecurityState currentState;
+    [Header("Target")]
     [SerializeField]private Transform targetPosition;
+    [SerializeField]private bool playerAlive=true;
     void Awake()
     {
         Instance = this;
@@ -49,5 +54,17 @@ public class SecurityManager : MonoBehaviour
     public Transform Target()
     {
         return targetPosition;
+    }
+    public SecurityState CurrentSecurityState()
+    {
+        return currentState;
+    }
+    public bool PlayerAlive()
+    {
+        return playerAlive;
+    }
+    public void SetPlayerAlive(bool set)
+    {
+        playerAlive=set;
     }
 }
