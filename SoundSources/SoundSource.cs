@@ -6,7 +6,7 @@ public class SoundSource : MonoBehaviour
 {
     [SerializeField]private float volume;
     [SerializeField]private AudioSource audioSource;
-    [SerializeField]private bool played=true;
+    [SerializeField]private bool played=false;
     private float timer=0.2f;
     void Awake()
     {
@@ -42,6 +42,11 @@ public class SoundSource : MonoBehaviour
     {
         audioSource.pitch = Random.Range(0.9f, 1.1f);
         audioSource.PlayOneShot(audioSource.clip);
+    }
+
+    public void Activate()
+    {
+        played=false;
     }
 
 }
