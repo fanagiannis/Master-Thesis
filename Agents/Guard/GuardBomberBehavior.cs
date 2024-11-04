@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 
 public class GuardBomberBehavior : GuardBehavior
 {
+    [Header("Explosion")]
+    [SerializeField]private GameObject explosionPrefab;
     public override void Start()
     {
         base.Start();
@@ -29,7 +31,7 @@ public class GuardBomberBehavior : GuardBehavior
         Action chaseTarget = new Action("Action Chase Target",new GuardGoTo(animator,navigation,()=>SecurityManager.Instance.Target().position));
 
         //DEBUG
-        Action explode = new Action("Action Explode",new Explode(gameObject));
+        Action explode = new Action("Action Explode",new Explode(this.gameObject,explosionPrefab,transform));
         //DEBUG
 
         Sequence explodeSequence = new Sequence("Sequence Explode");

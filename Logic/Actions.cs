@@ -703,17 +703,21 @@ namespace Actions
 
         public class Explode : IAction
         {
+            private GameObject explosion;
             private GameObject entity;
-            public Explode(GameObject gameObject)
+            private Transform position;
+            public Explode(GameObject entitygo, GameObject explosiongo, Transform transform)
             {
-                entity=gameObject;
+                entity=entitygo;
+                explosion=explosiongo;
+                position=transform;
             }
             public Node.Status Process()
             {
+                GameObject.Instantiate(explosion,position.position,Quaternion.identity);
                 entity.SetActive(false);
                 return Node.Status.SUCCESS;
             }
-
         }
     }  
 }
