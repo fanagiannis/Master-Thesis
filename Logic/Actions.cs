@@ -402,6 +402,67 @@ namespace Actions
             }
         }
 
+        public class GuardPatrolAroundPoint : IAction
+        {
+            private Agent agent;
+            private NavMeshAgent navigation;
+            private AnimationController animator;
+            private Transform pointToDefend;
+            private float waitTime = 2f; 
+            private float timer; 
+            private bool isWaiting = false;
+
+            public GuardPatrolAroundPoint(Agent agent, NavMeshAgent navigation,AnimationController animator, Transform defensePoint)
+            {
+                this.agent = agent;
+                this.navigation = navigation;
+                this.animator = animator;          
+                pointToDefend = defensePoint;
+            }
+
+            public Node.Status Process()
+            {
+                if (isWaiting)
+                {
+                    if (Time.time - timer >= waitTime)
+                    {
+                        isWaiting = false;
+                        SetRandomDestination(); 
+                    }
+                    return Node.Status.RUNNING;
+                }
+                if (navigation.remainingDistance < 0.5f && !navigation.pathPending)
+                {
+                    animator.Idle();
+                    isWaiting = true;
+                    timer = Time.time; 
+                    return Node.Status.RUNNING; 
+                }
+                return Node.Status.RUNNING; 
+            }
+
+            private void SetRandomDestination()
+            {
+                Vector3 randomPoint = UnityEngine.Random.insideUnitSphere * 10f+pointToDefend.position;
+                this.navigation.speed = 2f;
+                animator.Walk();
+                NavMeshHit hit;
+
+                
+                if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas))
+                {
+                    navigation.SetDestination(hit.position);
+                }
+    
+            }
+
+            public void Reset()
+            {
+                isWaiting = false;
+                navigation.ResetPath(); 
+            }
+        }
+
         public class GuardPatrol : IAction
         {
             private Agent agent;
@@ -670,13 +731,11 @@ namespace Actions
 
             public Node.Status Process()
             {
-                LineRenderer lineRenderer = guardTransform.GetComponent<LineRenderer>();
-                lineRenderer.enabled = false;
                 if(Mathf.Approximately(currentAngle, targetAngle))
                 {
                     targetAngle = UnityEngine.Random.Range(minAngle,maxAngle);
                 }
-                currentAngle = Mathf.MoveTowards(currentAngle, targetAngle, UnityEngine.Random.Range(0f,5f)*Time.deltaTime);
+                currentAngle = Mathf.MoveTowards(currentAngle, targetAngle, UnityEngine.Random.Range(4f,5f)*Time.deltaTime);
                 guardTransform.localEulerAngles = new Vector3(guardTransform.localEulerAngles.x, currentAngle, guardTransform.localEulerAngles.z);
 
                 return Node.Status.RUNNING;

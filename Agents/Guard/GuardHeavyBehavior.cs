@@ -8,6 +8,8 @@ using Actions.GuardActions;
 
 public class GuardHeavyBehavior : GuardBehavior
 {
+    [Header("Defend Zone")]
+    [SerializeField]private Transform defendZone;
     public override void Start()
     {
         base.Start();
@@ -23,29 +25,67 @@ public class GuardHeavyBehavior : GuardBehavior
         //CONDITIONS
         Condition spotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => sensors.GetVisibleTarget()   && !InDanger));
         Condition notspotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => !sensors.GetVisibleTarget()   && !InDanger));
+        Condition canShoot = new Condition("Condition CanShootTarget?", new ConditionLeaf(() => targetInRange));
+
 
         //ACTIONS
         Action lookAt = new Action("Action Look At Target", new LookAtTarget(this.navigation, this.animator, () => sensors.GetVisibleTarget() ));
-        Action randomSearch = new Action("Action Random Search", new GuardRandomSearch(this.transform, 0f, 80f));
+        Action defendingPatrol = new Action("Action Defending Patrol",new GuardPatrolAroundPoint(this,this.navigation,this.animator,defendZone));
+        Action gotoDefendPosition = new Action("Action Take Cover", new GuardGoTo(this.animator, this.navigation, () => defendZone.position));
+        Action crouch = new Action("Action Crouch", new Crouch(this.animator));
+        Action stand = new Action("Action Stand", new Stand(this.animator));
+        Action aim = new Action("Action Aim At Target", new Aim(this.animator));
+        Action shoot = new Action("Action Shoot Target", new ShootAction( animator, Shoot , entity.Damage() , ()=>sensors.GetVisibleTarget() ));
 
-        Sequence searchSequence = new Sequence("Sequence Search");
-        searchSequence.AddChild(notspotTarget);
-        searchSequence.AddChild(randomSearch);
+        //DELAY
+        WaitNode delay = new WaitNode("Delay Chase", 1f);
 
-        Sequence lookatSequence = new Sequence("Sequence LookAt");
-        lookatSequence.AddChild(lookAt);
-        //SHOOT
+        Sequence delayAndShootSequence = new Sequence("Sequence Delay and Shoot");
+        delayAndShootSequence.AddChild(canShoot);
+        delayAndShootSequence.AddChild(delay);
+        delayAndShootSequence.AddChild(shoot);
 
-        Sequence spotSequence = new Sequence("Sequence Spot");
-        spotSequence.AddChild(spotTarget);
-        spotSequence.AddChild(lookatSequence);
+        Sequence shootTargetSequence = new Sequence("Sequence Shoot Target");
+        RepeatNode repeat = new RepeatNode("Repeat Shoot", delayAndShootSequence, () => SecurityManager.Instance.GetEnemyManager().PlayerAlive() || sensors.GetVisibleTarget() );
+        shootTargetSequence.AddChild(repeat);
+        shootTargetSequence.AddChild(delayAndShootSequence);
 
-        Fallback searchFallback = new Fallback("Fallback Search");
-        searchFallback.AddChild(spotSequence);
-        searchFallback.AddChild(searchFallback);
+        Sequence aimAtTargetSequence = new Sequence("Sequence Aim At Target");
+        aimAtTargetSequence.AddChild(canShoot);
+        aimAtTargetSequence.AddChild(lookAt);
+        aimAtTargetSequence.AddChild(delay);
+        aimAtTargetSequence.AddChild(aim);
+        aimAtTargetSequence.AddChild(shootTargetSequence);
+
+        Sequence coverFireSequence = new Sequence("Sequence Cover Fire");
+        coverFireSequence.AddChild(canShoot);
+        coverFireSequence.AddChild(stand);
+        coverFireSequence.AddChild(aimAtTargetSequence);
+
+        Fallback coverFireFallback = new Fallback("Fallback Cover Fire");
+        coverFireFallback.AddChild(coverFireSequence);
+
+        Sequence checkCoverSequence = new Sequence("Sequence Check Cover");
+        //safe?
+        //stand
+
+        Sequence defendPositionSequence = new Sequence("Sequence Defend Position");
+        defendPositionSequence.AddChild(spotTarget);
+        defendPositionSequence.AddChild(gotoDefendPosition);
+        defendPositionSequence.AddChild(crouch);
+        defendPositionSequence.AddChild(coverFireFallback);
+        //check cover safety sequence
+
+        Sequence patrolSequence = new Sequence("Sequence Patrol");
+        patrolSequence.AddChild(notspotTarget);
+        patrolSequence.AddChild(defendingPatrol);
+
+        Fallback roamFallback = new Fallback("Fallback Search");
+        roamFallback.AddChild(defendPositionSequence);
+        roamFallback.AddChild(patrolSequence);
 
         Fallback rootFallback = new Fallback("Fallback Root");
-        rootFallback.AddChild(searchFallback);
+        rootFallback.AddChild(roamFallback);
 
         BT.AddChild(rootFallback);
         BT.PrintTree();
