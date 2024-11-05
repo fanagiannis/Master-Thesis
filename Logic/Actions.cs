@@ -652,6 +652,42 @@ namespace Actions
             }
         }
 
+        public class GuardRandomSearch : IAction
+        {
+            private Transform guardTransform;
+            private float minAngle;
+            private float maxAngle;
+            private float currentAngle;
+            private float targetAngle;
+
+            public GuardRandomSearch(Transform guardTransform, float minAngle, float maxAngle)
+            {
+                this.guardTransform = guardTransform;
+                this.minAngle = minAngle;
+                this.maxAngle = maxAngle;
+                this.currentAngle = guardTransform.localEulerAngles.y;
+            }
+
+            public Node.Status Process()
+            {
+                LineRenderer lineRenderer = guardTransform.GetComponent<LineRenderer>();
+                lineRenderer.enabled = false;
+                if(Mathf.Approximately(currentAngle, targetAngle))
+                {
+                    targetAngle = UnityEngine.Random.Range(minAngle,maxAngle);
+                }
+                currentAngle = Mathf.MoveTowards(currentAngle, targetAngle, UnityEngine.Random.Range(0f,5f)*Time.deltaTime);
+                guardTransform.localEulerAngles = new Vector3(guardTransform.localEulerAngles.x, currentAngle, guardTransform.localEulerAngles.z);
+
+                return Node.Status.RUNNING;
+            }
+
+            public void Reset()
+            {
+                currentAngle = guardTransform.localEulerAngles.y;
+            }
+        }
+
         public class AimTarget : IAction
         {
             private Transform guardTransform;
