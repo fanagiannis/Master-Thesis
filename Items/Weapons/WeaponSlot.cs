@@ -13,6 +13,10 @@ public class WeaponSlot : MonoBehaviour
     {
         equippedweapon = GetComponentInChildren<WeaponManager>();
     }
+    public WeaponManager EquippedWeapon()
+    {
+        return equippedweapon;
+    }
     public void FireEquippedWeapon(Transform origin)
     {
         equippedweapon.Fire(origin);

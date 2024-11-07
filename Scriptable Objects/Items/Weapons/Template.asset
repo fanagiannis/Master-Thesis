@@ -17,8 +17,8 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 9162d39dfff8eee418769488b7282343, type: 3}
   type: 3
   weaponName: Template
-  maxAmmo: 90
-  currentAmmo: 30
+  maxAmmo: 60
+  currentAmmo: 0
   magazineAmmo: 30
   damage: 30
   fireRate: 10
