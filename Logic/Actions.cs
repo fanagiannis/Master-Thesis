@@ -307,7 +307,7 @@ namespace Actions
 
             public void Reset()
             {
-                animator.ResetAll();
+                //animator.ResetAll();
             }
 
         }
