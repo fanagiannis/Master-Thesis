@@ -6,7 +6,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerShoot : MonoBehaviour
 {
-    [SerializeField] private UnityEvent Shoot;
+    [SerializeField]private WeaponSlot weaponSlot;
+    [SerializeField]private UnityEvent Shoot;
     [SerializeField]private UnityEvent StopShooting; 
     [SerializeField] private float fireRate = 0.1f; 
     private PlayerInput playerInput;
@@ -19,7 +20,7 @@ public class PlayerShoot : MonoBehaviour
 
     public void Control()
     {
-        if (playerInput.actions["Fire"].ReadValue<float>() > 0)
+        if (playerInput.actions["Fire"].ReadValue<float>() > 0 && weaponSlot.CanFire())
         {
             if (Time.time >= nextFireTime)
             {
@@ -27,10 +28,15 @@ public class PlayerShoot : MonoBehaviour
                 nextFireTime = Time.time + fireRate;  
             }
         }
+        else if (playerInput.actions["Reload"].ReadValue<float>()>0 && weaponSlot.CanReload())
+        {
+            weaponSlot.Reload();
+        }
         else
         {
             StopShooting.Invoke();
         }
+        
     }
     public void debug()
     {
