@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c8d49b2df7676a34baac29ed9ce3d112, type: 3}
-  m_Name: Template
+  m_Name: SMG
   m_EditorClassIdentifier: 
   prefab: {fileID: 5388248511104658989, guid: ad121bbf1bb5b48438403d46dbcc0eaf, type: 3}
   sound: {fileID: 8300000, guid: 1b766da7cc2d648aa84e36cb5fe8abcb, type: 3}
   icon: {fileID: 21300000, guid: 9162d39dfff8eee418769488b7282343, type: 3}
-  type: 3
-  weaponName: Template
-  maxAmmo: 150
-  currentAmmo: 30
-  magazineAmmo: 30
-  damage: 30
+  type: 4
+  weaponName: SMG
+  maxAmmo: 220
+  currentAmmo: 7
+  magazineAmmo: 20
+  damage: 10
   fireRate: 10

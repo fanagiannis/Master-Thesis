@@ -18,6 +18,10 @@ public class Weapon : ScriptableObject
     [SerializeField]private int magazineAmmo;
     [SerializeField]private int damage;
     [SerializeField]private int fireRate;
+    public void AddAmmo(int value)
+    {
+        maxAmmo+=value;
+    }
     public void DecAmmo(int value)
     {
         currentAmmo -= value;
