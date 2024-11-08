@@ -24,33 +24,61 @@ public class WeaponSlot : MonoBehaviour
                 weaponsList[currentWeaponIndex].gameObject.SetActive(true); 
             }
         }
-        SetWeapon();
+        SetWeapon(currentWeaponIndex);
     } 
     private void Update()
     {
+        WeaponChange();
+    }
+    public void WeaponChange()
+    {
         if(input.actions["WeaponChange"].ReadValue<Vector2>()!=Vector2.zero)
         {
-            if(input.actions["WeaponChange"].ReadValue<Vector2>().y>0)
-            {
-                currentWeaponIndex+=1;
-            }
-            else if(input.actions["WeaponChange"].ReadValue<Vector2>().y<0)
-            {
-                currentWeaponIndex-=1;
-            }
-            if(currentWeaponIndex<0)
-            {
-                currentWeaponIndex=weaponsList.Count-1;
-            }
-            else if (currentWeaponIndex>weaponsList.Count-1)
-            {
-                currentWeaponIndex=0;
-            }
-            if (weaponsList.Count > 0)
-            {
-                weaponsList[currentWeaponIndex].gameObject.SetActive(true); 
-            }
-            foreach (var weapon in weaponsList)
+            WeaponIndexControl();
+            WeaponIndexFlow();
+            WeaponListManipulation();
+            SetWeapon(currentWeaponIndex);
+        }
+    }
+    public void SetWeapon(int index)
+    {
+        
+        if(index>0 && index < weaponsList.Count-1)
+        {
+            weaponsList[index].gameObject.SetActive(true);
+        }
+        equippedweapon = GetComponentInChildren<WeaponManager>();
+    }
+    public void WeaponIndexFlow()
+    {
+        if(currentWeaponIndex<0)
+        {
+            currentWeaponIndex=weaponsList.Count-1;
+        }
+        else if (currentWeaponIndex>weaponsList.Count-1)
+        {
+            currentWeaponIndex=0;
+        }
+        if (weaponsList.Count > 0)
+        {
+            weaponsList[currentWeaponIndex].gameObject.SetActive(true); 
+        }
+        
+    }
+    public void WeaponIndexControl()
+    {
+        if(input.actions["WeaponChange"].ReadValue<Vector2>().y>0)
+        {
+            currentWeaponIndex+=1;
+        }
+        else if(input.actions["WeaponChange"].ReadValue<Vector2>().y<0)
+        {
+            currentWeaponIndex-=1;
+        }
+    }
+    public void WeaponListManipulation()
+    {
+        foreach (var weapon in weaponsList)
         {
             if(weapon.gameObject.tag == "Weapon")
             {
@@ -61,14 +89,6 @@ public class WeaponSlot : MonoBehaviour
                 weaponsList[currentWeaponIndex].gameObject.SetActive(true); 
             }
         }
-            SetWeapon();
-            Debug.Log(input.actions["WeaponChange"].ReadValue<Vector2>());
-        }
-        
-    }
-    public void SetWeapon()
-    {
-        equippedweapon = GetComponentInChildren<WeaponManager>();
     }
     public WeaponManager EquippedWeapon()
     {
