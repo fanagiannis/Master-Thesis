@@ -17,8 +17,8 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 9162d39dfff8eee418769488b7282343, type: 3}
   type: 4
   weaponName: SMG
-  maxAmmo: 220
-  currentAmmo: 7
+  maxAmmo: 160
+  currentAmmo: 20
   magazineAmmo: 20
   damage: 10
-  fireRate: 10
+  fireRate: 0.05

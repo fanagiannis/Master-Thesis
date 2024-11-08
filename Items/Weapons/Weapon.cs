@@ -17,20 +17,7 @@ public class Weapon : ScriptableObject
     [SerializeField]private int currentAmmo;
     [SerializeField]private int magazineAmmo;
     [SerializeField]private int damage;
-    [SerializeField]private int fireRate;
-    public void AddAmmo(int value)
-    {
-        maxAmmo+=value;
-    }
-    public void DecAmmo(int value)
-    {
-        currentAmmo -= value;
-    }
-    public void Reload()
-    {
-        currentAmmo = magazineAmmo;
-        maxAmmo -= magazineAmmo;
-    }
+    [SerializeField]private float fireRate;
     public string Name
     {
         get { return weaponName; }
@@ -39,7 +26,7 @@ public class Weapon : ScriptableObject
     {
         get { return damage; }
     }
-    public int FireRate
+    public float FireRate
     {
         get { return fireRate; }
     }

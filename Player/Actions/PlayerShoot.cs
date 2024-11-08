@@ -11,7 +11,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField]private UnityEvent StopShooting; 
     [SerializeField] private float fireRate = 0.1f; 
     private PlayerInput playerInput;
-    private float nextFireTime;
+    [SerializeField]private float nextFireTime;
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class PlayerShoot : MonoBehaviour
             if (Time.time >= nextFireTime)
             {
                 Shoot.Invoke();  
-                nextFireTime = Time.time + fireRate;  
+                nextFireTime = Time.time + weaponSlot.EquippedWeapon().Data().FireRate;  
             }
         }
         else if (playerInput.actions["Reload"].ReadValue<float>()>0 && weaponSlot.CanReload())

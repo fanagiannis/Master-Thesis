@@ -14,6 +14,6 @@ public class UIWeaponStats : MonoBehaviour
     }
     void Update()
     {
-        WeaponStats.text=$"{weaponSlot.EquippedWeapon().Data().Name}\n{weaponSlot.EquippedWeapon().Data().CurrentAmmo} / {weaponSlot.EquippedWeapon().Data().MaxAmmo}";
+        WeaponStats.text=$"{weaponSlot.EquippedWeapon().Data().Name}\n{weaponSlot.EquippedWeapon().CurrentAmmo} / {weaponSlot.EquippedWeapon().MaxAmmo}";
     }
 }

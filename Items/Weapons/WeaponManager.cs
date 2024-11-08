@@ -5,8 +5,22 @@ using UnityEngine.InputSystem;
 
 public class WeaponManager : MonoBehaviour
 {
+    [Header("Weapon Data")]
     [SerializeField]private Weapon weaponData;
+    [Header("Prefabs")]
     [SerializeField]private GameObject hitFX,enemyHitFX;
+    [Header("Weapon Stats")]
+    [SerializeField]private int damage;
+    [SerializeField]private int maxAmmo;
+    [SerializeField]private int currentAmmo;
+    [SerializeField]private int magazineAmmo;
+    private void Start()
+    {
+        damage=weaponData.Damage;
+        maxAmmo=weaponData.MaxAmmo;
+        magazineAmmo=weaponData.MagazineAmmo;
+        currentAmmo=magazineAmmo;
+    }
     public void Fire(Transform origin)
     {
         RaycastHit hit;
@@ -17,7 +31,7 @@ public class WeaponManager : MonoBehaviour
             if(hit.collider.gameObject.CompareTag("Guard")||hit.collider.gameObject.CompareTag("Zombie"))
             {
                 GameObject impact = Instantiate(enemyHitFX, hit.point+new Vector3(0,Random.Range(0.2f,0.7f),0), Quaternion.LookRotation(hit.normal),parent:hit.collider.gameObject.transform);
-                hit.collider.gameObject.GetComponent<Entity>().TakeDamage(10);
+                hit.collider.gameObject.GetComponent<Entity>().TakeDamage(weaponData.Damage);
                 Destroy(impact, 0.5f);
             }
 
@@ -32,4 +46,21 @@ public class WeaponManager : MonoBehaviour
     {
         return weaponData;
     }
+    public void AddAmmo(int value)
+    {
+        maxAmmo+=value;
+    }
+    public void DecAmmo(int value)
+    {
+        currentAmmo -= value;
+    }
+    public void Reload()
+    {
+        currentAmmo = magazineAmmo;
+        maxAmmo -= magazineAmmo;
+    }
+    public int Damage{get {return damage;}}
+    public int MaxAmmo{get {return maxAmmo;}}
+    public int CurrentAmmo{get {return currentAmmo;}}
+    public int MagazineAmmo{get {return magazineAmmo;}}
 }
