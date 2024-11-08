@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,7 @@ public class WeaponSlot : MonoBehaviour
     [SerializeField]private PlayerInput input;
     [SerializeField]private WeaponManager equippedweapon;
     [SerializeField]private List<WeaponManager> weaponsList;
+    [SerializeField]private ParticleSystem muzzleFlash;
     [SerializeField]private int currentWeaponIndex = 0;
     private void Start()
     {
@@ -24,6 +26,7 @@ public class WeaponSlot : MonoBehaviour
                 weaponsList[currentWeaponIndex].gameObject.SetActive(true); 
             }
         }
+        
         SetWeapon(currentWeaponIndex);
     } 
     private void Update()
@@ -48,6 +51,7 @@ public class WeaponSlot : MonoBehaviour
             weaponsList[index].gameObject.SetActive(true);
         }
         equippedweapon = GetComponentInChildren<WeaponManager>();
+       // muzzleFlash=equippedweapon.Data().MuzzleFlash;
     }
     public void WeaponIndexFlow()
     {

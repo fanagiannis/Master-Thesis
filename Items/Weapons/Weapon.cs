@@ -9,6 +9,7 @@ public class Weapon : ScriptableObject
 {
     public enum WeaponType{Melee,Pistol,Rifle,AutomaticRifle,SMG}
     [SerializeField]private GameObject prefab;
+    //[SerializeField]private GameObject muzzleFlash;
     [SerializeField]private AudioClip sound;
     [SerializeField]private Sprite icon;
     [SerializeField]private WeaponType type;
@@ -54,4 +55,8 @@ public class Weapon : ScriptableObject
     {
         get { return prefab; }
     }
+    // public GameObject MuzzleFlash
+    // {
+    //     get { return muzzleFlash; }
+    // }
 }
