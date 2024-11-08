@@ -9,7 +9,6 @@ public class WeaponSlot : MonoBehaviour
     [SerializeField]private PlayerInput input;
     [SerializeField]private WeaponManager equippedweapon;
     [SerializeField]private List<WeaponManager> weaponsList;
-    [SerializeField]private ParticleSystem muzzleFlash;
     [SerializeField]private int currentWeaponIndex = 0;
     private void Start()
     {
@@ -33,6 +32,15 @@ public class WeaponSlot : MonoBehaviour
     {
         WeaponChange();
     }
+    public void FireEquippedWeapon(Transform origin)
+    {
+        equippedweapon.Fire(origin);
+        equippedweapon.DecAmmo(1);
+    }
+    public void StopFiringEquippedWeapon()
+    {
+        equippedweapon.StopShooting();
+    }
     public void WeaponChange()
     {
         if(input.actions["WeaponChange"].ReadValue<Vector2>()!=Vector2.zero)
@@ -51,7 +59,6 @@ public class WeaponSlot : MonoBehaviour
             weaponsList[index].gameObject.SetActive(true);
         }
         equippedweapon = GetComponentInChildren<WeaponManager>();
-       // muzzleFlash=equippedweapon.Data().MuzzleFlash;
     }
     public void WeaponIndexFlow()
     {
@@ -97,11 +104,6 @@ public class WeaponSlot : MonoBehaviour
     public WeaponManager EquippedWeapon()
     {
         return equippedweapon;
-    }
-    public void FireEquippedWeapon(Transform origin)
-    {
-        equippedweapon.Fire(origin);
-        equippedweapon.DecAmmo(1);
     }
     public bool CanFire()
     {

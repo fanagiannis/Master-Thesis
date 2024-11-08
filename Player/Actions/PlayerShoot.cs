@@ -22,11 +22,7 @@ public class PlayerShoot : MonoBehaviour
     {
         if (playerInput.actions["Fire"].ReadValue<float>() > 0 && weaponSlot.CanFire())
         {
-            if (Time.time >= nextFireTime)
-            {
-                Shoot.Invoke();  
-                nextFireTime = Time.time + weaponSlot.EquippedWeapon().Data().FireRate;  
-            }
+            FireController();
         }
         else if (playerInput.actions["Reload"].ReadValue<float>()>0 && weaponSlot.CanReload())
         {
@@ -37,6 +33,27 @@ public class PlayerShoot : MonoBehaviour
             StopShooting.Invoke();
         }
         
+    }
+
+    public void FireController()
+    {
+        switch (weaponSlot.EquippedWeapon().Data().Type)
+        {
+            case Weapon.WeaponType.AutomaticRifle:
+            FireAutomatic();
+            break;
+            case Weapon.WeaponType.SMG:
+            FireAutomatic();
+            break;
+        }   
+    }
+    private void FireAutomatic()
+    {
+        if (Time.time >= nextFireTime)
+        {
+            Shoot.Invoke();  
+            nextFireTime = Time.time + weaponSlot.EquippedWeapon().Data().FireRate;  
+        }
     }
     public void debug()
     {
