@@ -86,8 +86,10 @@ public class PlayerShoot : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         StopShooting.Invoke();
     }
-
-    
+    public bool Aiming()
+    {
+        return isAiming;
+    }
     public void debug()
     {
         Debug.Log("Shot");

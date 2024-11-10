@@ -20,8 +20,16 @@ public class PlayerController : MonoBehaviour
         animcontroller=this.gameObject.GetComponent<PlayerAnimationController>();
     }
     public void Control()
-    {   
-        Movement();
+    {    
+        if(!GetComponent<PlayerShoot>().Aiming())
+        {
+            Movement();
+            
+        }
+        else if(GetComponent<PlayerShoot>().Aiming())
+        {
+            animcontroller.ResetAll();
+        }
         Look();
         gravity.Apply(Controller);
     }
@@ -43,7 +51,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Animations(float moveX, float moveZ)
     {
-        animcontroller.ResetAll();
+        animcontroller.ResetAll();  
         if (Mathf.Abs(moveX) > 0.1f || Mathf.Abs(moveZ) > 0.1f) 
         {
             if (moveZ > 0.1f) 
@@ -63,7 +71,7 @@ public class PlayerController : MonoBehaviour
                 animcontroller.WalkLeft();
             }
         }
-    
+
     }
     public PlayerInput PlayerInput(){return playerInput;}
     public bool HasJumped(){return !Controller.isGrounded; }

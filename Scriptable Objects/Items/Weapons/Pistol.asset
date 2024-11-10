@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   prefab: {fileID: 5388248511104658989, guid: ad121bbf1bb5b48438403d46dbcc0eaf, type: 3}
-  sound: {fileID: 8300000, guid: 1b766da7cc2d648aa84e36cb5fe8abcb, type: 3}
+  sound: {fileID: 8300000, guid: 65201ddabb4144f6a8fb9480120b7656, type: 3}
   icon: {fileID: 21300000, guid: 9162d39dfff8eee418769488b7282343, type: 3}
   type: 1
   weaponName: Pistol
