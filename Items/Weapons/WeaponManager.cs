@@ -43,17 +43,13 @@ public class WeaponManager : MonoBehaviour
                 GameObject impact = Instantiate(enemyHitFX, hit.point + new Vector3(0, Random.Range(0.2f, 0.7f), 0), Quaternion.LookRotation(hit.normal), parent: hit.collider.gameObject.transform);
                 hit.collider.gameObject.GetComponent<Entity>().TakeDamage(weaponData.Damage);
                 Destroy(impact, 0.5f);
-
             }
-
             else if (hit.collider.gameObject.CompareTag("Wall"))
             {
                 GameObject impact = Instantiate(hitFX, hit.point + new Vector3(0, Random.Range(0.2f, 0.7f), 0), Quaternion.LookRotation(hit.normal, origin.position - hit.point));
                 Destroy(impact, 2f);
             }
         }
-
-
     }
     public void Aim(bool value)
     {

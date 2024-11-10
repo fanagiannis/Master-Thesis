@@ -25,9 +25,8 @@ public class PlayerShoot : MonoBehaviour
         {  
             FireController();   
         }
-        else if (playerInput.actions["Fire"].ReadValue<float>() <= 0)
-        {
-            
+        else if (playerInput.actions["Fire"].ReadValue<float>() <= 0 || !weaponSlot.CanFire())
+        {     
             StopShooting.Invoke();
             isAiming=false;
         }
