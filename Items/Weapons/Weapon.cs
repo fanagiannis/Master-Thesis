@@ -7,11 +7,11 @@ using UnityEngine;
 [CreateAssetMenu (fileName = "Weapon", menuName = "New ScriptableObject/Weapons/Weapon")]
 public class Weapon : ScriptableObject
 {
-    public enum WeaponType{Melee,Pistol,Rifle,AutomaticRifle,SMG}
+    public enum FireType{Automatic,Single,Burst}
     [SerializeField]private GameObject prefab;
     [SerializeField]private AudioClip sound;
     [SerializeField]private Sprite icon;
-    [SerializeField]private WeaponType type;
+    [SerializeField]private FireType type;
     [SerializeField]private string weaponName;
     [SerializeField]private int maxAmmo;
     [SerializeField]private int currentAmmo;
@@ -42,7 +42,7 @@ public class Weapon : ScriptableObject
     {
         get { return currentAmmo;}
     }
-    public WeaponType Type
+    public FireType Type
     {
         get { return type; }
     }

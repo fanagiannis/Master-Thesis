@@ -12,6 +12,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private float fireRate = 0.1f; 
     private PlayerInput playerInput;
     [SerializeField]private float nextFireTime;
+    [SerializeField]private bool isAiming=false;
 
     private void Awake()
     {
@@ -20,41 +21,48 @@ public class PlayerShoot : MonoBehaviour
 
     public void Control()
     {
-        if (playerInput.actions["Fire"].ReadValue<float>() > 0 && weaponSlot.CanFire())
-        {
-            FireController();
+        if (playerInput.actions["Fire"].ReadValue<float>() > 0  && weaponSlot.CanFire())
+        {  
+            FireController();   
         }
-        else if (playerInput.actions["Reload"].ReadValue<float>()>0 && weaponSlot.CanReload())
+        else if (playerInput.actions["Fire"].ReadValue<float>() <= 0)
+        {
+            
+            StopShooting.Invoke();
+            isAiming=false;
+        }
+        if (playerInput.actions["Reload"].ReadValue<float>()>0 && weaponSlot.CanReload())
         {
             weaponSlot.Reload();
         }
-        else
+        if(playerInput.actions["Aim"].ReadValue<float>() > 0)
         {
-            StopShooting.Invoke();
-        }
-        
+            isAiming=true;
+        }   
+        AimController();
     }
-
     public void FireController()
     {
         switch (weaponSlot.EquippedWeapon().Data().Type)
         {
-            case Weapon.WeaponType.AutomaticRifle:
-            FireAutomatic();
-            break;
-            case Weapon.WeaponType.SMG:
+            case Weapon.FireType.Automatic:
             FireAutomatic();
             break;
         }   
     }
+    public void AimController()
+    {
+        weaponSlot.EquippedWeapon().Aim(isAiming);
+    }
     private void FireAutomatic()
     {
-        if (Time.time >= nextFireTime)
+        if (Time.time >= nextFireTime && isAiming)
         {
             Shoot.Invoke();  
             nextFireTime = Time.time + weaponSlot.EquippedWeapon().Data().FireRate;  
         }
     }
+    
     public void debug()
     {
         Debug.Log("Shot");

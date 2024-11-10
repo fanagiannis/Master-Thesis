@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: Automatic Rifle
   m_EditorClassIdentifier: 
   prefab: {fileID: 5388248511104658989, guid: 8494e3efd64584541935787abeb6b161, type: 3}
-  muzzleFlash: {fileID: 0}
   sound: {fileID: 8300000, guid: 65201ddabb4144f6a8fb9480120b7656, type: 3}
   icon: {fileID: 21300000, guid: 9162d39dfff8eee418769488b7282343, type: 3}
-  type: 3
+  type: 0
   weaponName: Automatic Rifle
   maxAmmo: 150
   currentAmmo: 30
