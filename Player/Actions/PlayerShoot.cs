@@ -13,6 +13,7 @@ public class PlayerShoot : MonoBehaviour
     private PlayerInput playerInput;
     [SerializeField]private float nextFireTime;
     [SerializeField]private bool isAiming=false;
+    private bool hasFired=false;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class PlayerShoot : MonoBehaviour
         {     
             StopShooting.Invoke();
             isAiming=false;
+            hasFired=false;
         }
         if (playerInput.actions["Reload"].ReadValue<float>()>0 && weaponSlot.CanReload())
         {
@@ -45,8 +47,11 @@ public class PlayerShoot : MonoBehaviour
         switch (weaponSlot.EquippedWeapon().Data().Type)
         {
             case Weapon.FireType.Automatic:
-            FireAutomatic();
-            break;
+                FireAutomatic();
+                break;
+            case Weapon.FireType.Single:
+                FireSingle();
+                break;
         }   
     }
     public void AimController()
@@ -61,6 +66,27 @@ public class PlayerShoot : MonoBehaviour
             nextFireTime = Time.time + weaponSlot.EquippedWeapon().Data().FireRate;  
         }
     }
+
+    private void FireSingle()
+    {
+        if (Time.time >= nextFireTime && isAiming )
+        {
+            if(!hasFired)
+            {
+                Shoot.Invoke();  
+                nextFireTime = Time.time + weaponSlot.EquippedWeapon().Data().FireRate;  
+                hasFired=true;
+                StartCoroutine(StopShootingCR());
+            }    
+        }
+    }
+
+    private IEnumerator StopShootingCR()
+    {
+        yield return new WaitForSeconds(0.2f);
+        StopShooting.Invoke();
+    }
+
     
     public void debug()
     {
