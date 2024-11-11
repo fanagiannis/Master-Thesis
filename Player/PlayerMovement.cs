@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -11,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]private Gravity gravity;
     [SerializeField]private PlayerInput playerInput;
     [SerializeField]private PlayerAnimationController animcontroller;
+    private bool IsCrouching = false;
     void Start()
     {
         Controller=GetComponent<CharacterController>();
@@ -24,6 +26,7 @@ public class PlayerController : MonoBehaviour
         if(!GetComponent<PlayerShoot>().Aiming())
         {
             Movement();
+            Crouch();
             
         }
         else if(GetComponent<PlayerShoot>().Aiming())
@@ -31,6 +34,7 @@ public class PlayerController : MonoBehaviour
             animcontroller.ResetAll();
         }
         Look();
+        
         gravity.Apply(Controller);
     }  
     private void Movement()
@@ -47,6 +51,25 @@ public class PlayerController : MonoBehaviour
         Vector2 mouseInput = playerInput.actions["Look"].ReadValue<Vector2>();
         float mouseX = mouseInput.x * 10f * Time.deltaTime;
         transform.Rotate(Vector3.up * mouseX);
+    }
+    private void Crouch()
+    {
+        if(playerInput.actions["Crouch"].ReadValue<float>() > 0)
+        {
+            if(IsCrouching)
+            {
+                animcontroller.ResetCrouch();
+                StartCoroutine(CrouchDelay(false));
+            }
+            else
+            {
+                animcontroller.Crouch();
+                StartCoroutine(CrouchDelay(true));
+            }
+            
+        }
+         
+        
     }
     private void Animations(float moveX, float moveZ)
     {
@@ -71,6 +94,12 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+    }
+    private IEnumerator CrouchDelay(bool value)
+    {
+        yield return new WaitForSeconds(0.2f);
+        IsCrouching=value;
+        yield break;
     }
     public PlayerInput PlayerInput(){return playerInput;}
     public bool HasJumped(){return !Controller.isGrounded; }
