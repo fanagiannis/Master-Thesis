@@ -32,8 +32,7 @@ public class PlayerController : MonoBehaviour
         }
         Look();
         gravity.Apply(Controller);
-    }
-    
+    }  
     private void Movement()
     {
         float Move_X=playerInput.actions["Movement"].ReadValue<Vector2>().x;

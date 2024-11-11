@@ -18,6 +18,7 @@ public class Weapon : ScriptableObject
     [SerializeField]private int magazineAmmo;
     [SerializeField]private int damage;
     [SerializeField]private float fireRate;
+    [SerializeField]private bool silenced;
     public string Name
     {
         get { return weaponName; }
@@ -41,6 +42,10 @@ public class Weapon : ScriptableObject
     public int CurrentAmmo
     {
         get { return currentAmmo;}
+    }
+    public bool Silenced
+    {
+        get { return silenced; }
     }
     public FireType Type
     {

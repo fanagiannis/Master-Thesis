@@ -33,7 +33,16 @@ public class WeaponManager : MonoBehaviour
     {
         muzzleFlash.SetActive(true);
         RaycastHit hit;
-        GetComponent<AudioSource>().pitch = Random.Range(0.85f, 1.15f);
+        float pitch = 0f;
+        if(weaponData.Silenced)
+        {   
+            pitch = 3f;
+        }
+        else
+        {
+            pitch = Random.Range(0.85f, 1.15f);
+        }
+        GetComponent<AudioSource>().pitch = pitch;
         GetComponent<AudioSource>().PlayOneShot(weaponData.Sound);
         if (Physics.Raycast(origin.position + new Vector3(0, 1, 0), origin.forward, out hit))
         {

@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerShoot : MonoBehaviour
 {
     [SerializeField]private WeaponSlot weaponSlot;
+    [SerializeField]private PlayerAnimationController animController;
     [SerializeField]private UnityEvent Shoot;
     [SerializeField]private UnityEvent StopShooting; 
     [SerializeField] private float fireRate = 0.1f; 
@@ -18,6 +19,7 @@ public class PlayerShoot : MonoBehaviour
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
+        animController = GetComponent<PlayerAnimationController>();
     }
 
     public void Control()
@@ -39,7 +41,13 @@ public class PlayerShoot : MonoBehaviour
         if(playerInput.actions["Aim"].ReadValue<float>() > 0)
         {
             isAiming=true;
+            animController.Aim();
         }   
+        else if(playerInput.actions["Aim"].ReadValue<float>() <= 0)
+        {
+            isAiming=false;
+            animController.ResetAim();
+        }
         AimController();
     }
     public void FireController()
