@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SoundSource : MonoBehaviour
 {
+    public enum Type{Gun,Etc}
+    [SerializeField]private Type soundType;
     [SerializeField]private float volume;
     [SerializeField]private AudioSource audioSource;
     [SerializeField]private bool played=false;
