@@ -51,6 +51,10 @@ public class SecurityManager : MonoBehaviour
     {
         enemyManager.ResetPlayerAlive();
     }
+    public void Alert()
+    {
+        currentState=SecurityState.Alert;
+    }
     public Transform Target()
     {
         return targetPosition;

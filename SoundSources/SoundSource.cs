@@ -49,6 +49,10 @@ public class SoundSource : MonoBehaviour
         //audioSource.pitch = Random.Range(0.9f, 1.1f);
         //audioSource.PlayOneShot(audioSource.clip);
     }
+    public Type SoundType()
+    {
+        return soundType;
+    }
     public void Activate()
     {
         played=false;
