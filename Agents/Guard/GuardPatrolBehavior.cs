@@ -86,14 +86,14 @@ public class GuardPatrolBehavior : GuardBehavior
         WaitNode shootDelay = new WaitNode("Delay", 3f); 
 
         // TREE STRUCTURE
-        Sequence guardPatrol = new Sequence("Sequence Patrol");
-        guardPatrol.AddChild(notspotTarget);
-        guardPatrol.AddChild(delay);
-        guardPatrol.AddChild(patrol);
+        Sequence guardPatrolSequence = new Sequence("Sequence Patrol");
+        guardPatrolSequence.AddChild(notspotTarget);
+        guardPatrolSequence.AddChild(delay);
+        guardPatrolSequence.AddChild(patrol);
 
-        Sequence checkcoverSafety = new Sequence("Sequence Check Cover Safety");
-        checkcoverSafety.AddChild(safe);
-        checkcoverSafety.AddChild(standUp);
+        Sequence checkcoverSafetySequence = new Sequence("Sequence Check Cover Safety");
+        checkcoverSafetySequence.AddChild(safe);
+        checkcoverSafetySequence.AddChild(standUp);
 
         Sequence chaseSequence = new Sequence("Sequence Chase Target");
 
@@ -122,10 +122,10 @@ public class GuardPatrolBehavior : GuardBehavior
         setAlarmSequence.AddChild(alarmnotSet);
         setAlarmSequence.AddChild(setAlarm);
 
-        Fallback killPlayerFallback = new Fallback("Fallback Kill Player");
-        killPlayerFallback.AddChild(setAlarmSequence);
-        killPlayerFallback.AddChild(chooseShootTargetSequence);
-        killPlayerFallback.AddChild(chaseSequence);
+        Fallback killPlayerFB = new Fallback("Fallback Kill Player");
+        killPlayerFB.AddChild(setAlarmSequence);
+        killPlayerFB.AddChild(chooseShootTargetSequence);
+        killPlayerFB.AddChild(chaseSequence);
         
         Sequence hideSequence = new Sequence("Sequence Take Cover");
         hideSequence.AddChild(checkIfDanger);
@@ -141,11 +141,11 @@ public class GuardPatrolBehavior : GuardBehavior
         CoverFireFB.AddChild(coverFireSequence);
 
         hideSequence.AddChild(CoverFireFB);
-        hideSequence.AddChild(checkcoverSafety);
+        hideSequence.AddChild(checkcoverSafetySequence);
 
         Sequence targetSpotSequence = new Sequence("Sequence Spot Target");
         targetSpotSequence.AddChild(spotTarget);
-        targetSpotSequence.AddChild(killPlayerFallback);
+        targetSpotSequence.AddChild(killPlayerFB);
 
         Sequence InvestigateSequence = new Sequence("Sequence Investigate");
         InvestigateSequence.AddChild(lookAtSound);
@@ -162,7 +162,7 @@ public class GuardPatrolBehavior : GuardBehavior
         Fallback roamFB = new Fallback("Fallback Roam");
         roamFB.AddChild(targetSpotSequence);
         roamFB.AddChild(SoundAlertSequence);
-        roamFB.AddChild(guardPatrol);
+        roamFB.AddChild(guardPatrolSequence);
         
         Fallback rootFallback = new Fallback("Fallback Root");
         rootFallback.AddChild(hideSequence);
