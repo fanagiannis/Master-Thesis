@@ -26,12 +26,14 @@ public class GuardHeavyBehavior : GuardBehavior
         Condition spotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => sensors.GetVisibleTarget()   && !InDanger));
         Condition notspotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => !sensors.GetVisibleTarget()   && !InDanger));
         Condition canShoot = new Condition("Condition CanShootTarget?", new ConditionLeaf(() => targetInRange));
-
+        Condition soundHeard = new Condition("Condition Heard Sound",new ConditionLeaf(()=>sensors.Heard()));
 
         //ACTIONS
         Action lookAt = new Action("Action Look At Target", new LookAtTarget(this.navigation, this.animator, () => sensors.GetVisibleTarget() ));
         Action defendingPatrol = new Action("Action Defending Patrol",new GuardPatrolAroundPoint(this,this.navigation,this.animator,defendZone));
         Action gotoDefendPosition = new Action("Action Take Cover", new GuardGoTo(this.animator, this.navigation, () => defendZone.position));
+        Action lookAtSound = new Action("Action Look At Sound Source", new LookAtTarget(this.navigation, this.animator, () => sensors.FindSoundSource() ));
+        Action inspectSource = new Action("Action Go To Sound Source", new Inspect(this.animator, this.navigation, this.sensors,() => sensors.InspectingSource.position));
         Action crouch = new Action("Action Crouch", new Crouch(this.animator));
         Action stand = new Action("Action Stand", new Stand(this.animator));
         Action aim = new Action("Action Aim At Target", new Aim(this.animator));
@@ -39,6 +41,7 @@ public class GuardHeavyBehavior : GuardBehavior
 
         //DELAY
         WaitNode delay = new WaitNode("Delay Chase", 1f);
+        WaitNode delay2 = new WaitNode("Delay Chase", 2f);
 
         Sequence delayAndShootSequence = new Sequence("Sequence Delay and Shoot");
         delayAndShootSequence.AddChild(canShoot);
@@ -68,6 +71,17 @@ public class GuardHeavyBehavior : GuardBehavior
         Sequence checkCoverSequence = new Sequence("Sequence Check Cover");
         //safe?
         //stand
+        Sequence InvestigateSequence = new Sequence("Sequence Investigate");
+        InvestigateSequence.AddChild(lookAtSound);
+        InvestigateSequence.AddChild(aim);
+        InvestigateSequence.AddChild(delay2);
+        InvestigateSequence.AddChild(inspectSource);
+        InvestigateSequence.AddChild(delay);
+
+        Sequence SoundAlertSequence = new Sequence("Sequence Sound Alert");
+        SoundAlertSequence.AddChild(soundHeard);
+        SoundAlertSequence.AddChild(InvestigateSequence);
+
 
         Sequence defendPositionSequence = new Sequence("Sequence Defend Position");
         defendPositionSequence.AddChild(spotTarget);
@@ -82,6 +96,7 @@ public class GuardHeavyBehavior : GuardBehavior
 
         Fallback roamFallback = new Fallback("Fallback Search");
         roamFallback.AddChild(defendPositionSequence);
+        roamFallback.AddChild(SoundAlertSequence);
         roamFallback.AddChild(patrolSequence);
 
         Fallback rootFallback = new Fallback("Fallback Root");
