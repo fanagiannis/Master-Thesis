@@ -34,20 +34,11 @@ public class WeaponManager : MonoBehaviour
     public void Fire(Transform origin)
     {
         muzzleFlash.SetActive(true);
-        var sound = Instantiate(soundSourcePrefab, transform.position,transform.rotation);
-        sound.GetComponent<SoundSource>().SetSourceVolume(volume);
+        CastSound();
+        
+        
         RaycastHit hit;
-        float pitch = 0f;
-        if(weaponData.Silenced)
-        {   
-            pitch = 3f;
-        }
-        else
-        {
-            pitch = Random.Range(0.85f, 1.15f);
-        }
-        GetComponent<AudioSource>().pitch = pitch;
-        GetComponent<AudioSource>().PlayOneShot(weaponData.Sound);
+        
         if (Physics.Raycast(origin.position + new Vector3(0, 1, 0), origin.forward, out hit))
         {
             Debug.Log($"Hit {hit.collider.gameObject.name}");
@@ -67,6 +58,25 @@ public class WeaponManager : MonoBehaviour
     public void Aim(bool value)
     {
         aimLine.SetActive(value);
+    }
+    private void CastSound()
+    {
+        if(!weaponData.Silenced)
+        {
+            var sound = Instantiate(soundSourcePrefab, transform.position,transform.rotation);
+            sound.GetComponent<SoundSource>().SetSourceVolume(volume);
+        }
+        float pitch = 0f;
+        if(weaponData.Silenced)
+        {   
+            pitch = 3f;
+        }
+        else
+        {
+            pitch = Random.Range(0.85f, 1.15f);
+        }
+        GetComponent<AudioSource>().pitch = pitch;
+        GetComponent<AudioSource>().PlayOneShot(weaponData.Sound);
     }
     public void StopShooting()
     {
