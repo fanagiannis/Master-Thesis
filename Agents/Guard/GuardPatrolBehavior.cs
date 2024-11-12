@@ -12,6 +12,7 @@ public class GuardPatrolBehavior : GuardBehavior
 {
     [Header("Patrol Variables")]
     [SerializeField]private List<Transform> patrolPoints;
+    [SerializeField]private Transform alarm;
     [SerializeField]private Transform safezone;
     
     public override void Start()
@@ -27,10 +28,10 @@ public class GuardPatrolBehavior : GuardBehavior
             BT.Process();
             targetInRange=TargetInRange(sensors.GetVisibleTarget(),10f);
             //DEBUG!!!!!!!!!!!
-            if(targetInRange)
-            {
-                navigation.ResetPath();
-            }
+            // if(targetInRange)
+            // {
+            //     navigation.ResetPath();
+            // }
             //DEBUG!!!!!!!!!!!!
 
             
@@ -47,6 +48,10 @@ public class GuardPatrolBehavior : GuardBehavior
         Condition notspotTarget = new Condition("Condition Not Target Spotted?", new ConditionLeaf(() => !sensors.GetVisibleTarget()  && !InDanger));
         Condition spotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => sensors.GetVisibleTarget()   && !InDanger));
         Condition soundHeard = new Condition("Condition Heard Sound",new ConditionLeaf(()=>sensors.Heard()));
+
+        //CHECK SECURITY 
+        Condition alarmnotSet = new Condition("Condition Alarm Not Set?",new ConditionLeaf(()=>SecurityManager.Instance.CurrentSecurityState()!=SecurityManager.SecurityState.Alert));
+        Condition alarmSet = new Condition("Condition Alarm Set?",new ConditionLeaf(()=>SecurityManager.Instance.CurrentSecurityState()==SecurityManager.SecurityState.Alert));
         
         //CHECK DANGER
         Condition checkIfDanger = new Condition("Condition Threatened?", new ConditionLeaf(() => InDanger));
@@ -72,12 +77,13 @@ public class GuardPatrolBehavior : GuardBehavior
         Action stand = new Action("Action Stand", new Stand(this.animator));
         Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot , entity.Damage() , ()=>sensors.GetVisibleTarget() ));
         Action stop = new Action("Action Stop",new Stop(this,this.navigation,this.animator));
+        Action setAlarm = new Action("Action Set Alarm",new GuardSetAlarm(this.animator, this.navigation, () => alarm.position));
 
         WaitNode delay = new WaitNode("Delay Chase", 1f);
         WaitNode delay2 = new WaitNode("Delay Chase", 2f);
         WaitNode delay3 = new WaitNode("Delay Chase", 3f);
         WaitNode delay4 = new WaitNode("Delay Chase", 4f);
-        WaitNode shootDelay = new WaitNode("Delay", 3f); //DELAY CONTROL FROM WEAPON FIRERATE
+        WaitNode shootDelay = new WaitNode("Delay", 3f); 
 
         // TREE STRUCTURE
         Sequence guardPatrol = new Sequence("Sequence Patrol");
@@ -112,10 +118,15 @@ public class GuardPatrolBehavior : GuardBehavior
         chooseShootTargetSequence.AddChild(aim);
         chooseShootTargetSequence.AddChild(shootSequence);
 
-        Fallback killPlayer = new Fallback("Fallback Kill Player");
-        killPlayer.AddChild(chooseShootTargetSequence);
-        killPlayer.AddChild(chaseSequence);
+        Sequence setAlarmSequence = new Sequence("Sequence Set Alarm");
+        setAlarmSequence.AddChild(alarmnotSet);
+        setAlarmSequence.AddChild(setAlarm);
 
+        Fallback killPlayerFallback = new Fallback("Fallback Kill Player");
+        killPlayerFallback.AddChild(setAlarmSequence);
+        killPlayerFallback.AddChild(chooseShootTargetSequence);
+        killPlayerFallback.AddChild(chaseSequence);
+        
         Sequence hideSequence = new Sequence("Sequence Take Cover");
         hideSequence.AddChild(checkIfDanger);
         hideSequence.AddChild(takeCover);
@@ -134,7 +145,7 @@ public class GuardPatrolBehavior : GuardBehavior
 
         Sequence targetSpotSequence = new Sequence("Sequence Spot Target");
         targetSpotSequence.AddChild(spotTarget);
-        targetSpotSequence.AddChild(killPlayer);
+        targetSpotSequence.AddChild(killPlayerFallback);
 
         Sequence InvestigateSequence = new Sequence("Sequence Investigate");
         InvestigateSequence.AddChild(lookAtSound);

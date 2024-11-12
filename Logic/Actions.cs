@@ -747,6 +747,33 @@ namespace Actions
             }
         }
 
+        public class GuardSetAlarm : IAction
+        {
+            private GuardAnimationController animator;
+            private NavMeshAgent navigation;
+            private System.Func<Vector3> getdestination;
+            public GuardSetAlarm(GuardAnimationController animator ,NavMeshAgent navigation,System.Func<Vector3> getdestination)
+            {
+                this.animator = animator;
+                this.navigation=navigation;
+                this.getdestination = getdestination;
+                navigation.ResetPath();
+            }
+            public Node.Status Process()
+            {
+                Vector3 destination = getdestination();
+                animator.Run();
+                this.navigation.speed = 4f;
+                navigation.SetDestination(destination); 
+                if(navigation.remainingDistance< 1f && !navigation.pathPending)
+                {
+                    SecurityManager.Instance.Alert();
+                    return Node.Status.SUCCESS;
+                }
+               return Node.Status.RUNNING;  
+            }
+        }
+
         public class AimTarget : IAction
         {
             private Transform guardTransform;

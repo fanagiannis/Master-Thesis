@@ -82,12 +82,13 @@ public class AISensors : MonoBehaviour
             if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget,layerMask:0) && target.gameObject.activeSelf)
             {  
                 ClearTargets(detectedSoundSources);
-                if(src.gameObject.GetComponent<SoundSource>().SoundType()==SoundSource.Type.Gun)
-                {
-                    SecurityManager.Instance.Alert();
-                }
+                // if(src.gameObject.GetComponent<SoundSource>().SoundType()==SoundSource.Type.Gun)
+                // {
+                //     SecurityManager.Instance.Alert();
+                // }
+                // // else 
                 // else 
-                else if (!src.Sound() && !detectedSoundSources.Contains(target))
+                if (!src.Sound() && !detectedSoundSources.Contains(target))
                 {
                     detectedSoundSources.Add(target);
                 }
