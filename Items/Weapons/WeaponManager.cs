@@ -12,6 +12,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField]private GameObject hitFX;
     [SerializeField]private GameObject enemyHitFX;
     [SerializeField]private GameObject muzzleFlash;
+    [SerializeField]private GameObject soundSourcePrefab;
     [Header("Aim Laser")]
     [SerializeField]private GameObject aimLine;
     [Header("Weapon Stats")]
@@ -19,6 +20,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField]private int maxAmmo;
     [SerializeField]private int currentAmmo;
     [SerializeField]private int magazineAmmo;
+    [SerializeField]private float volume;
     [SerializeField]private float resetdelay=1f;
     [SerializeField]private float delay;
     private void Start()
@@ -32,6 +34,8 @@ public class WeaponManager : MonoBehaviour
     public void Fire(Transform origin)
     {
         muzzleFlash.SetActive(true);
+        var sound = Instantiate(soundSourcePrefab, transform.position,transform.rotation);
+        sound.GetComponent<SoundSource>().SetSourceVolume(volume);
         RaycastHit hit;
         float pitch = 0f;
         if(weaponData.Silenced)

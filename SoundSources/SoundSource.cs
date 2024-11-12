@@ -10,8 +10,8 @@ public class SoundSource : MonoBehaviour
     private float timer=0.2f;
     void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
-        GetComponent<SphereCollider>().radius = volume;
+        audioSource = GetComponent<AudioSource>(); 
+        Activate();
     }
     void Update()
     {
@@ -30,20 +30,23 @@ public class SoundSource : MonoBehaviour
             timer-=Time.deltaTime;
             if(timer<=0)
             {
-                PlaySound();
+                //PlaySound();
                 played=true;
                 timer=0.2f;
             }
             
         }
     }
-
+    public void SetSourceVolume(float vol)
+    {
+        volume = vol;
+        GetComponent<SphereCollider>().radius = volume;
+    }
     public void PlaySound()
     {
-        audioSource.pitch = Random.Range(0.9f, 1.1f);
-        audioSource.PlayOneShot(audioSource.clip);
+        //audioSource.pitch = Random.Range(0.9f, 1.1f);
+        //audioSource.PlayOneShot(audioSource.clip);
     }
-
     public void Activate()
     {
         played=false;
