@@ -96,7 +96,6 @@ public class GuardPatrolBehavior : GuardBehavior
         checkcoverSafetySequence.AddChild(standUp);
 
         Sequence chaseSequence = new Sequence("Sequence Chase Target");
-
         chaseSequence.AddChild(cantShoot);
         chaseSequence.AddChild(chaseTarget);
 

@@ -17,6 +17,7 @@ public class GuardHeavyBehavior : GuardBehavior
     public override void Update()
     {
         base.Update();
+        targetInRange = TargetInRange(sensors.GetVisibleTarget(),10f);
     }
     public override void BakeBehavior()
     {
@@ -104,5 +105,17 @@ public class GuardHeavyBehavior : GuardBehavior
 
         BT.AddChild(rootFallback);
         BT.PrintTree();
+    }
+
+    public override bool TargetInRange(Transform target, float range)
+    {
+        if(target!=null)
+        {
+            return Vector3.Distance(this.transform.position,target.position)<range&&!Physics.Raycast(transform.position, (target.position - transform.position).normalized, Vector3.Distance(this.transform.position,target.position), sensors.obstacleMask);
+        }
+        else
+        {
+            return false;
+        }  
     }
 }

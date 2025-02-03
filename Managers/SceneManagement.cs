@@ -8,4 +8,5 @@ public class SceneManagement : MonoBehaviour
     public void LoadScene(string scene)=>SceneManager.LoadSceneAsync(scene);
     public void ReloadScene()=>SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     public void ExitGame()=>Application.Quit();
+    public void TestButton()=>Debug.Log("Working");
 }
