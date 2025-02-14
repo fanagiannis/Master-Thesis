@@ -21,12 +21,10 @@ public class Guard : Entity
             DisableComponents(GetComponentsInChildren<Component>());
         }
     }
-
     public float Damage()
     {
         return damage;
     }
-
     private void DisableComponents(Component[] components)
     {
         foreach (var component in components)
@@ -53,3 +51,4 @@ public class Guard : Entity
         }
     }
 }
+

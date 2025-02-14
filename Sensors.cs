@@ -98,15 +98,15 @@ public class AISensors : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        // Gizmos.color = Color.yellow;
-        // Gizmos.DrawWireSphere(transform.position, hearingRadius);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, hearingRadius);
 
-        // Handles.color = hearingRadiusColor;
-        // Handles.DrawSolidDisc(transform.position,Vector3.up, hearingRadius);
-        // Handles.color = fieldOfVisionColor;
-        // Handles.DrawSolidArc(transform.position, Vector3.up,DirFromAngle(-viewAngle / 2, false), viewAngle, viewRadius);
-        // Handles.Label(transform.position+new Vector3(0,0,-7),"FieldOfHearing");
-        // Handles.Label(transform.position+new Vector3(0,0,3),"FieldOfVision");
+        //Handles.color = hearingRadiusColor;
+        //Handles.DrawSolidDisc(transform.position,Vector3.up, hearingRadius);
+        Handles.color = fieldOfVisionColor;
+        Handles.DrawSolidArc(transform.position, Vector3.up,DirFromAngle(-viewAngle / 2, false), viewAngle, viewRadius);
+        Handles.Label(transform.position+new Vector3(0,0,-7),"FieldOfHearing");
+        Handles.Label(transform.position+new Vector3(0,0,3),"FieldOfVision");
 
         Gizmos.color = Color.blue;
         foreach (Transform visibleTarget in visibleTargets)

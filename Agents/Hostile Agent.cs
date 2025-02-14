@@ -21,3 +21,4 @@ public class HostileAgent : Agent
         SecurityManager.Instance.ResetPlayerAlive();
     }
 }
+

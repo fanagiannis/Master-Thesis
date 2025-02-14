@@ -18,13 +18,7 @@ public class SoundSource : MonoBehaviour
     void Update()
     {
         CastSound();
-    }
-
-    public bool Sound()
-    {
-        return played;
-    }
-
+    } 
     public void CastSound()
     {
         if (!played)
@@ -32,23 +26,29 @@ public class SoundSource : MonoBehaviour
             timer-=Time.deltaTime;
             if(timer<=0)
             {
-                //PlaySound();
+                PlaySound();
                 played=true;
                 timer=0.2f;
             }
-            
         }
     }
+    public void PlaySound()
+    {
+        audioSource.pitch = Random.Range(0.9f, 1.1f);
+        audioSource.PlayOneShot(audioSource.clip);
+    }
+    
     public void SetSourceVolume(float vol)
     {
         volume = vol;
         GetComponent<SphereCollider>().radius = volume;
     }
-    public void PlaySound()
+    
+    public bool Sound()
     {
-        //audioSource.pitch = Random.Range(0.9f, 1.1f);
-        //audioSource.PlayOneShot(audioSource.clip);
+        return played;
     }
+
     public Type SoundType()
     {
         return soundType;

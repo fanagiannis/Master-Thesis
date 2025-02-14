@@ -8,7 +8,7 @@ using Conditions;
 using UnityEngine.Events;
 using System.Linq.Expressions;
 
-public class GuardPatrolMenuBehavior : GuardBehavior
+public class GuardNoBrain : GuardBehavior
 {
     [Header("Patrol Variables")]
     [SerializeField]private List<Transform> patrolPoints;
@@ -41,30 +41,7 @@ public class GuardPatrolMenuBehavior : GuardBehavior
     {
 
         BT = new BehaviorTree("Basic Guard Logic");
-
-        // CONDITIONS
         
-        // // ACTIONS
-        Action patrol = new Action("Action Guard Patrol", new GuardPatrol(this, this.navigation, this.animator,patrolPoints));
-
-        //DECORATORS
-        WaitNode delay = new WaitNode("Delay Chase", 1f);
-    
-        // TREE STRUCTURE
-        Sequence guardPatrolSequence = new Sequence("Sequence Patrol");
-        guardPatrolSequence.AddChild(delay);
-        guardPatrolSequence.AddChild(patrol);
-
-
-        
-        Fallback roamFB = new Fallback("Fallback Roam");
-        roamFB.AddChild(guardPatrolSequence);
-        
-        Fallback rootFallback = new Fallback("Fallback Root");
-        rootFallback.AddChild(roamFB);
-
-        BT.AddChild(rootFallback);
-        //BT.PrintTree();
     }
 
     public override bool TargetInRange(Transform target, float range)

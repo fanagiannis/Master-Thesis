@@ -49,14 +49,12 @@ public class Agent : MonoBehaviour
         else
         {
             return false;
-        }
-        
+        }      
     }
-
     public virtual bool CheckTarget(){return false;}
-
     public void SetDanger(bool value)
     {
         InDanger=value;
     }
 }
+
