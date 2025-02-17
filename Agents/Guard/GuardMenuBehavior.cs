@@ -19,7 +19,6 @@ public class GuardPatrolMenuBehavior : GuardBehavior
     {
         base.Start();
         BakeBehavior();
-        //TestBehavior();
     }
     public override void Update()
     {
@@ -27,19 +26,10 @@ public class GuardPatrolMenuBehavior : GuardBehavior
         {
             BT.Process();
             targetInRange=TargetInRange(sensors.GetVisibleTarget(),10f);
-            //DEBUG!!!!!!!!!!!
-            // if(targetInRange)
-            // {
-            //     navigation.ResetPath();
-            // }
-            //DEBUG!!!!!!!!!!!!
-
-            
         }
     }
     public override void BakeBehavior()
     {
-
         BT = new BehaviorTree("Basic Guard Logic");
 
         // CONDITIONS
@@ -48,14 +38,12 @@ public class GuardPatrolMenuBehavior : GuardBehavior
         Action patrol = new Action("Action Guard Patrol", new GuardPatrol(this, this.navigation, this.animator,patrolPoints));
 
         //DECORATORS
-        WaitNode delay = new WaitNode("Delay Chase", 1f);
+        WaitNode delay = new WaitNode("Delay", 1f);
     
         // TREE STRUCTURE
         Sequence guardPatrolSequence = new Sequence("Sequence Patrol");
         guardPatrolSequence.AddChild(delay);
         guardPatrolSequence.AddChild(patrol);
-
-
         
         Fallback roamFB = new Fallback("Fallback Roam");
         roamFB.AddChild(guardPatrolSequence);
@@ -64,9 +52,8 @@ public class GuardPatrolMenuBehavior : GuardBehavior
         rootFallback.AddChild(roamFB);
 
         BT.AddChild(rootFallback);
-        //BT.PrintTree();
+        BT.PrintTree();
     }
-
     public override bool TargetInRange(Transform target, float range)
     {
         if(target!=null)

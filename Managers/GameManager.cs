@@ -12,23 +12,33 @@ public class GamemodeManager : MonoBehaviour
     [SerializeField]private bool ObjectiveCompleted=false; 
     [Header("Blueprints")]
     [SerializeField]private List<GameObject> Blueprints=new List<GameObject>();             //NUMBER OF BLUEPRINTS
-    [SerializeField]private int BlueprintsCollected=0; 
+    [SerializeField]private int BlueprintsCollected=0;   //NUMBER OF BLUEPRINTS COLLECTED
     [SerializeField]private AudioClip pickupsound;    
     [Header("References")]
-    private GameObject playercamera;                                  //NUMBER OF BLUEPRINTS COLLECTED
+    private GameObject playercamera;      
+    [SerializeField] private GameObject levelExit;                           
 
     void Start()
     {
         Instance = this;
-        //Blueprints=GameObject.FindGameObjectsWithTag("Blueprint").ToList();                     
-        playercamera=GameObject.FindGameObjectWithTag("MainCamera");               
+        Blueprints=GameObject.FindGameObjectsWithTag("Blueprint").ToList();                     
+        playercamera=GameObject.FindGameObjectWithTag("MainCamera");   
+        if(UIBPCollected.Instance!=null){
+            UIBPCollected.Instance.UpdateBPCount(GetBlueprintsCollected(),GetAllBlueprints());          
+        }
+        
     }
 
     public void AddBlueprint()    //INC BLUEPRINT COLLECTED
     {
         BlueprintsCollected++; 
         AudioSource.PlayClipAtPoint(pickupsound,playercamera.transform.position,0.5f);
-        if (BlueprintsCollected>=Blueprints.Count){ObjectiveCompleted=true;}
+        UIBPCollected.Instance.UpdateBPCount(GetBlueprintsCollected(),GetAllBlueprints());
+        if (BlueprintsCollected>=Blueprints.Count)
+        {
+            ObjectiveCompleted=true;
+            UIBPCollected.Instance.UpdateBPCount();
+        }
         else{return;}
     }            
     public void CompleteObjective()=>ObjectiveCompleted = true;                             //COMPLETE OBJECTIVE FUNCTION

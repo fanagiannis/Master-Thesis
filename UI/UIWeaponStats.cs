@@ -10,10 +10,10 @@ public class UIWeaponStats : MonoBehaviour
     private TextMeshProUGUI WeaponStats;
     void Awake()
     {
-       // WeaponStats=this.GetComponent<TextMeshProUGUI>();
+      WeaponStats=this.GetComponent<TextMeshProUGUI>();
     }
     void Update()
     {
-       // WeaponStats.text=$"{weaponSlot.EquippedWeapon().Data().Name}\n{weaponSlot.EquippedWeapon().CurrentAmmo} / {weaponSlot.EquippedWeapon().MaxAmmo}";
+      WeaponStats.text=$"{weaponSlot.EquippedWeapon().Data().Name}\n{weaponSlot.EquippedWeapon().CurrentAmmo} / {weaponSlot.EquippedWeapon().MaxAmmo}";
     }
 }

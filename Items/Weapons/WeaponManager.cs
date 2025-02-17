@@ -63,8 +63,8 @@ public class WeaponManager : MonoBehaviour
     {
         if(!weaponData.Silenced)
         {
-            var sound = Instantiate(soundSourcePrefab, transform.position,transform.rotation);
-            sound.GetComponent<SoundSource>().SetSourceVolume(volume);
+            //var sound = Instantiate(soundSourcePrefab, transform.position,transform.rotation);
+            //sound.GetComponent<SoundSource>().SetSourceVolume(volume);
         }
         float pitch = 0f;
         if(weaponData.Silenced)
