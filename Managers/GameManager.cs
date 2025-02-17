@@ -38,6 +38,7 @@ public class GamemodeManager : MonoBehaviour
         {
             ObjectiveCompleted=true;
             UIBPCollected.Instance.UpdateBPCount();
+            levelExit.SetActive(true);
         }
         else{return;}
     }            
