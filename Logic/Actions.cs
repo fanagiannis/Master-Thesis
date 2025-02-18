@@ -473,7 +473,6 @@ namespace Actions
                     }
                     return Node.Status.RUNNING;
                 }
-                
                 if (HasReachedDestination())
                 {
                     animator.Idle();
@@ -484,12 +483,10 @@ namespace Actions
 
                 return Node.Status.RUNNING;
             }
-
             private bool HasReachedDestination()
             {
                 return !navigation.pathPending && navigation.remainingDistance < 0.5f;
             }
-
             private void SetNextDestination()
             {
                 navigation.speed = 2f;
@@ -500,7 +497,6 @@ namespace Actions
                     currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count; 
                 }
             }
-
             public void Reset()
             {
                 isWaiting = false;
@@ -605,7 +601,7 @@ namespace Actions
             }
             public virtual void Reset()
             {
-                //navigation.ResetPath();
+                navigation.ResetPath();
             }
         }
 

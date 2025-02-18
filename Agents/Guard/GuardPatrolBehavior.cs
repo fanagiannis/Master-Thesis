@@ -28,10 +28,10 @@ public class GuardPatrolBehavior : GuardBehavior
             BT.Process();
             targetInRange=TargetInRange(sensors.GetVisibleTarget(),10f);
             //DEBUG!!!!!!!!!!!
-            if(targetInRange)
-            {
-                navigation.ResetPath();
-            }
+            // if(targetInRange)
+            // {
+            //     navigation.ResetPath();
+            // }
             //DEBUG!!!!!!!!!!!!
 
             
@@ -40,7 +40,7 @@ public class GuardPatrolBehavior : GuardBehavior
     public override void BakeBehavior()
     {
 
-        BT = new BehaviorTree("Basic Guard Logic");
+        BT = new BehaviorTree("Patrol Guard Logic");
 
         // CONDITIONS
 
@@ -63,12 +63,14 @@ public class GuardPatrolBehavior : GuardBehavior
         
 
         // ACTIONS
+        IAction guardchaseplayer = new GuardGoTo(this.animator, this.navigation, () => sensors.GetVisibleTarget() .position);
+
         Action randompatrol = new Action("Action Guard Random Patrol", new GuardRandomPatrol(this, this.navigation, this.animator));
         Action patrol = new Action("Action Guard Patrol", new GuardPatrol(this, this.navigation, this.animator,patrolPoints));
         Action crouchAction = new Action("Action Crouch", new Crouch(this.animator));
         Action standUp = new Action("Action Stand", new ActionReset(new Crouch(this.animator)));
         Action setDanger = new Action("Action Set Danger", new SetDanger(this, true));
-        Action chaseTarget = new Action("Action Chase Target", new GuardGoTo(this.animator, this.navigation, () => sensors.GetVisibleTarget() .position));
+        Action chaseTarget = new Action("Action Chase Target", guardchaseplayer);
         Action lookAt = new Action("Action Look At Target", new LookAtTarget(this.navigation, this.animator, () => sensors.GetVisibleTarget() ));
         Action lookAtSound = new Action("Action Look At Sound Source", new LookAtTarget(this.navigation, this.animator, () => sensors.FindSoundSource() ));
         Action inspectSource = new Action("Action Go To Sound Source", new Inspect(this.animator, this.navigation, this.sensors,() => sensors.InspectingSource.position));
@@ -76,6 +78,7 @@ public class GuardPatrolBehavior : GuardBehavior
         Action stand = new Action("Action Stand", new Stand(this.animator));
         Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot , entity.Damage() , ()=>sensors.GetVisibleTarget() ));
         Action stop = new Action("Action Stop",new Stop(this,this.navigation,this.animator));
+        Action resetPathAfterChase = new Action("Action Reset Path",new ActionReset(guardchaseplayer));
 
         WaitNode delay = new WaitNode("Delay Chase", 1f);
         WaitNode delay2 = new WaitNode("Delay Chase", 2f);
@@ -112,6 +115,7 @@ public class GuardPatrolBehavior : GuardBehavior
         chooseShootTargetSequence.AddChild(canShoot);
         chooseShootTargetSequence.AddChild(lookAt);
         chooseShootTargetSequence.AddChild(delay);
+        chooseShootTargetSequence.AddChild(resetPathAfterChase);
         chooseShootTargetSequence.AddChild(aim);
         chooseShootTargetSequence.AddChild(shootSequence);
 
