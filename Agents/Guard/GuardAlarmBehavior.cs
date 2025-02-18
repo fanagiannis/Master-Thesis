@@ -27,20 +27,12 @@ public class GuardAlarmBehavior : GuardBehavior
         {
             BT.Process();
             targetInRange=TargetInRange(sensors.GetVisibleTarget(),10f);
-            //DEBUG!!!!!!!!!!!
-            // if(targetInRange)
-            // {
-            //    navigation.ResetPath();
-            // }
-            //DEBUG!!!!!!!!!!!!
-
-            
         }
     }
     public override void BakeBehavior()
     {
 
-        BT = new BehaviorTree("Basic Guard Logic");
+        BT = new BehaviorTree("Alarm Guard Logic");
 
         // CONDITIONS
 
@@ -129,22 +121,6 @@ public class GuardAlarmBehavior : GuardBehavior
         killPlayerFB.AddChild(setAlarmSequence);
         killPlayerFB.AddChild(chooseShootTargetSequence);
         killPlayerFB.AddChild(chaseSequence);
-        
-        Sequence hideSequence = new Sequence("Sequence Take Cover");
-        hideSequence.AddChild(checkIfDanger);
-        hideSequence.AddChild(takeCover);
-        hideSequence.AddChild(crouchAction);
-
-        Fallback CoverFireFB = new Fallback("Fallback Cover Fire");
-        Sequence coverFireSequence = new Sequence("Sequence Cover Fire");
-        coverFireSequence.AddChild(canShoot);
-        coverFireSequence.AddChild(stand);
-        coverFireSequence.AddChild(chooseShootTargetSequence);
-
-        CoverFireFB.AddChild(coverFireSequence);
-
-        hideSequence.AddChild(CoverFireFB);
-        hideSequence.AddChild(checkcoverSafetySequence);
 
         Sequence targetSpotSequence = new Sequence("Sequence Spot Target");
         targetSpotSequence.AddChild(spotTarget);
@@ -168,7 +144,6 @@ public class GuardAlarmBehavior : GuardBehavior
         roamFB.AddChild(guardPatrolSequence);
         
         Fallback rootFallback = new Fallback("Fallback Root");
-        rootFallback.AddChild(hideSequence);
         rootFallback.AddChild(roamFB);
 
         BT.AddChild(rootFallback);

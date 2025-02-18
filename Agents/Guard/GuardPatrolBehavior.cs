@@ -26,15 +26,7 @@ public class GuardPatrolBehavior : GuardBehavior
         if(!GetComponent<Guard>().Death())
         {
             BT.Process();
-            targetInRange=TargetInRange(sensors.GetVisibleTarget(),10f);
-            //DEBUG!!!!!!!!!!!
-            // if(targetInRange)
-            // {
-            //     navigation.ResetPath();
-            // }
-            //DEBUG!!!!!!!!!!!!
-
-            
+            targetInRange=TargetInRange(sensors.GetVisibleTarget(),10f); 
         }
     }
     public override void BakeBehavior()

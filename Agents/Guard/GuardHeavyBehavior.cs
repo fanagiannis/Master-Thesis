@@ -70,8 +70,6 @@ public class GuardHeavyBehavior : GuardBehavior
         coverFireFallback.AddChild(coverFireSequence);
 
         Sequence checkCoverSequence = new Sequence("Sequence Check Cover");
-        //safe?
-        //stand
         Sequence InvestigateSequence = new Sequence("Sequence Investigate");
         InvestigateSequence.AddChild(lookAtSound);
         InvestigateSequence.AddChild(aim);
