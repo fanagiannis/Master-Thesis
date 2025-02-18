@@ -304,14 +304,11 @@ namespace Actions
                 animator.Crouch(); 
                 return Node.Status.SUCCESS; 
             }
-
             public void Reset()
             {
                 //animator.ResetAll();
             }
-
         }
-
         public class Stand : IAction
         {
             private GuardAnimationController animator;
@@ -325,14 +322,11 @@ namespace Actions
                 animator.Alert(); 
                 return Node.Status.SUCCESS; 
             }
-
             public void Reset()
             {
                 animator.ResetAll();
             }
-
         }
-
         public class SetDanger : IAction
         {
             private Agent agent;
@@ -348,8 +342,6 @@ namespace Actions
                 return Node.Status.SUCCESS;
             }
         }
-
-
         public class GuardRandomPatrol : IAction
         {
             private Agent agent;
@@ -358,14 +350,12 @@ namespace Actions
             private float waitTime = 2f; 
             private float timer; 
             private bool isWaiting = false;
-
             public GuardRandomPatrol(Agent agent, NavMeshAgent navigation,AnimationController animator)
             {
                 this.agent = agent;
                 this.navigation = navigation;
                 this.animator = animator;          
             }
-
             public Node.Status Process()
             {
                     if (isWaiting)
@@ -386,7 +376,6 @@ namespace Actions
                     }
                     return Node.Status.RUNNING; 
             }
-
             private void SetRandomDestination()
             {
                 this.navigation.speed = 2f;
@@ -394,14 +383,12 @@ namespace Actions
                 agent.SetRandomDestination();
                 
             }
-
             public void Reset()
             {
                 isWaiting = false;
                 navigation.ResetPath(); 
             }
         }
-
         public class GuardPatrolAroundPoint : IAction
         {
             private Agent agent;
@@ -411,7 +398,6 @@ namespace Actions
             private float waitTime = 2f; 
             private float timer; 
             private bool isWaiting = false;
-
             public GuardPatrolAroundPoint(Agent agent, NavMeshAgent navigation,AnimationController animator, Transform defensePoint)
             {
                 this.agent = agent;
@@ -419,7 +405,6 @@ namespace Actions
                 this.animator = animator;          
                 pointToDefend = defensePoint;
             }
-
             public Node.Status Process()
             {
                 if (isWaiting)
@@ -440,22 +425,17 @@ namespace Actions
                 }
                 return Node.Status.RUNNING; 
             }
-
             private void SetRandomDestination()
             {
                 Vector3 randomPoint = UnityEngine.Random.insideUnitSphere * 10f+pointToDefend.position;
                 this.navigation.speed = 2f;
                 animator.Walk();
-                NavMeshHit hit;
-
-                
+                NavMeshHit hit;     
                 if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas))
                 {
                     navigation.SetDestination(hit.position);
                 }
-    
             }
-
             public void Reset()
             {
                 isWaiting = false;

@@ -8,12 +8,12 @@ using Conditions;
 using UnityEngine.Events;
 using System.Linq.Expressions;
 
-public class GuardPatrolBehavior : GuardBehavior
+public class GuardAlarmBehavior : GuardBehavior
 {
     [Header("Patrol Variables")]
     [SerializeField]private List<Transform> patrolPoints;
-    //[SerializeField]private Transform alarm;
-    //[SerializeField]private Transform safezone;
+    [SerializeField]private Transform alarm;
+    [SerializeField]private Transform safezone;
     
     public override void Start()
     {
@@ -30,7 +30,7 @@ public class GuardPatrolBehavior : GuardBehavior
             //DEBUG!!!!!!!!!!!
             if(targetInRange)
             {
-                navigation.ResetPath();
+               navigation.ResetPath();
             }
             //DEBUG!!!!!!!!!!!!
 
@@ -65,6 +65,7 @@ public class GuardPatrolBehavior : GuardBehavior
         // ACTIONS
         Action randompatrol = new Action("Action Guard Random Patrol", new GuardRandomPatrol(this, this.navigation, this.animator));
         Action patrol = new Action("Action Guard Patrol", new GuardPatrol(this, this.navigation, this.animator,patrolPoints));
+        Action takeCover = new Action("Action Take Cover", new GuardGoTo(this.animator, this.navigation, () => safezone.position));
         Action crouchAction = new Action("Action Crouch", new Crouch(this.animator));
         Action standUp = new Action("Action Stand", new ActionReset(new Crouch(this.animator)));
         Action setDanger = new Action("Action Set Danger", new SetDanger(this, true));
@@ -76,6 +77,7 @@ public class GuardPatrolBehavior : GuardBehavior
         Action stand = new Action("Action Stand", new Stand(this.animator));
         Action shootAction = new Action("Action Shoot Target", new ShootAction( animator, Shoot , entity.Damage() , ()=>sensors.GetVisibleTarget() ));
         Action stop = new Action("Action Stop",new Stop(this,this.navigation,this.animator));
+        Action setAlarm = new Action("Action Set Alarm",new GuardSetAlarm(this.animator, this.navigation, () => alarm.position));
 
         WaitNode delay = new WaitNode("Delay Chase", 1f);
         WaitNode delay2 = new WaitNode("Delay Chase", 2f);
@@ -115,15 +117,30 @@ public class GuardPatrolBehavior : GuardBehavior
         chooseShootTargetSequence.AddChild(aim);
         chooseShootTargetSequence.AddChild(shootSequence);
 
+        Sequence setAlarmSequence = new Sequence("Sequence Set Alarm");
+        setAlarmSequence.AddChild(alarmnotSet);
+        setAlarmSequence.AddChild(setAlarm);
+
         Fallback killPlayerFB = new Fallback("Fallback Kill Player");
+        killPlayerFB.AddChild(setAlarmSequence);
         killPlayerFB.AddChild(chooseShootTargetSequence);
         killPlayerFB.AddChild(chaseSequence);
+        
+        Sequence hideSequence = new Sequence("Sequence Take Cover");
+        hideSequence.AddChild(checkIfDanger);
+        hideSequence.AddChild(takeCover);
+        hideSequence.AddChild(crouchAction);
 
         Fallback CoverFireFB = new Fallback("Fallback Cover Fire");
         Sequence coverFireSequence = new Sequence("Sequence Cover Fire");
         coverFireSequence.AddChild(canShoot);
         coverFireSequence.AddChild(stand);
         coverFireSequence.AddChild(chooseShootTargetSequence);
+
+        CoverFireFB.AddChild(coverFireSequence);
+
+        hideSequence.AddChild(CoverFireFB);
+        hideSequence.AddChild(checkcoverSafetySequence);
 
         Sequence targetSpotSequence = new Sequence("Sequence Spot Target");
         targetSpotSequence.AddChild(spotTarget);
@@ -147,6 +164,7 @@ public class GuardPatrolBehavior : GuardBehavior
         roamFB.AddChild(guardPatrolSequence);
         
         Fallback rootFallback = new Fallback("Fallback Root");
+        rootFallback.AddChild(hideSequence);
         rootFallback.AddChild(roamFB);
 
         BT.AddChild(rootFallback);
