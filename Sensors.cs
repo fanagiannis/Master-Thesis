@@ -46,7 +46,6 @@ public class AISensors : MonoBehaviour
         {
             InspectingSource=FindSoundSource();
         }
-        
     }
     public void VisionCone()
     {
