@@ -21,7 +21,7 @@ public class GuardScoutBehavior : GuardBehavior
     }
     public override void BakeBehavior()
     {
-        BT = new BehaviorTree("Scout Guard Logic");
+        BT = new BehaviorTree("Sniper Guard Logic");
 
         //CONDITIONS
 

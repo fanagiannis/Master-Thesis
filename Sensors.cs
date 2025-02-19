@@ -56,14 +56,14 @@ public class AISensors : MonoBehaviour
         {
             Transform target = targetsInView[i].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
-            if (Vector3.Angle(transform.forward, directionToTarget) < viewAngle / 2)
-            {
+            if (Vector3.Angle(transform.forward, directionToTarget) < viewAngle /2)
+            {       
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask)&&target.gameObject.activeSelf)
                 {
                     timer=0f;
                     SpotTarget(target);
-                }
+                }          
             }
         }
     }
