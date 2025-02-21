@@ -222,33 +222,47 @@ namespace Behavior
         }
         public override Status Process()
         {
-            if(repeatCount<=0)
+            if ((repeatCount > 0 && repeatTimes >= repeatCount) || (repeatCount <= 0 && !repeatCondition()))
             {
-                if (repeatCondition())
-                {
-                    Status childStatus = childNode.Process();
-                    if (childStatus == Status.SUCCESS || childStatus == Status.FAILURE)
-                    {
-                        childNode.Reset();
-                    }
-                    return Status.RUNNING;
-                }
                 return Status.SUCCESS;
             }
-            else
+
+            Status childStatus = childNode.Process();
+
+            if (childStatus == Status.SUCCESS || childStatus == Status.FAILURE)
             {
-                if(repeatTimes<repeatCount)
-                {
-                    Status childStatus = childNode.Process();
-                    if (childStatus == Status.SUCCESS || childStatus == Status.FAILURE)
-                    {
-                        childNode.Reset();
-                        repeatTimes+=1;
-                    }
-                    return Status.RUNNING;
-                }
-                return Status.SUCCESS;
+                childNode.Reset();
+                repeatTimes++;
             }
+
+            return Status.RUNNING;
+            // if(repeatCount<=0)
+            // {
+            //     if (repeatCondition())
+            //     {
+            //         Status childStatus = childNode.Process();
+            //         if (childStatus == Status.SUCCESS || childStatus == Status.FAILURE)
+            //         {
+            //             childNode.Reset();
+            //         }
+            //         return Status.RUNNING;
+            //     }
+            //     return Status.SUCCESS;
+            // }
+            // else
+            // {
+            //     if(repeatTimes<repeatCount)
+            //     {
+            //         Status childStatus = childNode.Process();
+            //         if (childStatus == Status.SUCCESS || childStatus == Status.FAILURE)
+            //         {
+            //             childNode.Reset();
+            //             repeatTimes+=1;
+            //         }
+            //         return Status.RUNNING;
+            //     }
+            //     return Status.SUCCESS;
+            // }
             
         }
         public override void Reset()
