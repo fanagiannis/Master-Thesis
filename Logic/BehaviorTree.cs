@@ -236,34 +236,6 @@ namespace Behavior
             }
 
             return Status.RUNNING;
-            // if(repeatCount<=0)
-            // {
-            //     if (repeatCondition())
-            //     {
-            //         Status childStatus = childNode.Process();
-            //         if (childStatus == Status.SUCCESS || childStatus == Status.FAILURE)
-            //         {
-            //             childNode.Reset();
-            //         }
-            //         return Status.RUNNING;
-            //     }
-            //     return Status.SUCCESS;
-            // }
-            // else
-            // {
-            //     if(repeatTimes<repeatCount)
-            //     {
-            //         Status childStatus = childNode.Process();
-            //         if (childStatus == Status.SUCCESS || childStatus == Status.FAILURE)
-            //         {
-            //             childNode.Reset();
-            //             repeatTimes+=1;
-            //         }
-            //         return Status.RUNNING;
-            //     }
-            //     return Status.SUCCESS;
-            // }
-            
         }
         public override void Reset()
         {
