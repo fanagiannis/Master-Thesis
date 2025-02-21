@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
         gravity=this.gameObject.GetComponent<Gravity>();
         playerInput.actions.Enable();
         animcontroller=this.gameObject.GetComponent<PlayerAnimationController>();
+        Cursor.visible=false;
+        
     }
     public void Control()
     {    

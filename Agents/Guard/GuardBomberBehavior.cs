@@ -28,12 +28,9 @@ public class GuardBomberBehavior : GuardBehavior
         Condition inRange = new Condition("Condition Target In?", new ConditionLeaf(() => targetInRange));
 
         //ACTIONS
-        Action chaseTarget = new Action("Action Chase Target",new GuardGoTo(animator,navigation,()=>SecurityManager.Instance.Target().position));
-
-        //DEBUG
+        Action chaseTarget = new Action("Action Chase Target",new GuardGoTo(animator,navigation,()=>SecurityManager.Instance.Target().position)); 
         Action explode = new Action("Action Explode",new Explode(this.gameObject,explosionPrefab,transform));
-        //DEBUG
-
+        
         Sequence explodeSequence = new Sequence("Sequence Explode");
         explodeSequence.AddChild(inRange);
         explodeSequence.AddChild(explode);

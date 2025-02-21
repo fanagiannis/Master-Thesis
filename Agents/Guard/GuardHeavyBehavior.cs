@@ -21,7 +21,7 @@ public class GuardHeavyBehavior : GuardBehavior
     }
     public override void BakeBehavior()
     {
-        BT = new BehaviorTree("Heavy Guard Logic");
+        BT = new BehaviorTree("Defender Guard Logic");
 
         //CONDITIONS
         Condition spotTarget = new Condition("Condition Target Spotted?", new ConditionLeaf(() => sensors.GetVisibleTarget()   && !InDanger));
