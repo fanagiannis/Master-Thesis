@@ -20,6 +20,6 @@ MonoBehaviour:
   maxAmmo: 35
   currentAmmo: 7
   magazineAmmo: 7
-  damage: 5
+  damage: 20
   fireRate: 0.5
   silenced: 0

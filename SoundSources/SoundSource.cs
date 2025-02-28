@@ -9,6 +9,7 @@ public class SoundSource : MonoBehaviour
     [SerializeField]private float volume;
     [SerializeField]private AudioSource audioSource;
     [SerializeField]private bool played=false;
+    [SerializeField]private WeaponSlot weaponSlot;
     private float timer=0.2f;
     void Awake()
     {
@@ -24,7 +25,7 @@ public class SoundSource : MonoBehaviour
         if (!played)
         {
             timer-=Time.deltaTime;
-            if(timer<=0)
+            if(timer<=0)// && !weaponSlot.EquippedWeapon().Data().Silenced)
             {
                 PlaySound();
                 played=true;
